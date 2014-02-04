@@ -1,0 +1,9 @@
+venv
+*.pyc
+*.pyo
+*.egg-info
+*.sublime-*
+.coverage
+htmlcov
+coverage
+*.log

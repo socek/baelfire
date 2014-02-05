@@ -7,6 +7,9 @@ class Task(object):
     def set_recipe(self, recipe):
         self.recipe = recipe
 
+    def get_output_file(self):
+        return None
+
     @property
     def paths(self):
         return self.recipe.paths

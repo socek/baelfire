@@ -111,3 +111,7 @@ class TaskTest(TestCase):
         self.task.run(force=True)
 
         self.assertEqual(True, self.task.made)
+
+    def test_get_output_file(self):
+        """Should return None"""
+        self.assertEqual(None, self.task.get_output_file())

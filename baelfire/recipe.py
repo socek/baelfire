@@ -13,7 +13,6 @@ class Recipe(object):
 
         self.create_settings()
         self.gather_recipes()
-        self.post_action()
         self.gather_tasks()
 
     def init_settings(self, settings, paths):
@@ -36,9 +35,6 @@ class Recipe(object):
         task.set_recipe(self)
 
     def create_settings(self):
-        pass
-
-    def post_action(self):
         pass
 
     def gather_recipes(self):

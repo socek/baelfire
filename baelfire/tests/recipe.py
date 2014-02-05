@@ -10,9 +10,6 @@ class ExampleRecipe(Recipe):
     def create_settings(self):
         self.chronology = ['create_settings']
 
-    def post_action(self):
-        self.chronology.append('post_action')
-
     def gather_recipes(self):
         self.chronology.append('gather_recipes')
 
@@ -30,7 +27,6 @@ class RecipeTest(TestCase):
         """Should init recipe and run methods in proper order."""
         self.assertEqual(['create_settings',
                           'gather_recipes',
-                          'post_action',
                           'gather_tasks',
                           ],
                          self.recipe.chronology)
@@ -57,7 +53,6 @@ class RecipeTest(TestCase):
 
         self.recipe.set_parent(recipe)
 
-        print (self.recipe.paths, recipe.paths)
         self.assertEqual(recipe, self.recipe.parent)
         self.assertEqual('child settings', self.recipe.settings['something'])
         self.assertEqual('child paths', self.recipe.paths['something'])

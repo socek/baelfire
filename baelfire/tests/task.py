@@ -1,3 +1,4 @@
+from mock import MagicMock
 from soktest import TestCase
 
 from .recipe import ExampleRecipe
@@ -5,7 +6,18 @@ from baelfire.task import Task
 
 
 class ExampleTask(Task):
-    pass
+
+    def __init__(self):
+        super().__init__()
+        self.dep_1 = MagicMock()
+        self.dep_1.return_value = False
+        self.dep_2 = MagicMock()
+        self.dep_2.return_value = False
+        self.dep_3 = MagicMock()
+        self.dep_3.return_value = False
+
+    def get_dependencys(self):
+        return [self.dep_1, self.dep_2, self.dep_3]
 
 
 class TaskTest(TestCase):
@@ -50,3 +62,17 @@ class TaskTest(TestCase):
         self.task.set_recipe(recipe)
 
         self.assertEqual('settings', self.task.settings)
+
+    def test_is_rebuild_needed_false(self):
+        """Should return false, if no dependency returned false."""
+        self.assertEqual(False, self.task.is_rebuild_needed())
+
+    def test_is_rebuild_needed_true(self):
+        """Should return false, if one or more dependency returned true."""
+        self.task.dep_2.return_value = True
+        self.assertEqual(True, self.task.is_rebuild_needed())
+
+    def test_is_rebuild_error(self):
+        """Should raise error, when no get_dependencys method specyfied."""
+        task = Task()
+        self.assertRaises(AttributeError, task.is_rebuild_needed)

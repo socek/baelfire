@@ -24,3 +24,11 @@ class Task(object):
             return '/' + self.__class__.__name__.lower()
         else:
             return self.path
+
+    def is_rebuild_needed(self):
+        need_rebuild = False
+
+        for dependency in self.get_dependencys():
+            need_rebuild = need_rebuild or dependency(self)
+
+        return need_rebuild

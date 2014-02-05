@@ -11,11 +11,13 @@ class Recipe(object):
         })
         self.paths = Paths()
         self.recipes = []
+        self.tasks = []
         self.parent = None
 
         self.create_settings()
         self.gather_recipes()
         self.post_action()
+        self.gather_tasks()
 
     def add_recipe(self, recipe):
         recipe.set_parent(self)
@@ -24,6 +26,10 @@ class Recipe(object):
     def set_parent(self, recipe):
         self.parent = recipe
 
+    def add_task(self, task):
+        self.tasks.append(task)
+        task.set_recipe(self)
+
     def create_settings(self):
         pass
 
@@ -31,4 +37,7 @@ class Recipe(object):
         pass
 
     def gather_recipes(self):
+        pass
+
+    def gather_tasks(self):
         pass

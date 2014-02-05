@@ -1,6 +1,7 @@
 from soktest import TestCase
 
 from baelfire.recipe import Recipe
+from baelfire.task import Task
 from baelfire import VERSION
 
 
@@ -15,6 +16,9 @@ class ExampleRecipe(Recipe):
     def gather_recipes(self):
         self.chronology.append('gather_recipes')
 
+    def gather_tasks(self):
+        self.chronology.append('gather_tasks')
+
 
 class RecipeTest(TestCase):
 
@@ -26,7 +30,9 @@ class RecipeTest(TestCase):
         """Should init recipe and run methods in proper order."""
         self.assertEqual(['create_settings',
                           'gather_recipes',
-                          'post_action'],
+                          'post_action',
+                          'gather_tasks',
+                          ],
                          self.recipe.chronology)
         self.assertEqual(VERSION, self.recipe.settings['minimal version'])
         self.assertEqual([], self.recipe.recipes)
@@ -46,3 +52,12 @@ class RecipeTest(TestCase):
         self.recipe.set_parent('my parrent')
 
         self.assertEqual('my parrent', self.recipe.parent)
+
+    def test_add_task(self):
+        """Should set tasks it's parent to self, and add this task to
+        self.tasks."""
+        task = Task()
+        self.recipe.add_task(task)
+
+        self.assertEqual(self.recipe, task.recipe)
+        self.assertEqual([task], self.recipe.tasks)

@@ -32,3 +32,8 @@ class Task(object):
             need_rebuild = need_rebuild or dependency(self)
 
         return need_rebuild
+
+    def run(self, **kwargs):
+        force = kwargs.pop('force', False)
+        if self.is_rebuild_needed() or force:
+            self.make(**kwargs)

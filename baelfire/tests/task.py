@@ -15,9 +15,13 @@ class ExampleTask(Task):
         self.dep_2.return_value = False
         self.dep_3 = MagicMock()
         self.dep_3.return_value = False
+        self.made = False
 
     def get_dependencys(self):
         return [self.dep_1, self.dep_2, self.dep_3]
+
+    def make(self):
+        self.made = True
 
 
 class TaskTest(TestCase):
@@ -76,3 +80,34 @@ class TaskTest(TestCase):
         """Should raise error, when no get_dependencys method specyfied."""
         task = Task()
         self.assertRaises(AttributeError, task.is_rebuild_needed)
+
+    def test_run_error(self):
+        """Should raise error, when no make method specyfied."""
+        task = Task()
+        self.add_mock_object(task, 'is_rebuild_needed', return_value=True)
+        self.assertRaises(AttributeError, task.run)
+
+    def test_run_true(self):
+        """Should run make when rebuild is needed."""
+        self.add_mock_object(self.task, 'is_rebuild_needed', return_value=True)
+        self.task.run()
+
+        self.assertEqual(True, self.task.made)
+
+    def test_run_false(self):
+        """Should not run make when rebuild is not needed."""
+        self.add_mock_object(self.task,
+                             'is_rebuild_needed',
+                             return_value=False)
+        self.task.run()
+
+        self.assertEqual(False, self.task.made)
+
+    def test_run_force(self):
+        """Should run make when force is true."""
+        self.add_mock_object(self.task,
+                             'is_rebuild_needed',
+                             return_value=False)
+        self.task.run(force=True)
+
+        self.assertEqual(True, self.task.made)

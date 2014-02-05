@@ -48,10 +48,21 @@ class RecipeTest(TestCase):
         self.assertEqual([recipe], self.recipe.recipes)
 
     def test_set_parent(self):
-        """Should assign parent to a recipe."""
-        self.recipe.set_parent('my parrent')
+        """Should assign parent to a recipe and update settings and paths."""
+        recipe = Recipe()
+        recipe.settings['something'] = 'child settings'
+        recipe.paths['something'] = 'child paths'
+        self.recipe.settings['something'] = 'parent settings'
+        self.recipe.paths['something'] = 'parent paths'
 
-        self.assertEqual('my parrent', self.recipe.parent)
+        self.recipe.set_parent(recipe)
+
+        print (self.recipe.paths, recipe.paths)
+        self.assertEqual(recipe, self.recipe.parent)
+        self.assertEqual('child settings', self.recipe.settings['something'])
+        self.assertEqual('child paths', self.recipe.paths['something'])
+        self.assertEqual(id(recipe.settings), id(self.recipe.settings))
+        self.assertEqual(id(recipe.paths), id(self.recipe.paths))
 
     def test_add_task(self):
         """Should set tasks it's parent to self, and add this task to

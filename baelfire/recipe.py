@@ -6,18 +6,19 @@ from baelfire import VERSION
 class Recipe(object):
 
     def __init__(self):
-        self.settings = Settings({
-            'minimal version': VERSION,
-        })
-        self.paths = Paths()
         self.recipes = []
         self.tasks = []
         self.parent = None
+        self.init_settings({'minimal version': VERSION}, {})
 
         self.create_settings()
         self.gather_recipes()
         self.post_action()
         self.gather_tasks()
+
+    def init_settings(self, settings, paths):
+        self.settings = Settings(settings)
+        self.paths = Paths(paths)
 
     def add_recipe(self, recipe):
         recipe.set_parent(self)

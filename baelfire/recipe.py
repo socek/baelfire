@@ -32,7 +32,7 @@ class Recipe(object):
 
     def add_task(self, task):
         self.tasks.append(task)
-        task.set_recipe(self)
+        task.assign_recipe(self)
 
     def create_settings(self):
         pass

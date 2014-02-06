@@ -3,9 +3,16 @@ class Task(object):
     def __init__(self):
         self.recipe = None
         self.path = None
+        self.dependencys = None
 
-    def set_recipe(self, recipe):
+    def assign_recipe(self, recipe):
         self.recipe = recipe
+        self.dependencys = []
+        self.generate_dependencys()
+
+    def add_dependecy(self, dependency):
+        dependency.assign_task(self)
+        self.dependencys.append(dependency)
 
     def get_output_file(self):
         return None
@@ -31,8 +38,8 @@ class Task(object):
     def is_rebuild_needed(self):
         need_rebuild = False
 
-        for dependency in self.get_dependencys():
-            need_rebuild = need_rebuild or dependency(self)
+        for dependency in self.dependencys:
+            need_rebuild = need_rebuild or dependency()
 
         return need_rebuild
 

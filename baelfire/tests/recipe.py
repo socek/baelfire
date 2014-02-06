@@ -5,6 +5,12 @@ from baelfire.task import Task
 from baelfire import VERSION
 
 
+class ExampleTask(Task):
+
+    def generate_dependencys(self):
+        pass
+
+
 class ExampleRecipe(Recipe):
 
     def create_settings(self):
@@ -62,7 +68,7 @@ class RecipeTest(TestCase):
     def test_add_task(self):
         """Should set tasks it's parent to self, and add this task to
         self.tasks."""
-        task = Task()
+        task = ExampleTask()
         self.recipe.add_task(task)
 
         self.assertEqual(self.recipe, task.recipe)

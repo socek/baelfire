@@ -1,37 +1,53 @@
-from baelfire.error import TaskMustHaveOutputFile
+from soktest import TestCase
+
+from .task import ExampleTask
+from ..dependencys import Dependency
 
 
-class Dependency(object):
+class ExampleDependency(Dependency):
 
     def __init__(self):
-        self.parent_task = None
-
-    def assign_parent(self, parent_task):
-        self.parent_task = parent_task
-
-    def __call__(self, task):
-        self.task = task
-        return self.make()
-
-
-class FileDependency(Dependency):
-
-    def __init__(self, filenames):
         super().__init__()
-        self.filenames = filenames
-
-
-class FileChanged(FileDependency):
+        self.running = []
 
     def validate_task(self):
-        if self.task.get_output_file() is None:
-            raise TaskMustHaveOutputFile(self.task.get_path())
+        self.running.append('validate_task')
 
-    def validate_parent_task(self):
-        if self.parent_task is not None and \
-                self.parent_task.get_output_file() is None:
-            raise TaskMustHaveOutputFile(self.parent_task.get_path())
+    def validate_parent(self):
+        self.running.append('validate_parent')
 
     def make(self):
-        self.validate_task()
-        self.validate_parent_task()
+        self.running.append('make')
+        return 'make'
+
+
+class DependencyTest(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.task = ExampleTask()
+        self.dependency = ExampleDependency()
+        self.dependency.assign_task(self.task)
+
+    def test_init(self):
+        dependency = Dependency()
+
+        self.assertEqual(None, dependency.task)
+        self.assertEqual(None, dependency.parent)
+
+    def test_assign_task(self):
+        """Should assign task"""
+        self.assertEqual(self.task, self.dependency.task)
+
+    def test_assign_parent(self):
+        """Should assign parent"""
+        task = ExampleTask()
+        self.dependency.assign_parent(task)
+        self.assertEqual(task, self.dependency.parent)
+
+    def test_call(self):
+        """Should run validation of task, parent and then run make method."""
+        self.assertEqual('make', self.dependency())
+        self.assertEqual(
+            ['validate_task', 'validate_parent', 'make'],
+            self.dependency.running)

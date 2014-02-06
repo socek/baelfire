@@ -1,24 +1,36 @@
-from mock import MagicMock
 from soktest import TestCase
 
 from .recipe import ExampleRecipe
 from baelfire.task import Task
+from baelfire.dependencys import Dependency
+
+
+class ExampleDependency(Dependency):
+
+    def __init__(self, return_value):
+        super().__init__()
+        self.return_value = return_value
+
+    def make(self):
+        return self.return_value
 
 
 class ExampleTask(Task):
 
     def __init__(self):
         super().__init__()
-        self.dep_1 = MagicMock()
-        self.dep_1.return_value = False
-        self.dep_2 = MagicMock()
-        self.dep_2.return_value = False
-        self.dep_3 = MagicMock()
-        self.dep_3.return_value = False
         self.made = False
+        self.dep_1 = ExampleDependency(False)
+        self.dep_2 = ExampleDependency(False)
+        self.dep_3 = ExampleDependency(False)
 
     def get_dependencys(self):
         return [self.dep_1, self.dep_2, self.dep_3]
+
+    def generate_dependencys(self):
+        self.add_dependecy(self.dep_1)
+        self.add_dependecy(self.dep_2)
+        self.add_dependecy(self.dep_3)
 
     def make(self):
         self.made = True
@@ -30,10 +42,10 @@ class TaskTest(TestCase):
         super().setUp()
         self.task = ExampleTask()
 
-    def test_set_recipe(self):
+    def test_assign_recipe(self):
         """Should set recipe to a task"""
         recipe = ExampleRecipe()
-        self.task.set_recipe(recipe)
+        self.task.assign_recipe(recipe)
 
         self.assertEqual(recipe, self.task.recipe)
 
@@ -55,7 +67,7 @@ class TaskTest(TestCase):
         """Should return paths object from recipe"""
         recipe = ExampleRecipe()
         recipe.paths = 'paths'
-        self.task.set_recipe(recipe)
+        self.task.assign_recipe(recipe)
 
         self.assertEqual('paths', self.task.paths)
 
@@ -63,23 +75,31 @@ class TaskTest(TestCase):
         """Should return settings object from recipe"""
         recipe = ExampleRecipe()
         recipe.settings = 'settings'
-        self.task.set_recipe(recipe)
+        self.task.assign_recipe(recipe)
 
         self.assertEqual('settings', self.task.settings)
 
     def test_is_rebuild_needed_false(self):
         """Should return false, if no dependency returned false."""
+        recipe = ExampleRecipe()
+        self.task.assign_recipe(recipe)
+
         self.assertEqual(False, self.task.is_rebuild_needed())
 
     def test_is_rebuild_needed_true(self):
         """Should return false, if one or more dependency returned true."""
         self.task.dep_2.return_value = True
+        recipe = ExampleRecipe()
+        self.task.assign_recipe(recipe)
+
         self.assertEqual(True, self.task.is_rebuild_needed())
 
-    def test_is_rebuild_error(self):
-        """Should raise error, when no get_dependencys method specyfied."""
+    def test_assign_recipe_error(self):
+        """Should raise error, when no generate_dependencys method
+        specyfied."""
+        recipe = ExampleRecipe()
         task = Task()
-        self.assertRaises(AttributeError, task.is_rebuild_needed)
+        self.assertRaises(AttributeError, task.assign_recipe, recipe)
 
     def test_run_error(self):
         """Should raise error, when no make method specyfied."""

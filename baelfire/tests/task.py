@@ -35,6 +35,9 @@ class ExampleTask(Task):
     def make(self):
         self.made = True
 
+    def get_output_file(self):
+        return '/tmp'
+
 
 class TaskTest(TestCase):
 
@@ -133,5 +136,5 @@ class TaskTest(TestCase):
         self.assertEqual(True, self.task.made)
 
     def test_get_output_file(self):
-        """Should return None"""
-        self.assertEqual(None, self.task.get_output_file())
+        """Should return file path"""
+        self.assertEqual('/tmp', self.task.get_output_file())

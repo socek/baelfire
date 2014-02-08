@@ -1,5 +1,5 @@
 from baelfire.error import TaskMustHaveOutputFile, CouldNotCreateFile
-from os.path import exists
+from os.path import exists, getmtime
 
 
 class Dependency(object):
@@ -48,6 +48,16 @@ class FileChanged(FileDependency):
             if not exists(filename):
                 raise CouldNotCreateFile(filename)
 
-    # def make(self):
-    #     for filename in self.filenames:
-    #         if not os.path.exists(filename):
+    def is_destination_file_older(self, source, destination):
+        if getmtime(source) > getmtime(destination):
+            return True
+        else:
+            return False
+
+    def make(self):
+        for filename in self.filenames:
+            if not self.is_destination_file_older(
+                    self.task.get_output_file(),
+                    filename):
+                return True
+        return False

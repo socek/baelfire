@@ -1,10 +1,21 @@
+from tempfile import NamedTemporaryFile
+from time import sleep
+
 from soktest import TestCase
 
 from baelfire.error import TaskMustHaveOutputFile, CouldNotCreateFile
-from .task import ExampleTask, Task
+from .task import ExampleTask as ExampleTaskBase, Task
 from ..dependencys import Dependency, FileChanged
 
 PREFIX = 'baelfire.dependencys.'
+
+
+class ExampleTask(ExampleTaskBase):
+
+    def get_output_file(self):
+        self.filename = getattr(
+            self, 'filename', NamedTemporaryFile(delete=False).name)
+        return self.filename
 
 
 class ExampleDependency(Dependency):
@@ -96,3 +107,49 @@ class FileChangedTest(TestCase):
         self.mocks['exists'].return_value = True
 
         self.assertEqual(None, self.dependency.validate_dependency())
+
+    def test_is_destination_file_older_success(self):
+        """Should return true if destination path is older"""
+        destination = NamedTemporaryFile(delete=False).name
+        sleep(0.01)
+        source = NamedTemporaryFile(delete=False).name
+
+        result = self.dependency.is_destination_file_older(
+            source,
+            destination)
+        self.assertEqual(True, result)
+
+    def test_is_destination_file_older_fail(self):
+        """Should return false if source path is older"""
+        source = NamedTemporaryFile(delete=False).name
+        sleep(0.01)
+        destination = NamedTemporaryFile(delete=False).name
+
+        result = self.dependency.is_destination_file_older(
+            source,
+            destination)
+        self.assertEqual(False, result)
+
+    def test_make_file_changed(self):
+        """Should return True if task file is older then dependency file."""
+        task = ExampleTask()
+        task.get_output_file()
+        self.dependency.assign_task(task)
+
+        sleep(0.01)
+        destination = NamedTemporaryFile(delete=False).name
+        self.dependency.filenames = [destination]
+
+        self.assertEqual(True, self.dependency())
+
+    def test_make_file_not_changed(self):
+        """Should return False if task file is newer then dependency file."""
+        destination = NamedTemporaryFile(delete=False).name
+        self.dependency.filenames = [destination]
+
+        sleep(0.01)
+        task = ExampleTask()
+        task.get_output_file()
+        self.dependency.assign_task(task)
+
+        self.assertEqual(False, self.dependency())

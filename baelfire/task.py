@@ -47,7 +47,11 @@ class Task(object):
 
         return need_rebuild
 
+    def pre_run(self):
+        pass
+
     def run(self):
+        self.pre_run()
         force = self.kwargs.pop('force', False)
         if self.is_rebuild_needed() or force:
             self.make(**self.kwargs)

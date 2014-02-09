@@ -8,7 +8,8 @@ from .task import ExampleTask as ExampleTaskBase, Task
 from ..dependencys import (Dependency,
                            FileChanged,
                            FileDoesNotExists,
-                           FileDependency)
+                           FileDependency,
+                           AlwaysRebuild)
 
 PREFIX = 'baelfire.dependencys.'
 
@@ -188,3 +189,11 @@ class FileDoesNotExistsTest(TestCase):
         destination = NamedTemporaryFile(delete=False).name
         dependency = FileDoesNotExists([destination])
         self.assertEqual(False, dependency())
+
+
+class AlwaysRebuildTest(TestCase):
+
+    def test_simple(self):
+        """Should always return True."""
+        dependency = AlwaysRebuild()
+        self.assertEqual(True, dependency())

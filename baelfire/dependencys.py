@@ -75,3 +75,9 @@ class FileDoesNotExists(FileDependency):
             if not exists(filename):
                 return True
         return False
+
+
+class AlwaysRebuild(Dependency):
+
+    def make(self):
+        return True

@@ -34,7 +34,12 @@ class FileDependency(Dependency):
 
     def __init__(self, filenames):
         super().__init__()
-        self.filenames = filenames
+        if type(filenames) is str:
+            self.filenames = [filenames]
+        elif type(filenames) in (list, tuple):
+            self.filenames = filenames
+        else:
+            raise AttributeError('filenames should be list, tuple or string')
 
 
 class FileChanged(FileDependency):

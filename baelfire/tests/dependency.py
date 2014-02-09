@@ -5,7 +5,10 @@ from soktest import TestCase
 
 from baelfire.error import TaskMustHaveOutputFile, CouldNotCreateFile
 from .task import ExampleTask as ExampleTaskBase, Task
-from ..dependencys import Dependency, FileChanged, FileDoesNotExists
+from ..dependencys import (Dependency,
+                           FileChanged,
+                           FileDoesNotExists,
+                           FileDependency)
 
 PREFIX = 'baelfire.dependencys.'
 
@@ -69,6 +72,24 @@ class DependencyTest(TestCase):
             ['validate_task', 'validate_parent',
                 'validate_dependency', 'make'],
             self.dependency.running)
+
+
+class FileDependencyTest(TestCase):
+
+    def test_init_list(self):
+        """Should assign filenames."""
+        dependency = FileDependency(['something'])
+        self.assertEqual(['something'], dependency.filenames)
+
+    def test_init_string(self):
+        """Should put string into list and assign it."""
+        dependency = FileDependency('something')
+        self.assertEqual(['something'], dependency.filenames)
+
+    def test_init_error(self):
+        """Should raise AttributeError when no list, tuple or string
+        provided"""
+        self.assertRaises(AttributeError, FileDependency, 13)
 
 
 class FileChangedTest(TestCase):

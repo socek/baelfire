@@ -55,6 +55,18 @@ class DependencyTest(TestCase):
                 'validate_dependency', 'make'],
             self.dependency.running)
 
+    def test_run_parent(self):
+        """Calling dependency should run parent when exists."""
+        task = ExampleTask()
+        task.dependencys = []
+        task.generate_dependencys()
+        task.kwargs['force'] = True
+        self.dependency.assign_parent(task)
+
+        self.dependency()
+
+        self.assertEqual(True, task.made)
+
 
 class AlwaysRebuildTest(TestCase):
 

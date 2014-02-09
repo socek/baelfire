@@ -6,7 +6,10 @@ from soktest import TestCase
 from baelfire.error import TaskMustHaveOutputFile, CouldNotCreateFile
 from baelfire.tests.task import ExampleTask as ExampleTaskBase, Task
 from ..dependency import Dependency
-from ..file import FileChanged, FileDoesNotExists, FileDependency
+from ..file import (FileChanged,
+                    FileDoesNotExists,
+                    FileDependency,
+                    ParentFileChanged)
 
 PREFIX = 'baelfire.dependencys.file.'
 
@@ -153,3 +156,21 @@ class FileDoesNotExistsTest(TestCase):
         destination = NamedTemporaryFile(delete=False).name
         dependency = FileDoesNotExists([destination])
         self.assertEqual(False, dependency())
+
+
+class ParentFileChangedTest(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.parent = ExampleTask()
+        self.dependency = ParentFileChanged(self.parent)
+
+    def test_validate_dependency(self):
+        """Should do nothing. (sic!)"""
+        self.assertEqual(None, self.dependency.validate_dependency())
+
+    def test_get_filenames(self):
+        """Should return output_file from parent"""
+        self.assertEqual(
+            [self.parent.get_output_file()],
+            self.dependency.get_filenames())

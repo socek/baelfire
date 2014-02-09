@@ -14,6 +14,9 @@ class FileDependency(Dependency):
         else:
             raise AttributeError('filenames should be list, tuple or string')
 
+    def get_filenames(self):
+        return self.filenames
+
 
 class FileChanged(FileDependency):
 
@@ -22,7 +25,7 @@ class FileChanged(FileDependency):
             raise TaskMustHaveOutputFile(self.task.get_path())
 
     def validate_dependency(self):
-        for filename in self.filenames:
+        for filename in self.get_filenames():
             if not exists(filename):
                 raise CouldNotCreateFile(filename)
 
@@ -33,7 +36,7 @@ class FileChanged(FileDependency):
             return False
 
     def make(self):
-        for filename in self.filenames:
+        for filename in self.get_filenames():
             if not self.is_destination_file_older(
                     self.task.get_output_file(),
                     filename):
@@ -41,10 +44,24 @@ class FileChanged(FileDependency):
         return False
 
 
+class ParentFileChanged(FileChanged):
+
+    def __init__(self, parent):
+        super().__init__([])
+        self.assign_parent(parent)
+
+    def validate_dependency(self):
+        # no need to check filenames here
+        pass
+
+    def get_filenames(self):
+        return [self.parent.get_output_file()]
+
+
 class FileDoesNotExists(FileDependency):
 
     def make(self):
-        for filename in self.filenames:
+        for filename in self.get_filenames():
             if not exists(filename):
                 return True
         return False

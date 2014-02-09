@@ -10,6 +10,10 @@ class Dependency(object):
     def assign_parent(self, parent):
         self.parent = parent
 
+    def run_parent(self):
+        if self.parent is not None:
+            self.parent.run()
+
     def validate_task(self):
         pass
 
@@ -23,6 +27,7 @@ class Dependency(object):
         self.validate_task()
         self.validate_parent()
         self.validate_dependency()
+        self.run_parent()
         return self.make()
 
 

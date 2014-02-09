@@ -4,14 +4,11 @@ from time import sleep
 from soktest import TestCase
 
 from baelfire.error import TaskMustHaveOutputFile, CouldNotCreateFile
-from .task import ExampleTask as ExampleTaskBase, Task
-from ..dependencys import (Dependency,
-                           FileChanged,
-                           FileDoesNotExists,
-                           FileDependency,
-                           AlwaysRebuild)
+from baelfire.tests.task import ExampleTask as ExampleTaskBase, Task
+from ..dependency import Dependency
+from ..file import FileChanged, FileDoesNotExists, FileDependency
 
-PREFIX = 'baelfire.dependencys.'
+PREFIX = 'baelfire.dependencys.file.'
 
 
 class ExampleTask(ExampleTaskBase):
@@ -40,39 +37,6 @@ class ExampleDependency(Dependency):
     def make(self):
         self.running.append('make')
         return 'make'
-
-
-class DependencyTest(TestCase):
-
-    def setUp(self):
-        super().setUp()
-        self.task = ExampleTask()
-        self.dependency = ExampleDependency()
-        self.dependency.assign_task(self.task)
-
-    def test_init(self):
-        dependency = Dependency()
-
-        self.assertEqual(None, dependency.task)
-        self.assertEqual(None, dependency.parent)
-
-    def test_assign_task(self):
-        """Should assign task"""
-        self.assertEqual(self.task, self.dependency.task)
-
-    def test_assign_parent(self):
-        """Should assign parent"""
-        task = ExampleTask()
-        self.dependency.assign_parent(task)
-        self.assertEqual(task, self.dependency.parent)
-
-    def test_call(self):
-        """Should run validation of task, parent and then run make method."""
-        self.assertEqual('make', self.dependency())
-        self.assertEqual(
-            ['validate_task', 'validate_parent',
-                'validate_dependency', 'make'],
-            self.dependency.running)
 
 
 class FileDependencyTest(TestCase):
@@ -189,11 +153,3 @@ class FileDoesNotExistsTest(TestCase):
         destination = NamedTemporaryFile(delete=False).name
         dependency = FileDoesNotExists([destination])
         self.assertEqual(False, dependency())
-
-
-class AlwaysRebuildTest(TestCase):
-
-    def test_simple(self):
-        """Should always return True."""
-        dependency = AlwaysRebuild()
-        self.assertEqual(True, dependency())

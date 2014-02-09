@@ -20,15 +20,16 @@ class Recipe(object):
         self.paths = Paths(paths)
 
     def add_recipe(self, recipe):
-        recipe.set_parent(self)
+        recipe.assign_parent(self)
         self.recipes.append(recipe)
 
-    def set_parent(self, recipe):
+    def assign_parent(self, recipe):
         self.parent = recipe
         self.settings.update(recipe.settings)
         recipe.settings = self.settings
         recipe.paths = self.paths.update(recipe.paths)
         recipe.paths = self.paths
+        recipe.tasks += self.tasks
 
     def add_task(self, task):
         self.tasks.append(task)

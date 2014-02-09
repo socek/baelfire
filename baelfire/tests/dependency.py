@@ -5,7 +5,7 @@ from soktest import TestCase
 
 from baelfire.error import TaskMustHaveOutputFile, CouldNotCreateFile
 from .task import ExampleTask as ExampleTaskBase, Task
-from ..dependencys import Dependency, FileChanged
+from ..dependencys import Dependency, FileChanged, FileDoesNotExists
 
 PREFIX = 'baelfire.dependencys.'
 
@@ -153,3 +153,17 @@ class FileChangedTest(TestCase):
         self.dependency.assign_task(task)
 
         self.assertEqual(False, self.dependency())
+
+
+class FileDoesNotExistsTest(TestCase):
+
+    def test_success(self):
+        """Should return True, if on of file does not exist."""
+        dependency = FileDoesNotExists(['/tmp/something'])
+        self.assertEqual(True, dependency())
+
+    def test_fail(self):
+        """Should return False, if all the files exists."""
+        destination = NamedTemporaryFile(delete=False).name
+        dependency = FileDoesNotExists([destination])
+        self.assertEqual(False, dependency())

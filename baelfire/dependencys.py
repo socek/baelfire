@@ -61,3 +61,12 @@ class FileChanged(FileDependency):
                     filename):
                 return True
         return False
+
+
+class FileDoesNotExists(FileDependency):
+
+    def make(self):
+        for filename in self.filenames:
+            if not exists(filename):
+                return True
+        return False

@@ -7,7 +7,7 @@ class Recipe(object):
 
     def __init__(self):
         self.recipes = []
-        self.tasks = []
+        self.tasks = {}
         self.parent = None
         self.init_settings({'minimal version': VERSION}, {})
 
@@ -25,14 +25,16 @@ class Recipe(object):
 
     def assign_parent(self, recipe):
         self.parent = recipe
-        self.settings.update(recipe.settings)
-        recipe.settings = self.settings
-        recipe.paths = self.paths.update(recipe.paths)
-        recipe.paths = self.paths
-        recipe.tasks += self.tasks
+        recipe.settings.update(self.settings)
+        recipe.paths.update(self.paths)
+        recipe.tasks.update(self.tasks)
+
+        self.settings = recipe.settings
+        self.paths = recipe.paths
+        self.tasks = recipe.tasks
 
     def add_task(self, task):
-        self.tasks.append(task)
+        self.tasks[task.get_path()] = task
         task.assign_recipe(self)
 
     def create_settings(self):

@@ -53,21 +53,28 @@ class RecipeTest(TestCase):
         """Should assign parent to a recipe and update tasks, settings and
         paths."""
         recipe = Recipe()
-        recipe.settings['something'] = 'child settings'
-        recipe.paths['something'] = 'child paths'
-        recipe.tasks = ['something 1']
-        self.recipe.settings['something'] = 'parent settings'
-        self.recipe.paths['something'] = 'parent paths'
-        self.recipe.tasks = ['something 2']
+        recipe.settings['something'] = 'parent settings'
+        recipe.paths['something'] = 'parent paths'
+        recipe.tasks = {'something 1': 1, 'something': 'parent'}
+        self.recipe.settings['something'] = 'child settings'
+        self.recipe.paths['something'] = 'child paths'
+        self.recipe.tasks = {'something 2': 2, 'something': 'child'}
 
         self.recipe.assign_parent(recipe)
 
         self.assertEqual(recipe, self.recipe.parent)
         self.assertEqual('child settings', self.recipe.settings['something'])
         self.assertEqual('child paths', self.recipe.paths['something'])
+        self.assertEqual('child settings', recipe.settings['something'])
+        self.assertEqual('child paths', recipe.paths['something'])
+        self.assertEqual({
+            'something 1': 1,
+            'something 2': 2,
+            'something': 'child',
+        }, recipe.tasks)
         self.assertEqual(id(recipe.settings), id(self.recipe.settings))
         self.assertEqual(id(recipe.paths), id(self.recipe.paths))
-        self.assertEqual(['something 1', 'something 2'], recipe.tasks)
+        self.assertEqual(id(recipe.tasks), id(self.recipe.tasks))
 
     def test_add_task(self):
         """Should set tasks it's parent to self, and add this task to
@@ -76,4 +83,4 @@ class RecipeTest(TestCase):
         self.recipe.add_task(task)
 
         self.assertEqual(self.recipe, task.recipe)
-        self.assertEqual([task], self.recipe.tasks)
+        self.assertEqual({'/exampletask': task}, self.recipe.tasks)

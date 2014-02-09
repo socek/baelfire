@@ -131,7 +131,8 @@ class TaskTest(TestCase):
         self.add_mock_object(self.task,
                              'is_rebuild_needed',
                              return_value=False)
-        self.task.run(force=True)
+        self.task.assign_kwargs(force=True)
+        self.task.run()
 
         self.assertEqual(True, self.task.made)
 

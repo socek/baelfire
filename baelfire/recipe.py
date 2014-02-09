@@ -1,3 +1,5 @@
+from urllib.parse import urlparse, parse_qs
+
 from smallsettings import Settings, Paths
 
 from baelfire import VERSION
@@ -36,6 +38,15 @@ class Recipe(object):
     def add_task(self, task):
         self.tasks[task.get_path()] = task
         task.assign_recipe(self)
+
+    def get_task(self, url):
+        url = urlparse(url)
+        path = url.path
+        kwargs = parse_qs(url.query)
+
+        task = self.tasks[path]
+        task.assign_kwargs(**kwargs)
+        return task
 
     def create_settings(self):
         pass

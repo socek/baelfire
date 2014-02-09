@@ -84,3 +84,17 @@ class RecipeTest(TestCase):
 
         self.assertEqual(self.recipe, task.recipe)
         self.assertEqual({'/exampletask': task}, self.recipe.tasks)
+
+    def test_get_task(self):
+        """Should return task with assigned kwargs from url."""
+        source_task = ExampleTask()
+        self.recipe.add_task(source_task)
+
+        task = self.recipe.get_task(
+            '/exampletask?arg=something&arg=somethin2&second_arg=metoo')
+
+        self.assertEqual(task, source_task)
+        self.assertEqual({
+            'arg': ['something', 'somethin2'],
+            'second_arg': ['metoo'],
+        }, task.kwargs)

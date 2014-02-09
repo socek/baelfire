@@ -4,6 +4,10 @@ class Task(object):
         self.recipe = None
         self.path = None
         self.dependencys = None
+        self.kwargs = {}
+
+    def assign_kwargs(self, **kwargs):
+        self.kwargs.update(kwargs)
 
     def assign_recipe(self, recipe):
         self.recipe = recipe
@@ -43,7 +47,7 @@ class Task(object):
 
         return need_rebuild
 
-    def run(self, **kwargs):
-        force = kwargs.pop('force', False)
+    def run(self):
+        force = self.kwargs.pop('force', False)
         if self.is_rebuild_needed() or force:
-            self.make(**kwargs)
+            self.make(**self.kwargs)

@@ -69,7 +69,7 @@ class TaskTest(TestCase):
     def test_paths(self):
         """Should return paths object from recipe"""
         recipe = ExampleRecipe()
-        recipe.paths = 'paths'
+        recipe._paths = 'paths'
         self.task.assign_recipe(recipe)
 
         self.assertEqual('paths', self.task.paths)
@@ -77,7 +77,7 @@ class TaskTest(TestCase):
     def test_settings(self):
         """Should return settings object from recipe"""
         recipe = ExampleRecipe()
-        recipe.settings = 'settings'
+        recipe._settings = 'settings'
         self.task.assign_recipe(recipe)
 
         self.assertEqual('settings', self.task.settings)

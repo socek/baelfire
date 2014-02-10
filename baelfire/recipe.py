@@ -9,7 +9,7 @@ class Recipe(object):
 
     def __init__(self):
         self.recipes = []
-        self.tasks = {}
+        self._tasks = {}
         self.parent = None
         self.init_settings({'minimal version': VERSION}, {})
 
@@ -18,8 +18,8 @@ class Recipe(object):
         self.gather_tasks()
 
     def init_settings(self, settings, paths):
-        self.settings = Settings(settings)
-        self.paths = Paths(paths)
+        self._settings = Settings(settings)
+        self._paths = Paths(paths)
 
     def add_recipe(self, recipe):
         recipe.assign_parent(self)
@@ -27,13 +27,9 @@ class Recipe(object):
 
     def assign_parent(self, recipe):
         self.parent = recipe
-        recipe.settings.update(self.settings)
-        recipe.paths.update(self.paths)
-        recipe.tasks.update(self.tasks)
-
-        self.settings = recipe.settings
-        self.paths = recipe.paths
-        self.tasks = recipe.tasks
+        recipe._settings.update(self._settings)
+        recipe._paths.update(self._paths)
+        recipe._tasks.update(self._tasks)
 
     def add_task(self, task):
         self.tasks[task.get_path()] = task
@@ -56,3 +52,24 @@ class Recipe(object):
 
     def gather_tasks(self):
         pass
+
+    @property
+    def tasks(self):
+        if self.parent is None:
+            return self._tasks
+        else:
+            return self.parent.tasks
+
+    @property
+    def settings(self):
+        if self.parent is None:
+            return self._settings
+        else:
+            return self.parent.settings
+
+    @property
+    def paths(self):
+        if self.parent is None:
+            return self._paths
+        else:
+            return self.parent.paths

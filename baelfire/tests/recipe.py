@@ -55,10 +55,10 @@ class RecipeTest(TestCase):
         recipe = Recipe()
         recipe.settings['something'] = 'parent settings'
         recipe.paths['something'] = 'parent paths'
-        recipe.tasks = {'something 1': 1, 'something': 'parent'}
+        recipe._tasks = {'something 1': 1, 'something': 'parent'}
         self.recipe.settings['something'] = 'child settings'
         self.recipe.paths['something'] = 'child paths'
-        self.recipe.tasks = {'something 2': 2, 'something': 'child'}
+        self.recipe._tasks = {'something 2': 2, 'something': 'child'}
 
         self.recipe.assign_parent(recipe)
 

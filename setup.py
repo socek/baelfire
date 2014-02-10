@@ -17,4 +17,8 @@ if __name__ == '__main__':
           packages=find_packages(),
           install_requires=install_requires,
           test_suite='baelfire.tests.get_all_test_suite',
+          entry_points="""\
+              [console_scripts]
+                  bael = baelfire.application.application:run
+          """,
           )

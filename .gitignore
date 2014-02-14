@@ -8,3 +8,5 @@ htmlcov
 coverage
 *.log
 run
+testrecipe
+.bael.init

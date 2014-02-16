@@ -1,7 +1,7 @@
 from os import path
 
 
-from .command import Command
+from ..command import Command
 from .models import InitFile
 from .error import RecipePackageNotValidError
 

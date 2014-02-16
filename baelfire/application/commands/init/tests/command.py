@@ -5,9 +5,9 @@ from soktest import TestCase
 
 from ..models import InitFile
 from ..error import RecipePackageNotValidError
-from ..init import Init
+from ..command import Init
 
-PREFIX = 'baelfire.application.commands.init.'
+PREFIX = 'baelfire.application.commands.init.command.'
 
 
 class InitTest(TestCase):

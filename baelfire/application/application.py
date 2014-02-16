@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 
-from .commands.init import Init
+from .commands.init.command import Init
 
 
 class Application(object):

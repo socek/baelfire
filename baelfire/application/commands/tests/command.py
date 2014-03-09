@@ -11,16 +11,26 @@ class CommandTest(TestCase):
         self.command = Command('one', 'two', three='3')
 
     def test_init(self):
-        self.assertEqual('one', self.command.name)
-        self.assertEqual(('two',), self.command.args)
-        self.assertEqual({'three': '3'}, self.command.kwargs)
+        self.assertEqual(
+            'Command', self.command.name)
+        self.assertEqual(('one', 'two'), self.command.args)
+        self.assertEqual(
+            {
+                'three': '3',
+                'dest': 'Command'
+            },
+            self.command.kwargs)
 
     def test_assign_argument(self):
         """Should user parser to add command argument with .args and .kwargs"""
         parser = MagicMock()
         self.command.assign_argument(parser)
 
-        parser.add_argument.assert_called_once_with('two', three='3')
+        parser.add_argument.assert_called_once_with(
+            'one',
+            'two',
+            three='3',
+            dest='Command')
 
     def test_assign_application(self):
         """Should assign parent application"""

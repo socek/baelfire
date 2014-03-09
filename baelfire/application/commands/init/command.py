@@ -9,10 +9,8 @@ from .error import RecipePackageNotValidError
 class Init(Command):
 
     def __init__(self):
-        super().__init__('init',
-                         '-i',
+        super().__init__('-i',
                          '--init',
-                         dest='init',
                          nargs=1,
                          help='Inits package.')
 

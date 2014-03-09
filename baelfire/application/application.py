@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 
 from .commands.init.command import Init
+from .commands.main.command import RunTask
 
 
 class Application(object):
@@ -13,6 +14,7 @@ class Application(object):
 
     def gather_commands(self):
         self.add_command(Init())
+        self.add_command(RunTask())
 
     def gather_options(self):
         self.option_names = [

@@ -1,9 +1,9 @@
 class Command(object):
 
-    def __init__(self, name, *args, **kwargs):
-        self.name = name
+    def __init__(self, *args, **kwargs):
         self.args = args
         self.kwargs = kwargs
+        self.kwargs['dest'] = self.name
 
     def assign_argument(self, parser):
         parser.add_argument(*self.args, **self.kwargs)
@@ -14,3 +14,7 @@ class Command(object):
     def __call__(self, args=()):
         self.args = args
         self.make()
+
+    @property
+    def name(self):
+        return self.__class__.__name__

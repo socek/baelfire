@@ -37,7 +37,12 @@ class ApplicationTest(TestCase):
 
     def test_init(self):
         """Should gather options and commands"""
-        self.assertEqual(['init'], list(self.app.commands))
+        self.assertEqual(
+            [
+                'Init',
+                'RunTask'
+            ],
+            sorted(list(self.app.commands)))
         self.assertEqual({}, self.app.options)
         self.assertEqual(['log'], self.app.option_names)
 
@@ -46,7 +51,8 @@ class ApplicationTest(TestCase):
         self.app.commands = {}
         self.app.gather_commands()
 
-        self.assertEqual(self.app, self.app.commands['init'].application)
+        command_key = 'Init'
+        self.assertEqual(self.app, self.app.commands[command_key].application)
 
     def test_create_parser(self):
         """Should create argument parser and add all commands to it."""
@@ -58,7 +64,7 @@ class ApplicationTest(TestCase):
                          self.app.parser)
 
         self.assertEqual(
-            2,
+            3,
             self.mocks['ArgumentParser'].return_value.add_argument.call_count)
 
     def test_parse_command_line(self):
@@ -93,8 +99,8 @@ class ApplicationTest(TestCase):
 
     def test_run_command_or_print_help_run_command(self):
         """Should run command which is in .args"""
-        self.app.args = {'example': 'something'}
         cmd = ExampleCommand()
+        self.app.args = {cmd.name: 'something'}
         self.app.add_command(cmd)
 
         self.app.run_command_or_print_help()

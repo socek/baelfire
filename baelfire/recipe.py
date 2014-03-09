@@ -3,6 +3,7 @@ from urllib.parse import urlparse, parse_qs
 from smallsettings import Settings, Paths
 
 from baelfire import VERSION
+from .error import TaskNotFound
 
 
 class Recipe(object):
@@ -40,9 +41,12 @@ class Recipe(object):
         path = url.path
         kwargs = parse_qs(url.query)
 
-        task = self.tasks[path]
-        task.assign_kwargs(**kwargs)
-        return task
+        try:
+            task = self.tasks[path]
+            task.assign_kwargs(**kwargs)
+            return task
+        except KeyError:
+            raise TaskNotFound(path)
 
     def create_settings(self):
         pass

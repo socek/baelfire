@@ -5,13 +5,15 @@ from soktest import TestCase
 
 from ..models import InitFile
 
+PREFIX = 'baelfire.application.commands.init.models.'
+
 
 class InitFileTest(TestCase):
 
     def setUp(self):
         super().setUp()
         self.initfile = InitFile()
-        self.add_mock_object(self.initfile, 'filename', '/tmp/.beal.init')
+        self.add_mock_object(self.initfile, 'filename', '/tmp/.bael.init')
 
     def tearDown(self):
         if path.exists(self.initfile.filename):
@@ -35,7 +37,7 @@ class InitFileTest(TestCase):
         self.assertEqual('mypackage', self.initfile.package)
 
     def test_save(self):
-        """Should save initfile data to a '.beal.init' file with json
+        """Should save initfile data to a '.bael.init' file with json
         encoded"""
         self.initfile.package = 'myawsomepackage'
         self.initfile.save()
@@ -46,7 +48,7 @@ class InitFileTest(TestCase):
         self.assertEqual({'package': 'myawsomepackage'}, data)
 
     def test_load(self):
-        """Shouls load initfile data from a proper '.beal.init' file with
+        """Shouls load initfile data from a proper '.bael.init' file with
         json encoded"""
         testfile = open(self.initfile.filename, 'w')
         json.dump({'package': 'mypackage2'}, testfile)
@@ -77,3 +79,19 @@ class InitFileTest(TestCase):
         recipe = self.initfile.get_recipe()
 
         self.assertEqual(self.initfile.module.recipe, recipe)
+
+    def test_is_present(self):
+        """Should return true if init file is present."""
+        self.add_mock(PREFIX + 'path')
+        self.mocks['path'].exists.return_value = True
+
+        self.assertEqual(True, self.initfile.is_present())
+        self.mocks['path'].exists.assert_called_once_with('/tmp/.bael.init')
+
+    def test_is_present_failed(self):
+        """Should return false if init file is missing."""
+        self.add_mock(PREFIX + 'path')
+        self.mocks['path'].exists.return_value = False
+
+        self.assertEqual(False, self.initfile.is_present())
+        self.mocks['path'].exists.assert_called_once_with('/tmp/.bael.init')

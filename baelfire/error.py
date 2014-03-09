@@ -14,3 +14,12 @@ class CouldNotCreateFile(Exception):
 
     def __str__(self):
         return 'Error: Could not create file %s' % (self.filename)
+
+
+class TaskNotFound(Exception):
+
+    def __init__(self, task):
+        self.task = task
+
+    def __str__(self):
+        return 'Error: Task "%s" can not be found!' % (self.task)

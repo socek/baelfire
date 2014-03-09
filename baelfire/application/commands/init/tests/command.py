@@ -17,10 +17,15 @@ class InitTest(TestCase):
         self.command = Init()
 
     def test_init(self):
-        self.assertEqual('init', self.command.name)
+        self.assertEqual('Init',
+                         self.command.name)
         self.assertEqual(('-i', '--init'), self.command.args)
         self.assertEqual(
-            {'dest': 'init', 'nargs': 1, 'help': 'Inits package.'},
+            {
+                'dest': 'Init',
+                'nargs': 1,
+                'help': 'Inits package.'
+            },
             self.command.kwargs)
 
     def test_module_exists_dir(self):

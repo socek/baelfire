@@ -1,4 +1,5 @@
 import json
+from os import path
 
 
 class InitFile(object):
@@ -34,3 +35,7 @@ class InitFile(object):
                 self.package + '.setup', globals(), locals()).setup
 
         return self.module.recipe
+
+    def is_present(self):
+        """Is init file present in actual directory?"""
+        return path.exists(self.filename)

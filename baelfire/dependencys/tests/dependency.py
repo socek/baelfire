@@ -1,4 +1,8 @@
+from mock import MagicMock
+
 from soktest import TestCase
+
+from baelfire.recipe import Recipe
 from baelfire.tests.task import ExampleTask
 from ..dependency import Dependency, AlwaysRebuild
 
@@ -61,11 +65,33 @@ class DependencyTest(TestCase):
         task.dependencys = []
         task.generate_dependencys()
         task.kwargs['force'] = True
+        self.add_mock_object(task, 'logme')
         self.dependency.assign_parent(task)
 
         self.dependency()
 
         self.assertEqual(True, task.made)
+
+    def test_name(self):
+        """Should return class name"""
+        self.assertEqual('ExampleDependency', self.dependency.name)
+
+    def test_logme(self):
+        """Should add dependency to log in the recipe."""
+        self.dependency.task = MagicMock()
+        self.dependency.task.name = 'taskname'
+        self.dependency.task.recipe = Recipe()
+        self.dependency.task.recipe.log.tasks[
+            'taskname'] = {'dependencys': []}
+        self.dependency.logdata = {
+            'data': 'example data',
+        }
+        self.dependency.logme()
+
+        self.assertEqual(
+            [{'name': 'ExampleDependency', 'data': {'data': 'example data'}}],
+            self.dependency.task.recipe.log.tasks['taskname']['dependencys'],
+        )
 
 
 class AlwaysRebuildTest(TestCase):

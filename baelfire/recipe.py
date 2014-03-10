@@ -4,6 +4,7 @@ from smallsettings import Settings, Paths
 
 from baelfire import VERSION
 from .error import TaskNotFound
+from .log import TaskLogger
 
 
 class Recipe(object):
@@ -12,6 +13,7 @@ class Recipe(object):
         self.recipes = []
         self._tasks = {}
         self.parent = None
+        self.log = TaskLogger()
         self.init_settings({'minimal version': VERSION}, {})
 
         self.create_settings()

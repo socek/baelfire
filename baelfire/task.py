@@ -50,8 +50,21 @@ class Task(object):
     def pre_run(self):
         pass
 
+    def logme(self, force, needed, success):
+        logdata = {
+            'force': force,
+        }
+        self.recipe.log.add_task(self, logdata)
+
     def run(self):
         self.pre_run()
         force = self.kwargs.pop('force', False)
-        if self.is_rebuild_needed() or force:
-            self.make(**self.kwargs)
+        success = False
+        needed = self.is_rebuild_needed()
+
+        try:
+            if needed or force:
+                self.make(**self.kwargs)
+                success = True
+        finally:
+            self.logme(force, needed, success)

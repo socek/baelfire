@@ -1,3 +1,5 @@
+from mock import MagicMock
+
 from soktest import TestCase
 
 from .recipe import ExampleRecipe
@@ -113,6 +115,7 @@ class TaskTest(TestCase):
     def test_run_true(self):
         """Should run make when rebuild is needed."""
         self.add_mock_object(self.task, 'is_rebuild_needed', return_value=True)
+        self.task.recipe = MagicMock()
         self.task.run()
 
         self.assertEqual(True, self.task.made)
@@ -122,6 +125,7 @@ class TaskTest(TestCase):
         self.add_mock_object(self.task,
                              'is_rebuild_needed',
                              return_value=False)
+        self.add_mock_object(self.task, 'logme')
         self.task.run()
 
         self.assertEqual(False, self.task.made)
@@ -132,6 +136,7 @@ class TaskTest(TestCase):
                              'is_rebuild_needed',
                              return_value=False)
         self.task.assign_kwargs(force=True)
+        self.add_mock_object(self.task, 'logme')
         self.task.run()
 
         self.assertEqual(True, self.task.made)

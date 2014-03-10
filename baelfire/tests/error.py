@@ -15,3 +15,8 @@ class ErrorsTests(TestCase):
         """Should create CouldNotCreateFile error with filename."""
         er = error.CouldNotCreateFile('filename')
         self.assertEqual('Error: Could not create file filename', str(er))
+
+    def test_TaskNotFound(self):
+        """Should create TaskNotFound error with task name."""
+        er = error.TaskNotFound('task_me')
+        self.assertEqual('Error: Task "task_me" can not be found!', str(er))

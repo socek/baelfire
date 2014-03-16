@@ -20,3 +20,9 @@ class ErrorsTests(TestCase):
         """Should create TaskNotFound error with task name."""
         er = error.TaskNotFound('task_me')
         self.assertEqual('Error: Task "task_me" can not be found!', str(er))
+
+    def test_OnlyOneTaskInARowError(self):
+        """Should create OnlyOneTaskInARow error with task name."""
+        er = error.OnlyOneTaskInARow('task_me')
+        self.assertEqual('Error: Task "task_me" can be run only once!',
+                         str(er))

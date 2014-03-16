@@ -23,3 +23,12 @@ class TaskNotFound(Exception):
 
     def __str__(self):
         return 'Error: Task "%s" can not be found!' % (self.task)
+
+
+class OnlyOneTaskInARow(Exception):
+
+    def __init__(self, task):
+        self.task = task
+
+    def __str__(self):
+        return 'Error: Task "%s" can be run only once!' % (self.task)

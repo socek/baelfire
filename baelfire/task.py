@@ -29,6 +29,10 @@ class Task(object):
     def settings(self):
         return self.recipe.settings
 
+    @property
+    def name(self):
+        return self.__class__.__name__
+
     def get_path(self):
         """get_path(self) -> str
         Returns path (for using in command line) of the tasks provided by class
@@ -68,3 +72,7 @@ class Task(object):
                 success = True
         finally:
             self.logme(force, needed, success)
+
+    def was_runned(self):
+        """Was this task runned?"""
+        return self.name in self.recipe.log.tasks

@@ -64,7 +64,7 @@ class ApplicationTest(TestCase):
                          self.app.parser)
 
         self.assertEqual(
-            3,
+            4,
             self.mocks['ArgumentParser'].return_value.add_argument.call_count)
 
     def test_parse_command_line(self):
@@ -102,6 +102,7 @@ class ApplicationTest(TestCase):
         cmd = ExampleCommand()
         self.app.args = {cmd.name: 'something'}
         self.app.add_command(cmd)
+        self.app.raw_args = {}
 
         self.app.run_command_or_print_help()
 

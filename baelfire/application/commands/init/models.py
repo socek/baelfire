@@ -1,5 +1,6 @@
 import json
 from os import path
+from importlib import import_module
 
 
 class InitFile(object):
@@ -31,8 +32,7 @@ class InitFile(object):
 
     def get_recipe(self):
         if self.module is None:
-            self.module = __import__(
-                self.package + '.setup', globals(), locals()).setup
+            self.module = import_module(self.package + '.setup')
 
         return self.module.recipe
 

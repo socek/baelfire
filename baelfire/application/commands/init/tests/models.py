@@ -62,14 +62,14 @@ class InitFileTest(TestCase):
         """Should import package and return recipe which should be in
         setup.py"""
         self.initfile.package = 'mypackage'
-        self.add_mock('builtins.__import__')
+        self.add_mock(PREFIX + 'import_module')
         recipe = self.initfile.get_recipe()
 
         self.assertEqual(
-            self.mocks['__import__'].return_value.setup.recipe,
+            self.mocks['import_module'].return_value.recipe,
             recipe,
         )
-        self.mocks['__import__'].assert_called_once()
+        self.mocks['import_module'].assert_called_once_with('mypackage.setup')
 
     def test_get_recipe_without_import(self):
         self.initfile.package = 'mypackage'

@@ -11,8 +11,9 @@ class Command(object):
     def assign_application(self, application):
         self.application = application
 
-    def __call__(self, args=()):
+    def __call__(self, args=(), raw_args={}):
         self.args = args
+        self.raw_args = raw_args
         self.make()
 
     @property

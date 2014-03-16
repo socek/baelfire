@@ -34,10 +34,15 @@ class Application(object):
             '-l', '--log', dest='log', action='store_true',
             help='Set log level from "debug" or "info".')
 
+        self.parser.add_argument(
+            '-r', '--recipe', dest='recipe',
+            help='Use this recipe.',
+            )
+
     def parse_command_line(self):
-        args = vars(self.parser.parse_args())
+        self.raw_args = vars(self.parser.parse_args())
         self.args = {}
-        for key, value in args.items():
+        for key, value in self.raw_args.items():
             if value is not None:
                 self.args[key] = value
 
@@ -48,7 +53,7 @@ class Application(object):
     def run_command_or_print_help(self):
         if len(self.args) > 0:
             for name, value in self.args.items():
-                self.commands[name](value)
+                self.commands[name](value, self.raw_args)
         else:
             self.parser.print_help()
 

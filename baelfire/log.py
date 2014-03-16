@@ -23,6 +23,7 @@ class TaskLogger(object):
         })
 
     def save(self):
+        """Saves tasks log coded in json ordered by tasks execution."""
         log = open(self.filename, 'w')
         data = [task for key, task in self.tasks.items()]
         dump(data, log)

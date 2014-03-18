@@ -3,7 +3,7 @@ from io import StringIO
 from mock import MagicMock
 from soktest import TestCase
 
-from baelfire.log import TaskLogger
+from baelfire.log import TaskLogger, Logger
 
 
 class TaskLoggerTest(TestCase):
@@ -54,3 +54,47 @@ class TaskLoggerTest(TestCase):
         saved_data = loads(self.mocks['open'].return_value.getvalue())
 
         self.assertEqual([self.log.tasks['myname']], saved_data)
+
+
+class LoggerTest(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.log = Logger()
+        self.add_mock_object(self.log, 'common_log')
+        self.add_mock_object(self.log, 'task_log')
+
+    def test_info(self):
+        """Should use .info from common logger."""
+        result = self.log.info('arg', kw=1)
+
+        self.assertEqual(self.mocks['common_log'].info.return_value, result)
+        self.mocks['common_log'].info.assert_called_once_with('arg', kw=1)
+
+    def test_error(self):
+        """Should use .error from common logger."""
+        result = self.log.error('arg', kw=1)
+
+        self.assertEqual(self.mocks['common_log'].error.return_value, result)
+        self.mocks['common_log'].error.assert_called_once_with('arg', kw=1)
+
+    def test_warning(self):
+        """Should use .warning from common logger."""
+        result = self.log.warning('arg', kw=1)
+
+        self.assertEqual(self.mocks['common_log'].warning.return_value, result)
+        self.mocks['common_log'].warning.assert_called_once_with('arg', kw=1)
+
+    def test_debug(self):
+        """Should use .debug from common logger."""
+        result = self.log.debug('arg', kw=1)
+
+        self.assertEqual(self.mocks['common_log'].debug.return_value, result)
+        self.mocks['common_log'].debug.assert_called_once_with('arg', kw=1)
+
+    def test_task(self):
+        """Should use .info from task logger."""
+        result = self.log.task('arg', kw=1)
+
+        self.assertEqual(self.mocks['task_log'].info.return_value, result)
+        self.mocks['task_log'].info.assert_called_once_with('arg', kw=1)

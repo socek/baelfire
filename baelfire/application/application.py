@@ -37,7 +37,7 @@ class Application(object):
         self.parser.add_argument(
             '-r', '--recipe', dest='recipe',
             help='Use this recipe.',
-            )
+        )
 
     def parse_command_line(self):
         self.raw_args = vars(self.parser.parse_args())
@@ -52,7 +52,10 @@ class Application(object):
 
     def run_command_or_print_help(self):
         if len(self.args) > 0:
-            for name, value in self.args.items():
+            commands = filter(
+                lambda command: command[0] in self.commands,
+                self.args.items())
+            for name, value in commands:
                 self.commands[name](value, self.raw_args)
         else:
             self.parser.print_help()

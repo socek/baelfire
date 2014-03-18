@@ -1,3 +1,5 @@
+import logging
+
 from soktest import TestCase
 
 from ..command import RunTask
@@ -47,7 +49,7 @@ class RunTaskTest(TestCase):
         result = self.command.get_recipe()
 
         self.assertEqual(
-            self.mocks['import_module'].return_value.recipe, result)
+            self.mocks['import_module'].return_value.recipe(), result)
 
         self.mocks['import_module'].assert_called_once_with('myrecipe')
 
@@ -94,6 +96,7 @@ class RunTaskTest(TestCase):
     def test_run_tasks(self):
         """Should run all the tasks from run_list, but only once."""
         recipe = Recipe()
+        recipe.log.task_log.setLevel(logging.CRITICAL)
         task = ExampleTask()
         recipe.add_task(task)
 
@@ -106,6 +109,7 @@ class RunTaskTest(TestCase):
     def test_make(self):
         """Should get recipe, gather tasks and run them."""
         recipe = Recipe()
+        recipe.log.task_log.setLevel(logging.CRITICAL)
         task = ExampleTask()
         recipe.add_task(task)
 

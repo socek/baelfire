@@ -22,14 +22,6 @@ class Task(object):
         return None
 
     @property
-    def paths(self):
-        return self.recipe.paths
-
-    @property
-    def settings(self):
-        return self.recipe.settings
-
-    @property
     def name(self):
         return self.__class__.__name__
 
@@ -58,7 +50,7 @@ class Task(object):
         logdata = {
             'force': force,
         }
-        self.recipe.log.add_task(self, logdata)
+        self.recipe.data_log.add_task(self, logdata)
 
     def run(self):
         self.pre_run()
@@ -68,6 +60,7 @@ class Task(object):
 
         try:
             if needed or force:
+                self.log.task(self.name)
                 self.make(**self.kwargs)
                 success = True
         finally:
@@ -75,4 +68,16 @@ class Task(object):
 
     def was_runned(self):
         """Was this task runned?"""
-        return self.name in self.recipe.log.tasks
+        return self.name in self.recipe.data_log.tasks
+
+    @property
+    def paths(self):
+        return self.recipe.paths
+
+    @property
+    def settings(self):
+        return self.recipe.settings
+
+    @property
+    def log(self):
+        return self.recipe.log

@@ -76,6 +76,7 @@ class RecipeTest(TestCase):
         self.assertEqual(id(recipe.settings), id(self.recipe.settings))
         self.assertEqual(id(recipe.paths), id(self.recipe.paths))
         self.assertEqual(id(recipe.tasks), id(self.recipe.tasks))
+        self.assertEqual(id(recipe.data_log), id(self.recipe.data_log))
 
     def test_add_task(self):
         """Should set tasks it's parent to self, and add this task to

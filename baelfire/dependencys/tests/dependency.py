@@ -62,6 +62,7 @@ class DependencyTest(TestCase):
     def test_run_parent(self):
         """Calling dependency should run parent when exists."""
         task = ExampleTask()
+        task.recipe = MagicMock()
         task.dependencys = []
         task.generate_dependencys()
         task.kwargs['force'] = True
@@ -81,7 +82,7 @@ class DependencyTest(TestCase):
         self.dependency.task = MagicMock()
         self.dependency.task.name = 'taskname'
         self.dependency.task.recipe = Recipe()
-        self.dependency.task.recipe.log.tasks[
+        self.dependency.task.recipe.data_log.tasks[
             'taskname'] = {'dependencys': []}
         self.dependency.logdata = {
             'data': 'example data',
@@ -90,7 +91,7 @@ class DependencyTest(TestCase):
 
         self.assertEqual(
             [{'name': 'ExampleDependency', 'data': {'data': 'example data'}}],
-            self.dependency.task.recipe.log.tasks['taskname']['dependencys'],
+            self.dependency.task.recipe.data_log.tasks['taskname']['dependencys'],
         )
 
 

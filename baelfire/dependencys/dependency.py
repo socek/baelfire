@@ -45,7 +45,7 @@ class Dependency(object):
         return self._log_method('make')
 
     def logme(self):
-        self.task.recipe.log.add_dependecy(self.task, self, self.logdata)
+        self.task.recipe.data_log.add_dependecy(self.task, self, self.logdata)
 
 
 class AlwaysRebuild(Dependency):

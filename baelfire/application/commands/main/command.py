@@ -15,8 +15,8 @@ class RunTask(Command):
 
     def get_recipe(self):
         """Gets recipe from command switch or init file."""
-        if 'recipe' in self.raw_args:
-            return import_module(self.raw_args['recipe']).recipe
+        if 'recipe' in self.raw_args and self.raw_args['recipe'] is not None:
+            return import_module(self.raw_args['recipe']).recipe()
         else:
             initfile = InitFile()
             if initfile.is_present():

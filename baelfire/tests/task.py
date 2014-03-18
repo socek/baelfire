@@ -137,6 +137,7 @@ class TaskTest(TestCase):
                              return_value=False)
         self.task.assign_kwargs(force=True)
         self.add_mock_object(self.task, 'logme')
+        self.task.recipe = MagicMock()
         self.task.run()
 
         self.assertEqual(True, self.task.made)
@@ -144,3 +145,11 @@ class TaskTest(TestCase):
     def test_get_output_file(self):
         """Should return file path"""
         self.assertEqual('/tmp', self.task.get_output_file())
+
+    def test_log(self):
+        """Should return log from recipe"""
+        recipe = ExampleRecipe()
+        recipe.log = 'log'
+        self.task.assign_recipe(recipe)
+
+        self.assertEqual('log', self.task.log)

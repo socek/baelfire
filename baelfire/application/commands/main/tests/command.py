@@ -99,6 +99,7 @@ class RunTaskTest(TestCase):
         recipe.log.task_log.setLevel(logging.CRITICAL)
         task = ExampleTask()
         recipe.add_task(task)
+        recipe.validate_dependencys()
 
         self.command.run_list = [task, task]
 
@@ -112,6 +113,7 @@ class RunTaskTest(TestCase):
         recipe.log.task_log.setLevel(logging.CRITICAL)
         task = ExampleTask()
         recipe.add_task(task)
+        recipe.validate_dependencys()
 
         self.command.args = ['/exampletask']
         self.command.recipe = recipe

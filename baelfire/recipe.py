@@ -20,6 +20,7 @@ class Recipe(object):
         self.create_settings()
         self.gather_recipes()
         self.gather_tasks()
+        self.validate_dependencys()
 
     def init_settings(self, settings, paths):
         self._settings = Settings(settings)
@@ -51,6 +52,10 @@ class Recipe(object):
             return task
         except KeyError:
             raise TaskNotFound(path)
+
+    def validate_dependencys(self):
+        for task in self.tasks.values():
+            task.generate_dependencys()
 
     def create_settings(self):
         pass

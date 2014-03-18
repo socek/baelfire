@@ -12,7 +12,6 @@ class Task(object):
     def assign_recipe(self, recipe):
         self.recipe = recipe
         self.dependencys = []
-        self.generate_dependencys()
 
     def add_dependecy(self, dependency):
         dependency.assign_task(self)

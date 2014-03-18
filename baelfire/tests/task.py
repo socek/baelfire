@@ -96,15 +96,9 @@ class TaskTest(TestCase):
         self.task.dep_2.return_value = True
         recipe = ExampleRecipe()
         self.task.assign_recipe(recipe)
+        self.task.generate_dependencys()
 
         self.assertEqual(True, self.task.is_rebuild_needed())
-
-    def test_assign_recipe_error(self):
-        """Should raise error, when no generate_dependencys method
-        specyfied."""
-        recipe = ExampleRecipe()
-        task = Task()
-        self.assertRaises(AttributeError, task.assign_recipe, recipe)
 
     def test_run_error(self):
         """Should raise error, when no make method specyfied."""

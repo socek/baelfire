@@ -108,6 +108,17 @@ class FileChangedTest(TestCase):
             destination)
         self.assertEqual(True, result)
 
+    def test_is_destination_file_older_when_no_file(self):
+        """Should return true if task file does not exists."""
+        destination = NamedTemporaryFile(delete=False).name
+        sleep(0.01)
+        source = NamedTemporaryFile().name
+
+        result = self.dependency.is_destination_file_older(
+            source,
+            destination)
+        self.assertEqual(False, result)
+
     def test_is_destination_file_older_fail(self):
         """Should return false if source path is older"""
         source = NamedTemporaryFile(delete=False).name

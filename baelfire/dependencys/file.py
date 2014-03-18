@@ -30,10 +30,7 @@ class FileChanged(FileDependency):
                 raise CouldNotCreateFile(filename)
 
     def is_destination_file_older(self, source, destination):
-        if getmtime(source) > getmtime(destination):
-            return True
-        else:
-            return False
+        return exists(source) and getmtime(source) > getmtime(destination)
 
     def make(self):
         for filename in self.get_filenames():

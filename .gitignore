@@ -10,3 +10,4 @@ coverage
 run
 testrecipe
 .bael.init
+.baelfire.lastlog.json

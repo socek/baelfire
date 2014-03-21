@@ -47,3 +47,4 @@ class RunTask(Command):
         self.recipe = self.get_recipe()
         self.gather_tasks()
         self.run_tasks()
+        self.recipe.data_log.save()

@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 class TaskLogger(object):
 
-    filename = '.lastlog.json'
+    filename = '.baelfire.lastlog.json'
 
     def __init__(self):
         self.tasks = OrderedDict()
@@ -32,6 +32,7 @@ class TaskLogger(object):
 
 
 class Logger(object):
+    filename = '.baelfire.log'
 
     def __init__(self):
         self.common_log = logging.getLogger('common')
@@ -42,7 +43,7 @@ class Logger(object):
         self.init_task()
 
     def init_file_handler(self):
-        self.file_handler = logging.FileHandler('.baelfire.log')
+        self.file_handler = logging.FileHandler(self.filename)
         self.file_handler.setLevel(logging.DEBUG)
         self.file_handler.setFormatter(logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s'))

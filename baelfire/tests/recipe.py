@@ -1,6 +1,6 @@
 from soktest import TestCase
 
-from baelfire.error import TaskNotFound
+from baelfire.error import TaskNotFoundError
 from baelfire.recipe import Recipe
 from baelfire.task import Task
 from baelfire import VERSION
@@ -109,10 +109,10 @@ class RecipeTest(TestCase):
         }, task.kwargs)
 
     def test_get_task_bad_name(self):
-        """Should raise TaskNotFound when task is not found."""
+        """Should raise TaskNotFoundError when task is not found."""
 
         self.assertRaises(
-            TaskNotFound,
+            TaskNotFoundError,
             self.recipe.get_task,
             '/exampletask?arg=something&arg=somethin2&second_arg=metoo',
         )

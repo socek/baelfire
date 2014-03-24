@@ -1,6 +1,7 @@
 from importlib import import_module
 
 from .init.models import InitFile
+from baelfire.error import RecipeNotFoundError, BadRecipePathError
 
 
 class Command(object):
@@ -28,13 +29,19 @@ class Command(object):
     def get_recipe(self):
         """Gets recipe from command switch or init file."""
         if 'recipe' in self.raw_args and self.raw_args['recipe'] is not None:
-            return import_module(self.raw_args['recipe']).recipe()
+            try:
+                return import_module(self.raw_args['recipe']).recipe()
+            except ImportError:
+                raise BadRecipePathError()
+            except AttributeError:
+                raise RecipeNotFoundError()
         else:
             initfile = InitFile()
             if initfile.is_present():
                 initfile.load()
                 return initfile.get_recipe()()
-        return None
+
+        raise RecipeNotFoundError()
 
 
 class TriggeredCommand(Command):

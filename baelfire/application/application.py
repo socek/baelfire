@@ -3,6 +3,7 @@ from argparse import ArgumentParser
 from .commands.init.command import Init
 from .commands.main.command import RunTask
 from .commands.list.command import ListTasks
+from baelfire.error import RecipeNotFoundError, BadRecipePathError
 
 
 class Application(object):
@@ -62,7 +63,10 @@ class Application(object):
         self.create_parser()
         self.parse_command_line()
         self.convert_options()
-        self.run_command_or_print_help()
+        try:
+            self.run_command_or_print_help()
+        except (RecipeNotFoundError, BadRecipePathError) as error:
+            print(error)
 
 
 def run():

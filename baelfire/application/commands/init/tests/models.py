@@ -4,6 +4,7 @@ from os import unlink, path
 from soktest import TestCase
 
 from ..models import InitFile
+from baelfire.error import BadRecipePathError, RecipeNotFoundError
 
 PREFIX = 'baelfire.application.commands.init.models.'
 
@@ -79,6 +80,21 @@ class InitFileTest(TestCase):
         recipe = self.initfile.get_recipe()
 
         self.assertEqual(self.initfile.module.recipe, recipe)
+
+    def test_get_recipe_bad_path(self):
+        """Should raise BadRecipePathError when import error raised."""
+        self.initfile.package = 'mypackage'
+        self.add_mock(PREFIX + 'import_module', side_effect=ImportError())
+
+        self.assertRaises(BadRecipePathError, self.initfile.get_recipe)
+
+    def test_get_recipe_no_recipe_found(self):
+        """Should raise BadRecipePathError when import error raised."""
+        self.initfile.package = 'mypackage'
+        self.add_mock(PREFIX + 'import_module')
+        self.mocks['import_module'].return_value = object()
+
+        self.assertRaises(RecipeNotFoundError, self.initfile.get_recipe)
 
     def test_is_present(self):
         """Should return true if init file is present."""

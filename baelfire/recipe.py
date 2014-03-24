@@ -3,7 +3,7 @@ from urllib.parse import urlparse, parse_qs
 from smallsettings import Settings, Paths
 
 from baelfire import VERSION
-from .error import TaskNotFound
+from .error import TaskNotFoundError
 from .log import TaskLogger, Logger
 
 
@@ -51,7 +51,7 @@ class Recipe(object):
             task.assign_kwargs(**kwargs)
             return task
         except KeyError:
-            raise TaskNotFound(path)
+            raise TaskNotFoundError(path)
 
     def validate_dependencys(self):
         for task in self.tasks.values():

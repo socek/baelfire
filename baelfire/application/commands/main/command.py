@@ -1,5 +1,5 @@
 from ..command import Command
-from baelfire.error import OnlyOneTaskInARow
+from baelfire.error import OnlyOneTaskInARowError
 
 
 class RunTask(Command):
@@ -17,7 +17,7 @@ class RunTask(Command):
 
             task_path = task.get_path()
             if task_path in task_paths:
-                raise OnlyOneTaskInARow(task_path)
+                raise OnlyOneTaskInARowError(task_path)
             task_paths.append(task_path)
 
             self.run_list.append(task)

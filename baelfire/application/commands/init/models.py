@@ -2,6 +2,8 @@ import json
 from os import path
 from importlib import import_module
 
+from baelfire.error import BadRecipePathError, RecipeNotFoundError
+
 
 class InitFile(object):
 
@@ -32,9 +34,15 @@ class InitFile(object):
 
     def get_recipe(self):
         if self.module is None:
-            self.module = import_module(self.package + '.setup')
+            try:
+                self.module = import_module(self.package + '.setup')
+            except ImportError:
+                raise BadRecipePathError()
 
-        return self.module.recipe
+        try:
+            return self.module.recipe
+        except AttributeError:
+            raise RecipeNotFoundError()
 
     def is_present(self):
         """Is init file present in actual directory?"""

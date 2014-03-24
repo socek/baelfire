@@ -5,24 +5,34 @@ from baelfire import error
 
 class ErrorsTests(TestCase):
 
-    def test_TaskMustHaveOutputFile(self):
-        """Should create TaskMustHaveOutputFile error with name."""
-        er = error.TaskMustHaveOutputFile('name')
+    def test_TaskMustHaveOutputFileError(self):
+        """Should create TaskMustHaveOutputFileError error with name."""
+        er = error.TaskMustHaveOutputFileError('name')
         self.assertEqual(
             "Error: Taks must have output_file setted: name", str(er))
 
-    def test_CouldNotCreateFile(self):
-        """Should create CouldNotCreateFile error with filename."""
-        er = error.CouldNotCreateFile('filename')
+    def test_CouldNotCreateFileError(self):
+        """Should create CouldNotCreateFileError error with filename."""
+        er = error.CouldNotCreateFileError('filename')
         self.assertEqual('Error: Could not create file filename', str(er))
 
-    def test_TaskNotFound(self):
-        """Should create TaskNotFound error with task name."""
-        er = error.TaskNotFound('task_me')
+    def test_TaskNotFoundError(self):
+        """Should create TaskNotFoundError error with task name."""
+        er = error.TaskNotFoundError('task_me')
         self.assertEqual('Error: Task "task_me" can not be found!', str(er))
 
-    def test_OnlyOneTaskInARowError(self):
-        """Should create OnlyOneTaskInARow error with task name."""
-        er = error.OnlyOneTaskInARow('task_me')
+    def test_OnlyOneTaskInARowErrorError(self):
+        """Should create OnlyOneTaskInARowError error with task name."""
+        er = error.OnlyOneTaskInARowError('task_me')
         self.assertEqual('Error: Task "task_me" can be run only once!',
+                         str(er))
+
+    def test_BadRecipePathError(self):
+        er = error.BadRecipePathError()
+        self.assertEqual('Error: Bad path for recipe!',
+                         str(er))
+
+    def test_RecipeNotFoundError(self):
+        er = error.RecipeNotFoundError()
+        self.assertEqual('Error: No recipe found!',
                          str(er))

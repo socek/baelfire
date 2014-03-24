@@ -2,6 +2,7 @@ from mock import MagicMock
 from soktest import TestCase
 
 from ..command import Command, TriggeredCommand
+from baelfire.error import RecipeNotFoundError, BadRecipePathError
 
 PREFIX = 'baelfire.application.commands.command.'
 
@@ -51,8 +52,9 @@ class CommandTest(TestCase):
         self.assertEqual('args', self.command.args)
 
     def test_get_recipe_not(self):
-        """Should return None if no recipe in init file or command switch."""
-        self.assertEqual(None, self.command.get_recipe())
+        """Should raise RecipeNotFoundError if no recipe in init file or
+        command switch."""
+        self.assertRaises(RecipeNotFoundError, self.command.get_recipe)
 
     def test_get_recipe_from_command_line(self):
         """Should return recipe from module specifed by command."""
@@ -65,6 +67,21 @@ class CommandTest(TestCase):
             self.mocks['import_module'].return_value.recipe(), result)
 
         self.mocks['import_module'].assert_called_once_with('myrecipe')
+
+    def test_get_recipe_when_import_error_raised(self):
+        """Should raise BadRecipePathError when import error is raised."""
+        self.command.raw_args = {'recipe': 'myrecipe'}
+        self.add_mock(PREFIX + 'import_module', side_effect=ImportError())
+        self.assertRaises(BadRecipePathError, self.command.get_recipe)
+
+    def test_get_recipe_when_attribute_error_raised(self):
+        """Should raise RecipeNotFoundError when package have no recipe object
+        """
+        self.command.raw_args = {'recipe': 'myrecipe'}
+        self.add_mock(PREFIX + 'import_module')
+        self.mocks[
+            'import_module'].return_value.recipe.side_effect = AttributeError()
+        self.assertRaises(RecipeNotFoundError, self.command.get_recipe)
 
     def test_get_recipe_from_initfile(self):
         """Should rerurn recipe from init file."""

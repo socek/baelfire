@@ -1,4 +1,4 @@
-class TaskMustHaveOutputFile(Exception):
+class TaskMustHaveOutputFileError(Exception):
 
     def __init__(self, name):
         self.name = name
@@ -7,7 +7,7 @@ class TaskMustHaveOutputFile(Exception):
         return 'Error: Taks must have output_file setted: %s' % (self.name)
 
 
-class CouldNotCreateFile(Exception):
+class CouldNotCreateFileError(Exception):
 
     def __init__(self, filename):
         self.filename = filename
@@ -16,7 +16,7 @@ class CouldNotCreateFile(Exception):
         return 'Error: Could not create file %s' % (self.filename)
 
 
-class TaskNotFound(Exception):
+class TaskNotFoundError(Exception):
 
     def __init__(self, task):
         self.task = task
@@ -25,10 +25,22 @@ class TaskNotFound(Exception):
         return 'Error: Task "%s" can not be found!' % (self.task)
 
 
-class OnlyOneTaskInARow(Exception):
+class OnlyOneTaskInARowError(Exception):
 
     def __init__(self, task):
         self.task = task
 
     def __str__(self):
         return 'Error: Task "%s" can be run only once!' % (self.task)
+
+
+class BadRecipePathError(Exception):
+
+    def __str__(self):
+        return 'Error: Bad path for recipe!'
+
+
+class RecipeNotFoundError(Exception):
+
+    def __str__(self):
+        return 'Error: No recipe found!'

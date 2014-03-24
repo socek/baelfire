@@ -1,8 +1,9 @@
 from mock import MagicMock
 from soktest import TestCase
 
-from baelfire.application.application import run, Application
+from baelfire.error import RecipeNotFoundError
 from baelfire.application.commands.command import Command
+from baelfire.application.application import run, Application
 
 PREFIX = 'baelfire.application.application.'
 
@@ -123,3 +124,19 @@ class ApplicationTest(TestCase):
         self.mocks['parse_command_line'].assert_called_once_with()
         self.mocks['convert_options'].assert_called_once_with()
         self.mocks['run_command_or_print_help'].assert_called_once_with()
+
+    def test_call_when_no_recipe_found(self):
+        """Should print error on screen."""
+        self.add_mock_object(self.app, 'create_parser')
+        self.add_mock_object(self.app, 'parse_command_line')
+        self.add_mock_object(self.app, 'convert_options')
+        error = RecipeNotFoundError()
+        self.add_mock_object(
+            self.app,
+            'run_command_or_print_help',
+            side_effect=error)
+        self.add_mock('builtins.print')
+
+        self.app()
+
+        self.mocks['print'].assert_called_once_with(error)

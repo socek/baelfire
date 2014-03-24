@@ -5,7 +5,7 @@ from soktest import TestCase
 from ..command import RunTask
 from baelfire.task import Task
 from baelfire.recipe import Recipe
-from baelfire.error import OnlyOneTaskInARow
+from baelfire.error import OnlyOneTaskInARowError
 from baelfire.dependencys import AlwaysRebuild
 
 PREFIX = 'baelfire.application.commands.main.command.'
@@ -64,7 +64,7 @@ class RunTaskTest(TestCase):
             '/exampletask?data=one', '/exampletask?second=two']
         self.command.recipe = recipe
 
-        self.assertRaises(OnlyOneTaskInARow, self.command.gather_tasks)
+        self.assertRaises(OnlyOneTaskInARowError, self.command.gather_tasks)
 
     def test_run_tasks(self):
         """Should run all the tasks from run_list, but only once."""

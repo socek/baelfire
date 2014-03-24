@@ -3,7 +3,7 @@ from time import sleep
 
 from soktest import TestCase
 
-from baelfire.error import TaskMustHaveOutputFile, CouldNotCreateFile
+from baelfire.error import TaskMustHaveOutputFileError, CouldNotCreateFileError
 from baelfire.tests.task import ExampleTask as ExampleTaskBase, Task
 from ..dependency import Dependency
 from ..file import (FileChanged,
@@ -67,11 +67,11 @@ class FileChangedTest(TestCase):
         self.dependency = FileChanged(['example_file'])
 
     def test_validate_task_error(self):
-        """Should throw TaskMustHaveOutputFile when task has no output file."""
+        """Should throw TaskMustHaveOutputFileError when task has no output file."""
         task = Task()
         self.dependency.assign_task(task)
         self.assertRaises(
-            TaskMustHaveOutputFile,
+            TaskMustHaveOutputFileError,
             self.dependency.validate_task)
 
     def test_validate_task(self):
@@ -87,7 +87,7 @@ class FileChangedTest(TestCase):
         self.mocks['exists'].return_value = False
 
         self.assertRaises(
-            CouldNotCreateFile,
+            CouldNotCreateFileError,
             self.dependency.validate_dependency)
 
     def test_validate_dependency(self):

@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 
 from .commands.init.command import Init
 from .commands.main.command import RunTask
+from .commands.list.command import ListTasks
 
 
 class Application(object):
@@ -15,6 +16,7 @@ class Application(object):
     def gather_commands(self):
         self.add_command(Init())
         self.add_command(RunTask())
+        self.add_command(ListTasks())
 
     def gather_options(self):
         self.option_names = [
@@ -29,10 +31,6 @@ class Application(object):
         self.parser = ArgumentParser()
         for name, command in self.commands.items():
             command.assign_argument(self.parser)
-
-        self.parser.add_argument(
-            '-l', '--log', dest='log', action='store_true',
-            help='Set log level from "debug" or "info".')
 
         self.parser.add_argument(
             '-r', '--recipe', dest='recipe',

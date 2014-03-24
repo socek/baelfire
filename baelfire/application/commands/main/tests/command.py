@@ -37,33 +37,6 @@ class RunTaskTest(TestCase):
         self.command = RunTask()
         self.command.raw_args = {}
 
-    def test_get_recipe_not(self):
-        """Should return None if no recipe in init file or command switch."""
-        self.assertEqual(None, self.command.get_recipe())
-
-    def test_get_recipe_from_command_line(self):
-        """Should return recipe from module specifed by command."""
-        self.command.raw_args = {'recipe': 'myrecipe'}
-        self.add_mock(PREFIX + 'import_module')
-
-        result = self.command.get_recipe()
-
-        self.assertEqual(
-            self.mocks['import_module'].return_value.recipe(), result)
-
-        self.mocks['import_module'].assert_called_once_with('myrecipe')
-
-    def test_get_recipe_from_initfile(self):
-        """Should rerurn recipe from init file."""
-        self.add_mock(PREFIX + 'InitFile')
-        self.mocks['InitFile'].return_value.is_present.return_value = True
-
-        recipe = self.mocks[
-            'InitFile'].return_value.get_recipe.return_value.return_value
-        self.assertEqual(recipe, self.command.get_recipe())
-        recipe = self.mocks[
-            'InitFile'].return_value.get_recipe.assert_called_once_with()
-
     def test_gather_tasks(self):
         """Should gather the tasks and assign command line arguments."""
         recipe = Recipe()

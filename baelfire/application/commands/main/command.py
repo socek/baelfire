@@ -1,28 +1,12 @@
-from importlib import import_module
-
 from ..command import Command
-from ..init.models import InitFile
 from baelfire.error import OnlyOneTaskInARow
 
 
 class RunTask(Command):
 
     def __init__(self):
-        super().__init__('-t',
-                         '--tasks',
-                         nargs='+',
-                         help='Run tasks')
-
-    def get_recipe(self):
-        """Gets recipe from command switch or init file."""
-        if 'recipe' in self.raw_args and self.raw_args['recipe'] is not None:
-            return import_module(self.raw_args['recipe']).recipe()
-        else:
-            initfile = InitFile()
-            if initfile.is_present():
-                initfile.load()
-                return initfile.get_recipe()()
-        return None
+        super().__init__(nargs='*',
+                         help='List of task to do.')
 
     def gather_tasks(self):
         """Assign command line arguments to a tasks and produce tasks list."""

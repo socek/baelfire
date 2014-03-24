@@ -1,9 +1,12 @@
 class Task(object):
 
+    recipe = None
+    path = None
+    dependencys = None
+    hide = False
+    help = ''
+
     def __init__(self):
-        self.recipe = None
-        self.path = None
-        self.dependencys = None
         self.kwargs = {}
 
     def assign_kwargs(self, **kwargs):

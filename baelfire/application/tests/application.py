@@ -40,7 +40,8 @@ class ApplicationTest(TestCase):
         self.assertEqual(
             [
                 'Init',
-                'RunTask'
+                'ListTasks',
+                'RunTask',
             ],
             sorted(list(self.app.commands)))
         self.assertEqual({}, self.app.options)

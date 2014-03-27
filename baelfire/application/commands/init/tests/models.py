@@ -81,13 +81,6 @@ class InitFileTest(TestCase):
 
         self.assertEqual(self.initfile.module.recipe, recipe)
 
-    def test_get_recipe_bad_path(self):
-        """Should raise BadRecipePathError when import error raised."""
-        self.initfile.package = 'mypackage'
-        self.add_mock(PREFIX + 'import_module', side_effect=ImportError())
-
-        self.assertRaises(BadRecipePathError, self.initfile.get_recipe)
-
     def test_get_recipe_no_recipe_found(self):
         """Should raise BadRecipePathError when import error raised."""
         self.initfile.package = 'mypackage'

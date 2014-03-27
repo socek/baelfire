@@ -110,6 +110,7 @@ class TaskTest(TestCase):
         """Should run make when rebuild is needed."""
         self.add_mock_object(self.task, 'is_rebuild_needed', return_value=True)
         self.task.recipe = MagicMock()
+        self.task.dependencys = []
         self.task.run()
 
         self.assertEqual(True, self.task.made)

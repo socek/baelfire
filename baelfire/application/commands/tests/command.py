@@ -68,12 +68,6 @@ class CommandTest(TestCase):
 
         self.mocks['import_module'].assert_called_once_with('myrecipe')
 
-    def test_get_recipe_when_import_error_raised(self):
-        """Should raise BadRecipePathError when import error is raised."""
-        self.command.raw_args = {'recipe': 'myrecipe'}
-        self.add_mock(PREFIX + 'import_module', side_effect=ImportError())
-        self.assertRaises(BadRecipePathError, self.command.get_recipe)
-
     def test_get_recipe_when_attribute_error_raised(self):
         """Should raise RecipeNotFoundError when package have no recipe object
         """

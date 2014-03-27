@@ -91,7 +91,24 @@ class DependencyTest(TestCase):
 
         self.assertEqual(
             [{'name': 'ExampleDependency', 'data': {'data': 'example data'}}],
-            self.dependency.task.recipe.data_log.tasks['taskname']['dependencys'],
+            self.dependency.task.recipe.data_log.tasks[
+                'taskname']['dependencys'],
+        )
+
+    def test_logme_when_dependency_not_runned(self):
+        """Should use 'default' log for dependency when it was nor runned."""
+
+        self.dependency.task = MagicMock()
+        self.dependency.task.name = 'taskname'
+        self.dependency.task.recipe = Recipe()
+        self.dependency.task.recipe.data_log.tasks[
+            'taskname'] = {'dependencys': []}
+        self.dependency.logme()
+
+        self.assertEqual(
+            [{'name': 'ExampleDependency', 'data': {'runned': False}}],
+            self.dependency.task.recipe.data_log.tasks[
+                'taskname']['dependencys'],
         )
 
 

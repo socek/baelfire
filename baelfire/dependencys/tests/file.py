@@ -1,11 +1,12 @@
-from tempfile import NamedTemporaryFile
 from time import sleep
+from mock import MagicMock
+from tempfile import NamedTemporaryFile
 
 from soktest import TestCase
 
-from baelfire.error import TaskMustHaveOutputFileError, CouldNotCreateFileError
-from baelfire.tests.task import ExampleTask as ExampleTaskBase, Task
 from ..dependency import Dependency
+from baelfire.tests.task import ExampleTask as ExampleTaskBase, Task
+from baelfire.error import TaskMustHaveOutputFileError, CouldNotCreateFileError
 from ..file import (FileChanged,
                     FileDoesNotExists,
                     FileDependency,
@@ -59,6 +60,15 @@ class FileDependencyTest(TestCase):
         provided"""
         self.assertRaises(AttributeError, FileDependency, 13)
 
+    def test_logme(self):
+        dependency = FileDependency(['something'])
+        dependency.task = MagicMock()
+        dependency.logme()
+
+        self.assertEqual(
+            {'filenames': ['something'], 'runned': False},
+            dependency.logdata)
+
 
 class FileChangedTest(TestCase):
 
@@ -67,7 +77,8 @@ class FileChangedTest(TestCase):
         self.dependency = FileChanged(['example_file'])
 
     def test_validate_task_error(self):
-        """Should throw TaskMustHaveOutputFileError when task has no output file."""
+        """Should throw TaskMustHaveOutputFileError when task has no output
+        file."""
         task = Task()
         self.dependency.assign_task(task)
         self.assertRaises(
@@ -185,3 +196,16 @@ class ParentFileChangedTest(TestCase):
         self.assertEqual(
             [self.parent.get_output_file()],
             self.dependency.get_filenames())
+
+    def test_logme(self):
+        self.dependency.task = MagicMock()
+        self.dependency.logme()
+
+        self.assertEqual(
+            {
+                'filenames': [],
+                'parent': {
+                    'file': self.parent.filename,
+                    'name': 'ExampleTask'},
+                'runned': False},
+            self.dependency.logdata)

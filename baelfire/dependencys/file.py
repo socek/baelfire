@@ -58,6 +58,13 @@ class ParentFileChanged(FileChanged):
     def get_filenames(self):
         return [self.parent.get_output_file()]
 
+    def _add_log_data(self):
+        super()._add_log_data()
+        self.logdata['parent'] = {
+            'name': self.parent.name,
+            'file': self.parent.get_output_file(),
+        }
+
 
 class FileDoesNotExists(FileDependency):
 

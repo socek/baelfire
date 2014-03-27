@@ -34,10 +34,10 @@ class InitFile(object):
 
     def get_recipe(self):
         if self.module is None:
-            try:
-                self.module = import_module(self.package + '.setup')
-            except ImportError:
-                raise BadRecipePathError()
+            # try:
+            self.module = import_module(self.package + '.setup')
+            # except ImportError:
+            #     raise BadRecipePathError()
 
         try:
             return self.module.recipe

@@ -28,11 +28,11 @@ class Command(object):
 
     def get_recipe(self):
         """Gets recipe from command switch or init file."""
-        if 'recipe' in self.raw_args and self.raw_args['recipe'] is not None:
+        if self.raw_args.get('recipe', None) is not None:
             try:
                 return import_module(self.raw_args['recipe']).recipe()
-            except ImportError:
-                raise BadRecipePathError()
+            # except ImportError:
+            #     raise BadRecipePathError()
             except AttributeError:
                 raise RecipeNotFoundError()
         else:

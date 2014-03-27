@@ -65,7 +65,7 @@ class Application(object):
         self.convert_options()
         try:
             self.run_command_or_print_help()
-        except (RecipeNotFoundError, BadRecipePathError) as error:
+        except (RecipeNotFoundError,) as error:
             print(error)
 
 

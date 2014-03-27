@@ -5,6 +5,7 @@ from baelfire import VERSION
 install_requires = [
     'smallsettings',
     'soktest',
+    'jinja2',
 ]
 
 if __name__ == '__main__':

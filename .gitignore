@@ -12,3 +12,4 @@ testrecipe
 .bael.init
 .baelfire.lastlog.json
 test.txt
+*.egg

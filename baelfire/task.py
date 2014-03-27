@@ -61,11 +61,12 @@ class Task(object):
     def run(self):
         self.pre_run()
         force = self.kwargs.pop('force', False)
-        success = False
+        success = None
         needed = self.is_rebuild_needed()
 
         try:
             if needed or force:
+                success = False
                 self.log.task(self.name)
                 self.make(**self.kwargs)
                 success = True

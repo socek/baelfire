@@ -64,7 +64,7 @@ class DependencyTest(TestCase):
         task = ExampleTask()
         task.recipe = MagicMock()
         task.dependencys = []
-        task.generate_dependencys()
+        task._generate_dependencys()
         task.kwargs['force'] = True
         self.add_mock_object(task, 'logme')
         self.dependency.assign_parent(task)

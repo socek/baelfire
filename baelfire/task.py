@@ -51,8 +51,12 @@ class Task(object):
     def logme(self, force, needed, success):
         logdata = {
             'force': force,
+            'needed': needed,
+            'success': success,
         }
         self.recipe.data_log.add_task(self, logdata)
+        for dependency in self.dependencys:
+            dependency.logme()
 
     def run(self):
         self.pre_run()
@@ -83,3 +87,9 @@ class Task(object):
     @property
     def log(self):
         return self.recipe.log
+
+    def _generate_dependencys(self):
+        """Run generate_dependencys."""
+        # This method is only for inheritance (so child class can add some
+        # dependecys for all instances)
+        self.generate_dependencys()

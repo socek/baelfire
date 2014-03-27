@@ -3,6 +3,7 @@ class Dependency(object):
     def __init__(self):
         self.task = None
         self.parent = None
+        self.logdata = None
 
     @property
     def name(self):
@@ -36,8 +37,13 @@ class Dependency(object):
         self.logdata[name] = True
         return result
 
+    def _add_log_data(self):
+        pass
+
     def __call__(self):
-        self.logdata = {}
+        self.logdata = {
+            'runned': True,
+        }
         self._log_method('validate_task')
         self._log_method('validate_parent')
         self._log_method('validate_dependency')
@@ -45,7 +51,15 @@ class Dependency(object):
         return self._log_method('make')
 
     def logme(self):
-        self.task.recipe.data_log.add_dependecy(self.task, self, self.logdata)
+        if self.logdata is None:
+            self.logdata = {
+                'runned': False,
+            }
+        self._add_log_data()
+        self.task.recipe.data_log.add_dependecy(
+            self.task,
+            self,
+            self.logdata)
 
 
 class AlwaysRebuild(Dependency):

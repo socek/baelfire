@@ -55,7 +55,7 @@ class Recipe(object):
 
     def validate_dependencys(self):
         for task in self.tasks.values():
-            task.generate_dependencys()
+            task._generate_dependencys()
 
     def create_settings(self):
         pass

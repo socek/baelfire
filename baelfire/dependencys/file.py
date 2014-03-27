@@ -17,6 +17,10 @@ class FileDependency(Dependency):
     def get_filenames(self):
         return self.filenames
 
+    def _add_log_data(self):
+        super()._add_log_data()
+        self.logdata['filenames'] = self.filenames
+
 
 class FileChanged(FileDependency):
 

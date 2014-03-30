@@ -4,7 +4,7 @@ from os import unlink, path
 from soktest import TestCase
 
 from ..models import InitFile
-from baelfire.error import BadRecipePathError, RecipeNotFoundError
+from baelfire.error import RecipeNotFoundError
 
 PREFIX = 'baelfire.application.commands.init.models.'
 
@@ -22,68 +22,75 @@ class InitFileTest(TestCase):
         super().tearDown()
 
     def test_init(self):
-        self.assertEqual(None, self.initfile.package)
-        self.assertEqual(None, self.initfile.module)
+        self.assertEqual(None, self.initfile.package_url)
+        self.assertEqual(None, self.initfile.setup_path)
+        self.assertEqual(None, self.initfile.recipe)
 
     def test_to_dict(self):
         """Should return proper dict with all the nessesery data"""
-        self.initfile.package = 'mypackage'
+        self.initfile.assign('package.url', 'setup/path')
 
-        self.assertEqual({'package': 'mypackage'}, self.initfile.to_dict())
+        self.assertEqual(
+            {'package_url': 'package.url', 'setup_path': 'setup/path'},
+            self.initfile.to_dict())
 
     def test_from_dict(self):
         """Should unpack all the data from proper dict"""
-        self.initfile.from_dict({'package': 'mypackage'})
+        self.initfile.from_dict(
+            {'package_url': 'package.url', 'setup_path': 'setup/path'})
 
-        self.assertEqual('mypackage', self.initfile.package)
+        self.assertEqual('package.url', self.initfile.package_url)
+        self.assertEqual('setup/path', self.initfile.setup_path)
 
     def test_save(self):
         """Should save initfile data to a '.bael.init' file with json
         encoded"""
-        self.initfile.package = 'myawsomepackage'
+        self.initfile.assign('package.url', 'setup/path')
         self.initfile.save()
 
         testfile = open(self.initfile.filename)
         data = json.load(testfile)
         testfile.close()
-        self.assertEqual({'package': 'myawsomepackage'}, data)
+        self.assertEqual(
+            {'package_url': 'package.url', 'setup_path': 'setup/path'}, data)
 
     def test_load(self):
         """Shouls load initfile data from a proper '.bael.init' file with
         json encoded"""
         testfile = open(self.initfile.filename, 'w')
-        json.dump({'package': 'mypackage2'}, testfile)
+        json.dump(
+            {'package_url': 'mypackage2', 'setup_path': 'path'}, testfile)
         testfile.close()
 
         self.initfile.load()
 
-        self.assertEqual('mypackage2', self.initfile.package)
+        self.assertEqual('mypackage2', self.initfile.package_url)
+        self.assertEqual('path', self.initfile.setup_path)
 
     def test_get_recipe_with_import(self):
-        """Should import package and return recipe which should be in
-        setup.py"""
-        self.initfile.package = 'mypackage'
+        """Should import recipe where package_url points to."""
+        self.initfile.assign('package.url:cls', 'setup/path')
         self.add_mock(PREFIX + 'import_module')
         recipe = self.initfile.get_recipe()
 
         self.assertEqual(
-            self.mocks['import_module'].return_value.recipe,
+            self.mocks['import_module'].return_value.cls,
             recipe,
         )
-        self.mocks['import_module'].assert_called_once_with('mypackage.setup')
+        self.mocks['import_module'].assert_called_once_with('package.url')
 
-    def test_get_recipe_without_import(self):
-        self.initfile.package = 'mypackage'
-        self.add_mock('builtins.__import__')
-        self.initfile.module = MagicMock()
+    # def test_get_recipe_without_import(self):
+    #     self.initfile.assign('package:class', 'setup_path')
+    #     self.add_mock('builtins.__import__')
+    #     self.initfile.module = MagicMock()
 
-        recipe = self.initfile.get_recipe()
+    #     recipe = self.initfile.get_recipe()
 
-        self.assertEqual(self.initfile.module.recipe, recipe)
+    #     self.assertEqual(self.initfile.module.recipe, recipe)
 
     def test_get_recipe_no_recipe_found(self):
         """Should raise BadRecipePathError when import error raised."""
-        self.initfile.package = 'mypackage'
+        self.initfile.assign('package:cls', 'setup_path')
         self.add_mock(PREFIX + 'import_module')
         self.mocks['import_module'].return_value = object()
 

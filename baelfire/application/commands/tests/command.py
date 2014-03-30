@@ -54,6 +54,8 @@ class CommandTest(TestCase):
     def test_get_recipe_not(self):
         """Should raise RecipeNotFoundError if no recipe in init file or
         command switch."""
+        self.add_mock('baelfire.application.commands.init.models.path')
+        self.mocks['path'].exists.return_value = False
         self.assertRaises(RecipeNotFoundError, self.command.get_recipe)
 
     def test_get_recipe_from_command_line(self):

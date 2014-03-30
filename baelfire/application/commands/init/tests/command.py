@@ -3,9 +3,10 @@ import json
 
 from soktest import TestCase
 
+from ..command import Init
 from ..models import InitFile
 from ..error import RecipePackageNotValidError
-from ..command import Init
+from baelfire.error import RecipeNotFoundError
 
 PREFIX = 'baelfire.application.commands.init.command.'
 
@@ -23,106 +24,25 @@ class InitTest(TestCase):
         self.assertEqual(
             {
                 'dest': 'Init',
-                'nargs': 1,
+                'nargs': 2,
                 'help': 'Inits package.'
             },
             self.command.kwargs)
 
-    def test_module_exists_dir(self):
-        """Should return True if module exists as a directory."""
-        def exists_side_effect(path):
-            if path == '/tmp/__init__.py':
-                return True
-            else:
-                return False
-
-        self.add_mock(PREFIX + 'path')
-        self.mocks['path'].exists.side_effect = exists_side_effect
-        self.mocks['path'].join.side_effect = os.path.join
-
-        self.assertEqual(True, self.command.module_exists('/tmp'))
-
-    def test_module_exists_py(self):
-        """Should return True if module exists as a .py (or .pyc, or .pyo)
-        file."""
-        def exists_side_effect(path):
-            if path == '/tmp.py':
-                return True
-            else:
-                return False
-
-        self.add_mock(PREFIX + 'path')
-        self.mocks['path'].exists.side_effect = exists_side_effect
-        self.mocks['path'].join.side_effect = os.path.join
-
-        self.assertEqual(True, self.command.module_exists('/tmp'))
-
-    def test_module_exists_error(self):
-        """Should return False if no module exists."""
-        def exists_side_effect(path):
-            return False
-
-        self.add_mock(PREFIX + 'path')
-        self.mocks['path'].exists.side_effect = exists_side_effect
-        self.mocks['path'].join.side_effect = os.path.join
-
-        self.assertEqual(False, self.command.module_exists('/tmp'))
-
     def test_validate_package_success(self):
         """Should return None if no error found."""
-        self.add_mock(PREFIX + 'path')
-        self.mocks['path'].exists.return_value = True
-        self.add_mock(PREFIX + 'InitFile')
+        self.command.initfile = InitFile()
+        self.command.initfile.assign('os:path', 'setupy')
 
-        self.assertEqual(None, self.command.validate_package('/tmp'))
+        self.assertEqual(None, self.command.validate_package())
 
-    def test_validate_package_no_directory(self):
-        """Should raise RecipePackageNotValidError when no directory found."""
-        def exists_side_effect(path):
-            if path == '/tmp':
-                return False
-            else:
-                return True
-
-        self.add_mock(PREFIX + 'path')
-        self.mocks['path'].exists.side_effect = exists_side_effect
-        self.mocks['path'].join.side_effect = os.path.join
+    def test_validate_package_bad_url(self):
+        """Should raise RecipePackageNotValidError when bad url provided."""
+        self.command.initfile = InitFile()
+        self.command.initfile.assign('os:path2', 'setupy')
 
         self.assertRaises(
-            RecipePackageNotValidError, self.command.validate_package, '/tmp')
-
-    def test_validate_package_no_setup(self):
-        """Should raise RecipePackageNotValidError when no setup.py found."""
-        def exists_side_effect(path):
-            if path in [
-                    '/tmp/setup/__init__.py',
-                    '/tmp/setup.py',
-                    '/tmp/setup.pyc',
-                    '/tmp/setup.pyo',
-            ]:
-                return False
-            else:
-                return True
-
-        self.add_mock(PREFIX + 'path')
-        self.mocks['path'].exists.side_effect = exists_side_effect
-        self.mocks['path'].join.side_effect = os.path.join
-
-        self.assertRaises(
-            RecipePackageNotValidError, self.command.validate_package, '/tmp')
-
-    def test_validate_package_no_recipe(self):
-        """Should raise RecipePackageNotValidError when no recipe var
-        found in setup.py."""
-        self.add_mock(PREFIX + 'InitFile')
-        self.add_mock(PREFIX + 'path')
-        self.mocks['path'].exists.return_value = True
-        self.mocks['path'].join.side_effect = os.path.join
-        self.mocks['InitFile'].return_value.get_recipe.side_effect = \
-            AttributeError
-
-        self.assertRaises(
-            RecipePackageNotValidError, self.command.validate_package, '/tmp')
+            RecipeNotFoundError, self.command.validate_package)
 
     def test_call_error(self):
         """Should print RecipePackageNotValidError when raised."""
@@ -139,16 +59,14 @@ class InitTest(TestCase):
 
     def test_call_success(self):
         """Should save initfile with proper data."""
-        self.command.args = ('somepackage',)
+        self.command.args = ('package.url', 'setup/path')
         self.add_mock_object(self.command, 'validate_package')
-
-        self.command.initfile = InitFile()
-        self.command.initfile.package = 'somepackage'
-        self.command.make()
 
         testfile = open(InitFile.filename)
         data = json.load(testfile)
         testfile.close()
-        self.assertEqual({'package': 'somepackage'}, data)
+        self.assertEqual({
+            'package_url': 'testrecipe.all:TestMe',
+            'setup_path': 'testrecipe/setup.py'}, data)
 
         os.unlink(InitFile.filename)

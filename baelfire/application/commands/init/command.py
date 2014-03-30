@@ -11,36 +11,26 @@ class Init(Command):
     def __init__(self):
         super().__init__('-i',
                          '--init',
-                         nargs=1,
+                         nargs=2,
                          help='Inits package.')
 
-    def module_exists(self, module_path):
-        if path.exists(path.join(module_path, '__init__.py')):
-            return True
-        for sufix in ['.py', '.pyc', '.pyo']:
-            if path.exists(module_path + sufix):
-                return True
-        return False
-
-    def validate_package(self, name):
-        if not path.exists(name):
-            raise RecipePackageNotValidError(1, name)
-
-        setup_path = path.join(name, 'setup')
-        if not self.module_exists(setup_path):
-            raise RecipePackageNotValidError(2, name)
-
-        self.initfile = InitFile()
-        self.initfile.package = name
+    def validate_package(self):
         try:
             self.initfile.get_recipe()
         except AttributeError:
-            raise RecipePackageNotValidError(3, name)
+            raise RecipePackageNotValidError(3, self.initfile.package_url)
+
+    def validate_setup(self):
+        if not path.exists(self.initfile.setup_path):
+            raise RecipePackageNotValidError(2, self.initfile.setup_path)
 
     def make(self):
+        self.initfile = InitFile()
+        self.initfile.assign(*self.args)
         try:
-            package = self.args[0]
-            self.validate_package(package)
-            self.initfile.save()
+            self.validate_package()
+            self.validate_setup()
+
+            self.initfile.install_dependencys()
         except RecipePackageNotValidError as er:
             print(er)

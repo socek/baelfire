@@ -2,8 +2,8 @@ class RecipePackageNotValidError(Exception):
 
     codes = {
         1: 'package does not exist',
-        2: 'no setup.py file found',
-        3: 'no recipe found. Please create recipe var in setup.py',
+        2: 'setup.py file not exist',
+        3: 'no recipe found in package',
     }
 
     def __init__(self, code, name):

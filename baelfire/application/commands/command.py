@@ -1,7 +1,7 @@
 from importlib import import_module
 
 from .init.models import InitFile
-from baelfire.error import RecipeNotFoundError, BadRecipePathError
+from baelfire.error import RecipeNotFoundError
 
 
 class Command(object):
@@ -31,14 +31,13 @@ class Command(object):
         if self.raw_args.get('recipe', None) is not None:
             try:
                 return import_module(self.raw_args['recipe']).recipe()
-            # except ImportError:
-            #     raise BadRecipePathError()
             except AttributeError:
                 raise RecipeNotFoundError()
         else:
             initfile = InitFile()
             if initfile.is_present():
                 initfile.load()
+                initfile.install_dependencys()
                 return initfile.get_recipe()()
 
         raise RecipeNotFoundError()

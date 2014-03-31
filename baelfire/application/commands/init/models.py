@@ -3,6 +3,7 @@ from os import path
 from importlib import import_module
 from subprocess import Popen
 
+from .error import RecipeInstallError
 from baelfire.error import RecipeNotFoundError
 
 
@@ -41,6 +42,7 @@ class InitFile(object):
         initfile.close()
 
     def get_recipe(self):
+        """Imports and return recipe from initfile."""
         if self.recipe is None:
             url = self.package_url.split(':')
             module = import_module(url[0])
@@ -58,7 +60,10 @@ class InitFile(object):
         if self.is_reinstall_needed():
             spp = Popen(['python', self.setup_path, 'test'])
             spp.wait()
-            self.save()
+            if spp.returncode is 0:
+                self.save()
+            else:
+                raise RecipeInstallError()
 
     def is_present(self):
         """Is init file present in actual directory?"""

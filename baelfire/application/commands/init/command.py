@@ -4,6 +4,7 @@ from os import path
 from ..command import Command
 from .models import InitFile
 from .error import RecipePackageNotValidError
+from baelfire.error import RecipeNotFoundError
 
 
 class Init(Command):
@@ -17,7 +18,7 @@ class Init(Command):
     def validate_package(self):
         try:
             self.initfile.get_recipe()
-        except AttributeError:
+        except RecipeNotFoundError:
             raise RecipePackageNotValidError(3, self.initfile.package_url)
 
     def validate_setup(self):

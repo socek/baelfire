@@ -4,6 +4,7 @@ from os import unlink, path
 from soktest import TestCase
 
 from ..models import InitFile
+from ..error import RecipeInstallError
 from baelfire.error import RecipeNotFoundError
 
 PREFIX = 'baelfire.application.commands.init.models.'
@@ -79,14 +80,13 @@ class InitFileTest(TestCase):
         )
         self.mocks['import_module'].assert_called_once_with('package.url')
 
-    # def test_get_recipe_without_import(self):
-    #     self.initfile.assign('package:class', 'setup_path')
-    #     self.add_mock('builtins.__import__')
-    #     self.initfile.module = MagicMock()
+    def test_get_recipe_without_import(self):
+        self.initfile.assign('package:class', 'setup_path')
+        self.initfile.recipe = MagicMock()
 
-    #     recipe = self.initfile.get_recipe()
+        recipe = self.initfile.get_recipe()
 
-    #     self.assertEqual(self.initfile.module.recipe, recipe)
+        self.assertEqual(self.initfile.recipe, recipe)
 
     def test_get_recipe_no_recipe_found(self):
         """Should raise BadRecipePathError when import error raised."""
@@ -111,3 +111,41 @@ class InitFileTest(TestCase):
 
         self.assertEqual(False, self.initfile.is_present())
         self.mocks['path'].exists.assert_called_once_with('/tmp/.bael.init')
+
+    def test_install_dependencys_not_needed(self):
+        """Should do nothing when reinstall is not required."""
+        self.add_mock_object(
+            self.initfile, 'is_reinstall_needed', return_value=False)
+
+        self.assertEqual(None, self.initfile.install_dependencys())
+
+    def test_install_dependencys_test_failed(self):
+        """Should raise RecipeInstallError when test command failed."""
+        self.add_mock_object(
+            self.initfile, 'is_reinstall_needed', return_value=True)
+
+        self.add_mock(PREFIX + 'Popen')
+        self.mocks['Popen'].return_value.returncode = 1
+
+        self.initfile.assign('package.url', 'setup/path')
+        self.assertRaises(
+            RecipeInstallError, self.initfile.install_dependencys)
+        self.mocks['Popen'].assert_called_once_with(
+            ['python', 'setup/path', 'test'])
+
+    def test_install_dependencys_test_success(self):
+        """Should save initfile when test command successed."""
+        self.add_mock_object(
+            self.initfile, 'is_reinstall_needed', return_value=True)
+        self.add_mock_object(
+            self.initfile, 'save')
+
+        self.add_mock(PREFIX + 'Popen')
+        self.mocks['Popen'].return_value.returncode = 0
+
+        self.initfile.assign('package.url', 'setup/path')
+        self.initfile.install_dependencys()
+
+        self.mocks['Popen'].assert_called_once_with(
+            ['python', 'setup/path', 'test'])
+        self.mocks['save'].assert_called_once_with()

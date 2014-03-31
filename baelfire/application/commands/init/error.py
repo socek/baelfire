@@ -12,3 +12,8 @@ class RecipePackageNotValidError(Exception):
 
     def __str__(self):
         return '%s: %s' % (self.codes[self.code], self.name)
+
+
+class RecipeInstallError(Exception):
+
+    """Raised when install dependencys or tests for recipe failed."""

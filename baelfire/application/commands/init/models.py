@@ -7,6 +7,16 @@ from .error import RecipeInstallError
 from baelfire.error import RecipeNotFoundError
 
 
+def get_recipe_from_url(package_url):
+    """Returns recipe from url "some.url:klass" """
+    url = package_url.split(':')
+    module = import_module(url[0])
+    try:
+        return getattr(module, url[1])
+    except AttributeError:
+        raise RecipeNotFoundError()
+
+
 class InitFile(object):
 
     filename = '.bael.init'
@@ -44,12 +54,7 @@ class InitFile(object):
     def get_recipe(self):
         """Imports and return recipe from initfile."""
         if self.recipe is None:
-            url = self.package_url.split(':')
-            module = import_module(url[0])
-            try:
-                self.recipe = getattr(module, url[1])
-            except AttributeError:
-                raise RecipeNotFoundError()
+            self.recipe = get_recipe_from_url(self.package_url)
         return self.recipe
 
     def is_reinstall_needed(self):

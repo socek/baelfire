@@ -63,11 +63,11 @@ class InitTest(TestCase):
         self.add_mock_object(data, 'close')
         self.add_mock('builtins.open', return_value=data)
         self.add_mock('baelfire.application.commands.init.models.Popen')
+        self.add_mock_object(
+            InitFile, 'is_reinstall_needed', return_value=True)
         self.mocks['Popen'].return_value.returncode = 0
 
         self.command.make()
-
-        self.mocks['close'].assert_called_once_with()
 
         data.seek(0)
         data = json.load(data)
@@ -75,6 +75,8 @@ class InitTest(TestCase):
         self.assertEqual({
             'package_url': 'testrecipe.all:TestMe',
             'setup_path': 'testrecipe/setup.py'}, data)
+
+        self.mocks['close'].assert_called_once_with()
 
     def test_validate_setup_error(self):
         """Should raise RecipePackageNotValidError when setup.py file do not

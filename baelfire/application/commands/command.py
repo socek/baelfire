@@ -1,6 +1,4 @@
-from importlib import import_module
-
-from .init.models import InitFile
+from .init.models import InitFile, get_recipe_from_url
 from baelfire.error import RecipeNotFoundError
 
 
@@ -29,10 +27,7 @@ class Command(object):
     def get_recipe(self):
         """Gets recipe from command switch or init file."""
         if self.raw_args.get('recipe', None) is not None:
-            try:
-                return import_module(self.raw_args['recipe']).recipe()
-            except AttributeError:
-                raise RecipeNotFoundError()
+            return get_recipe_from_url(self.raw_args['recipe'])()
         else:
             initfile = InitFile()
             if initfile.is_present():

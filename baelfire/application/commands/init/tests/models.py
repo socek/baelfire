@@ -149,3 +149,45 @@ class InitFileTest(TestCase):
         self.mocks['Popen'].assert_called_once_with(
             ['python', 'setup/path', 'test'])
         self.mocks['save'].assert_called_once_with()
+
+    def test_is_reinstall_needed_when_filename_not_exists(self):
+        """Should return True when filename do not exists."""
+        self.add_mock(PREFIX + 'path')
+        self.mocks['path'].exists.return_value = False
+
+        self.assertEqual(True, self.initfile.is_reinstall_needed())
+
+        self.mocks['path'].exists.assert_called_once_with(
+            self.initfile.filename)
+
+    def test_is_reinstall_needed_when_setup_is_older_then_filename(self):
+        """Should return True when setup is older then filename."""
+        def getmtime_mock(filename):
+            if filename == self.initfile.filename:
+                return 1
+            else:
+                return 2
+        self.add_mock(PREFIX + 'path')
+        self.mocks['path'].exists.return_value = True
+        self.mocks['path'].getmtime.side_effect = getmtime_mock
+
+        self.assertEqual(True, self.initfile.is_reinstall_needed())
+
+        self.mocks['path'].exists.assert_called_once_with(
+            self.initfile.filename)
+
+    def test_is_reinstall_needed_when_filename_is_older_then_setup(self):
+        """Should return False when filename is older then setup."""
+        def getmtime_mock(filename):
+            if filename == self.initfile.filename:
+                return 2
+            else:
+                return 1
+        self.add_mock(PREFIX + 'path')
+        self.mocks['path'].exists.return_value = True
+        self.mocks['path'].getmtime.side_effect = getmtime_mock
+
+        self.assertEqual(False, self.initfile.is_reinstall_needed())
+
+        self.mocks['path'].exists.assert_called_once_with(
+            self.initfile.filename)

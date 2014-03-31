@@ -62,6 +62,8 @@ class InitTest(TestCase):
         data = StringIO()
         self.add_mock_object(data, 'close')
         self.add_mock('builtins.open', return_value=data)
+        self.add_mock('baelfire.application.commands.init.models.Popen')
+        self.mocks['Popen'].return_value.returncode = 0
 
         self.command.make()
 

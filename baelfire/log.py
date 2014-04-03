@@ -37,10 +37,12 @@ class Logger(object):
     def __init__(self):
         self.common_log = logging.getLogger('common')
         self.task_log = logging.getLogger('task')
+        self.process_log = logging.getLogger('process')
 
         self.init_file_handler()
         self.init_common()
         self.init_task()
+        self.init_process()
 
     def init_file_handler(self):
         self.file_handler = logging.FileHandler(self.filename)
@@ -65,6 +67,11 @@ class Logger(object):
 
         self.task_log.addHandler(self.get_stdout_handler('* %(message)s'))
         self.task_log.addHandler(self.file_handler)
+
+    def init_process(self):
+        self.process_log.setLevel(logging.DEBUG)
+        self.process_log.addHandler(self.get_stdout_handler('%(message)s'))
+        self.process_log.addHandler(self.file_handler)
 
     def info(self, *args, **kwargs):
         return self.common_log.info(*args, **kwargs)

@@ -1,3 +1,6 @@
+from .process import Process
+
+
 class Task(object):
 
     recipe = None
@@ -94,3 +97,8 @@ class Task(object):
         # This method is only for inheritance (so child class can add some
         # dependecys for all instances)
         self.generate_dependencys()
+
+    def command(self, *args, **kwargs):
+        """Run external command."""
+        process = Process(self)
+        return process(*args, **kwargs)

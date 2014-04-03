@@ -5,6 +5,7 @@ from smallsettings import Settings, Paths
 from baelfire import VERSION
 from .error import TaskNotFoundError
 from .log import TaskLogger, Logger
+from .signals import SignalHandling
 
 
 class Recipe(object):
@@ -13,6 +14,8 @@ class Recipe(object):
         self.recipes = []
         self._tasks = {}
         self.parent = None
+        self._spp = None
+        self.aborting = False
         self.data_log = TaskLogger()
         self.log = Logger()
         self.init_settings({'minimal version': VERSION}, {})
@@ -21,6 +24,7 @@ class Recipe(object):
         self.gather_recipes()
         self.gather_tasks()
         self.validate_dependencys()
+        self.init_signals()
 
     def init_settings(self, settings, paths):
         self._settings = Settings(settings)
@@ -56,6 +60,9 @@ class Recipe(object):
     def validate_dependencys(self):
         for task in self.tasks.values():
             task._generate_dependencys()
+
+    def init_signals(self):
+        self.signal_handling = SignalHandling(self)
 
     def create_settings(self):
         pass

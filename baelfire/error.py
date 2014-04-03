@@ -44,3 +44,17 @@ class RecipeNotFoundError(Exception):
 
     def __str__(self):
         return 'Error: No recipe found!'
+
+
+class CommandError(Exception):
+
+    def __init__(self, number, text=''):
+        self.number = number
+        self.text = text
+
+    def __str__(self):
+        return 'Error: Command error (%d): %s' % (self.number, self.text)
+
+
+class CommandAborted(Exception):
+    pass

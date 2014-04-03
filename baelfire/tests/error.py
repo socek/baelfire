@@ -36,3 +36,8 @@ class ErrorsTests(TestCase):
         er = error.RecipeNotFoundError()
         self.assertEqual('Error: No recipe found!',
                          str(er))
+
+    def test_CommandError(self):
+        er = error.CommandError(11, 'text')
+        self.assertEqual('Error: Command error (11): text',
+                         str(er))

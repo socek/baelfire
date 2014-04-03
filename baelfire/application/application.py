@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 from .commands.init.command import Init
 from .commands.main.command import RunTask
 from .commands.list.command import ListTasks
-from baelfire.error import RecipeNotFoundError, BadRecipePathError
+from baelfire.error import RecipeNotFoundError, CommandAborted, CommandError
 
 
 class Application(object):
@@ -66,6 +66,10 @@ class Application(object):
         try:
             self.run_command_or_print_help()
         except (RecipeNotFoundError,) as error:
+            print(error)
+        except CommandAborted:
+            print('\r >> Command aborted!')
+        except CommandError as error:
             print(error)
 
 

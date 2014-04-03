@@ -6,6 +6,8 @@ from .recipe import ExampleRecipe
 from baelfire.task import Task
 from baelfire.dependencys import Dependency
 
+PREFIX = 'baelfire.task.'
+
 
 class ExampleDependency(Dependency):
 
@@ -148,3 +150,12 @@ class TaskTest(TestCase):
         self.task.assign_recipe(recipe)
 
         self.assertEqual('log', self.task.log)
+
+    def test_command(self):
+        """Should initialize Process with itself and transport args."""
+        self.add_mock(PREFIX + 'Process')
+        self.task.command('arg', kw='arg')
+
+        self.mocks['Process'].assert_called_once_with(self.task)
+        self.mocks['Process'].return_value.assert_called_once_with(
+            'arg', kw='arg')

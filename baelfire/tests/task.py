@@ -1,3 +1,4 @@
+import os
 from mock import MagicMock
 
 from soktest import TestCase
@@ -159,3 +160,25 @@ class TaskTest(TestCase):
         self.mocks['Process'].assert_called_once_with(self.task)
         self.mocks['Process'].return_value.assert_called_once_with(
             'arg', kw='arg')
+
+    def test_touch_when_file_not_exists(self):
+        """Should create file if not exists."""
+        path = '/tmp/mytestfile.txt'
+        self.task.touch(path)
+        self.assertTrue(os.path.exists(path))
+        os.unlink(path)
+
+    def test_touch_when_file_exists(self):
+        """Should update files utime if exists."""
+        self.add_mock(PREFIX + 'utime')
+        path = '/tmp/mytestfile2.txt'
+        fp = open(path, 'w')
+        fp.write('test')
+        fp.close()
+
+        self.task.touch(path)
+
+        fp = open(path, 'r')
+        self.assertEqual('test', fp.read())
+        fp.close()
+        self.mocks['utime'].assert_called_once_with(path, None)

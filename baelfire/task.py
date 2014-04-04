@@ -1,3 +1,5 @@
+from os import utime
+
 from .process import Process
 
 
@@ -102,3 +104,13 @@ class Task(object):
         """Run external command."""
         process = Process(self)
         return process(*args, **kwargs)
+
+    def touch(self, path):
+        """touch(filename) -> None
+        Updates file access and modified times specified by path.
+        """
+        fhandle = open(path, 'a')
+        try:
+            utime(path, None)
+        finally:
+            fhandle.close()

@@ -1,7 +1,7 @@
 from mock import MagicMock
 from soktest import TestCase
 
-from baelfire.error import RecipeNotFoundError, CommandAborted
+from baelfire.error import RecipeNotFoundError, CommandAborted, CommandError
 from baelfire.application.commands.command import Command
 from baelfire.application.application import run, Application
 
@@ -141,7 +141,8 @@ class ApplicationTest(TestCase):
 
         self.mocks['print'].assert_called_once_with(error)
 
-    def test_call_when_command_aborted_raised(self):
+    def test_call_when_CommandAborted_raised(self):
+        """Should print 'Command aborted' text."""
         self.add_mock_object(self.app, 'create_parser')
         self.add_mock_object(self.app, 'parse_command_line')
         self.add_mock_object(self.app, 'convert_options')
@@ -154,3 +155,19 @@ class ApplicationTest(TestCase):
         self.app()
 
         self.mocks['print'].assert_called_once_with('\r >> Command aborted!')
+
+    def test_call_when_CommandError_raised(self):
+        """Should print error from process."""
+        error = CommandError(1, 'my error')
+        self.add_mock_object(self.app, 'create_parser')
+        self.add_mock_object(self.app, 'parse_command_line')
+        self.add_mock_object(self.app, 'convert_options')
+        self.add_mock_object(
+            self.app,
+            'run_command_or_print_help',
+            side_effect=error)
+        self.add_mock('builtins.print')
+
+        self.app()
+
+        self.mocks['print'].assert_called_once_with(error)

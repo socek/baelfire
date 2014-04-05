@@ -50,7 +50,7 @@ class TemplateTaskTest(TestCase):
         self.add_mock_object(self.template, 'module')
         self.mocks['module'].return_value.__file__ = '/main/child'
 
-        self.template._generate_dependencys()
+        self.template.generate_dependencys()
 
         dependency = self.template.dependencys[0]
         self.assertEqual(

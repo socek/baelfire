@@ -59,7 +59,7 @@ class Recipe(object):
 
     def validate_dependencys(self):
         for task in self.tasks.values():
-            task._generate_dependencys()
+            task.generate_dependencys()
 
     def init_signals(self):
         self.signal_handling = SignalHandling(self)

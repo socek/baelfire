@@ -94,12 +94,6 @@ class Task(object):
     def log(self):
         return self.recipe.log
 
-    def _generate_dependencys(self):
-        """Run generate_dependencys."""
-        # This method is only for inheritance (so child class can add some
-        # dependecys for all instances)
-        self.generate_dependencys()
-
     def command(self, *args, **kwargs):
         """Run external command."""
         process = Process(self)

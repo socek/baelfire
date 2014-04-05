@@ -25,14 +25,13 @@ class TemplateTask(Task):
                             self.templates_dir,
                             self.get_template_path())
 
-    def _generate_dependencys(self):
+    def generate_dependencys(self):
         """Generates FileChanged dependency for template file and task file.
         generate_dependencys method is not needed now."""
         self.add_dependecy(FileChanged(self.template_absolute_path()))
         task_file = sys.modules[self.__module__].__file__
         self.add_dependecy(FileChanged(task_file))
 
-        getattr(self, 'generate_dependencys', lambda: None)()
 
     def jinja(self):
         """Jinja2 environment generator."""

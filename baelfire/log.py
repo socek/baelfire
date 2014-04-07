@@ -1,5 +1,6 @@
+import os
 import logging
-from json import dump
+from json import dump, load
 from collections import OrderedDict
 
 
@@ -13,6 +14,7 @@ class TaskLogger(object):
     def add_task(self, task, data):
         self.tasks[task.name] = {
             'name': task.name,
+            'path': task.get_path(),
             'data': data,
             'dependencys': [],
         }
@@ -25,10 +27,21 @@ class TaskLogger(object):
 
     def save(self):
         """Saves tasks log coded in json ordered by tasks execution."""
-        log = open(self.filename, 'w')
         data = [task for key, task in self.tasks.items()]
-        dump(data, log, indent=2)
-        log.close()
+        if len(data) > 0:
+            log = open(self.filename, 'w')
+            dump(data, log, indent=2)
+            log.close()
+
+    @classmethod
+    def read(cls):
+        """Read lastlog and return data."""
+        if not os.path.exists(cls.filename):
+            return []
+        lastlog = open(cls.filename, 'r')
+        data = load(lastlog)
+        lastlog.close()
+        return data
 
 
 class Logger(object):

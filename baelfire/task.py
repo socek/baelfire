@@ -46,7 +46,8 @@ class Task(object):
         need_rebuild = False
 
         for dependency in self.dependencys:
-            need_rebuild = need_rebuild or dependency()
+            dependency_rule = dependency()
+            need_rebuild = need_rebuild or dependency_rule
 
         return need_rebuild
 
@@ -64,12 +65,13 @@ class Task(object):
             dependency.logme()
 
     def run(self):
-        self.pre_run()
-        force = self.kwargs.pop('force', False)
-        success = None
-        needed = self.is_rebuild_needed()
-
         try:
+            print('\t', self.get_path(), 'S')
+            self.pre_run()
+            force = self.kwargs.pop('force', False)
+            success = None
+            needed = self.is_rebuild_needed()
+
             if needed or force:
                 success = False
                 self.log.task(self.name)
@@ -77,6 +79,7 @@ class Task(object):
                 success = True
         finally:
             self.logme(force, needed, success)
+            print('\t', self.get_path(), 'F')
 
     def was_runned(self):
         """Was this task runned?"""

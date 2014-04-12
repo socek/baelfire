@@ -22,6 +22,7 @@ class TaskLoggerTest(TestCase):
             'name': 'myname',
             'data': {'this': 'is data'},
             'dependencys': [],
+            'path': task.get_path.return_value,
         }, self.log.tasks['myname'])
 
     def test_add_dependecy(self):
@@ -47,6 +48,7 @@ class TaskLoggerTest(TestCase):
 
         task = MagicMock()
         task.name = 'myname'
+        task.get_path.return_value = '/mypath'
         self.log.add_task(task, {'this': 'is data'})
 
         self.log.save()

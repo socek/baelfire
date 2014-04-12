@@ -206,6 +206,7 @@ class ParentFileChangedTest(TestCase):
                 'filenames': [],
                 'parent': {
                     'file': self.parent.filename,
-                    'name': 'ExampleTask'},
+                    'name': 'ExampleTask',
+                    'path': '/exampletask'},
                 'runned': False},
             self.dependency.logdata)

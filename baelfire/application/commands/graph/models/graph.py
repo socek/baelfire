@@ -18,8 +18,6 @@ class Graph(object):
 
     def close(self):
         self.datalog.write(b'}\n')
-        self.datalog.seek(0)
-        print(self.datalog.read().decode('utf-8'))
 
     def open_lastlog(self):
         self.lastlog = TaskLogger.read()

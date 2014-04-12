@@ -40,6 +40,7 @@ class ApplicationTest(TestCase):
         """Should gather options and commands"""
         self.assertEqual(
             [
+                'GraphCommand',
                 'Init',
                 'ListTasks',
                 'RunTask',
@@ -66,7 +67,7 @@ class ApplicationTest(TestCase):
                          self.app.parser)
 
         self.assertEqual(
-            4,
+            5,
             self.mocks['ArgumentParser'].return_value.add_argument.call_count)
 
     def test_parse_command_line(self):

@@ -66,7 +66,6 @@ class Task(object):
 
     def run(self):
         try:
-            print('\t', self.get_path(), 'S')
             self.pre_run()
             force = self.kwargs.pop('force', False)
             success = None
@@ -79,7 +78,6 @@ class Task(object):
                 success = True
         finally:
             self.logme(force, needed, success)
-            print('\t', self.get_path(), 'F')
 
     def was_runned(self):
         """Was this task runned?"""

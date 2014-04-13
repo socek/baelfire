@@ -54,10 +54,14 @@ class Application(object):
     def run_command_or_print_help(self):
         if len(self.args) > 0:
             commands = filter(
-                lambda command: command[0] in self.commands,
-                self.args.items())
-            for name, value in commands:
-                self.commands[name](value, self.raw_args)
+                lambda command: command in self.commands,
+                list(self.args))
+
+            # this line is to make "GraphCommand" run last
+            commands = sorted(commands, reverse=True)
+
+            for name in commands:
+                self.commands[name](self.args[name], self.raw_args)
         else:
             self.parser.print_help()
 

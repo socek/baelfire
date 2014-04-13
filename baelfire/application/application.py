@@ -1,3 +1,5 @@
+import os
+import sys
 from argparse import ArgumentParser
 
 from .commands.init.command import Init
@@ -65,7 +67,11 @@ class Application(object):
         else:
             self.parser.print_help()
 
+    def add_acutal_path(self):
+        sys.path.append(os.getcwd())
+
     def __call__(self):
+        self.add_acutal_path()
         self.create_parser()
         self.parse_command_line()
         self.convert_options()

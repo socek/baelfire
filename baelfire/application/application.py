@@ -44,7 +44,7 @@ class Application(object):
         self.raw_args = vars(self.parser.parse_args())
         self.args = {}
         for key, value in self.raw_args.items():
-            if value is not None:
+            if not value in [None, False, []]:
                 self.args[key] = value
 
     def convert_options(self):

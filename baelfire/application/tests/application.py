@@ -78,6 +78,8 @@ class ApplicationTest(TestCase):
             'init': 'command',
             'log': 'option',
             'something': None,
+            'somethin2': [],
+            'and so on': False,
         }
         self.app.parse_command_line()
 

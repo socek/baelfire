@@ -26,7 +26,7 @@ class InitFile(object):
         self.setup_path = None
         self.recipe = None
 
-    def assign(self, package_url, setup_path):
+    def assign(self, package_url, setup_path=None):
         self.package_url = package_url
         self.setup_path = setup_path
 
@@ -58,16 +58,17 @@ class InitFile(object):
         return self.recipe
 
     def is_reinstall_needed(self):
-        return not path.exists(self.filename) or \
-            path.getmtime(self.filename) < path.getmtime(self.setup_path)
+        if self.setup_path is None:
+            return False
+        else:
+            return not path.exists(self.filename) or \
+                path.getmtime(self.filename) < path.getmtime(self.setup_path)
 
     def install_dependencys(self):
         if self.is_reinstall_needed():
             spp = Popen(['python', self.setup_path, 'test'])
             spp.wait()
-            if spp.returncode is 0:
-                self.save()
-            else:
+            if spp.returncode is not 0:
                 raise RecipeInstallError()
 
     def is_present(self):

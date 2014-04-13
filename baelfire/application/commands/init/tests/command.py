@@ -25,7 +25,7 @@ class InitTest(TestCase):
         self.assertEqual(
             {
                 'dest': 'Init',
-                'nargs': 2,
+                'nargs': '+',
                 'help': 'Inits package.'
             },
             self.command.kwargs)
@@ -92,4 +92,9 @@ class InitTest(TestCase):
         """Should do nothing when everything is good."""
         self.add_mock(PREFIX + 'path')
         self.mocks['path'].exists.return_value = True
+        self.assertEqual(None, self.command.validate_setup())
+
+    def test_validate_setup_when_no_setup_path_set(self):
+        """Should do nothing."""
+        self.command.initfile.setup_path = None
         self.assertEqual(None, self.command.validate_setup())

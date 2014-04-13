@@ -12,7 +12,7 @@ class Init(Command):
     def __init__(self):
         super().__init__('-i',
                          '--init',
-                         nargs=2,
+                         nargs='+',
                          help='Inits package.')
 
     def validate_package(self):
@@ -22,6 +22,8 @@ class Init(Command):
             raise RecipePackageNotValidError(3, self.initfile.package_url)
 
     def validate_setup(self):
+        if self.initfile.setup_path is None:
+            return
         if not path.exists(self.initfile.setup_path):
             raise RecipePackageNotValidError(2, self.initfile.setup_path)
 
@@ -33,5 +35,6 @@ class Init(Command):
             self.validate_setup()
 
             self.initfile.install_dependencys()
+            self.initfile.save()
         except RecipePackageNotValidError as er:
             print(er)

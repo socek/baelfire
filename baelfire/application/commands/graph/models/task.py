@@ -36,7 +36,6 @@ class TaskVisualization(Visualization):
         }
 
     def dependencys(self):
-        self.is_always_rebuilding()
         for dependency in self.data['dependencys']:
             cls = dependency_visualization(dependency['name'])
             yield cls(dependency, self)

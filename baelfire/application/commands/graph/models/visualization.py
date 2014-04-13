@@ -7,7 +7,3 @@ class Visualization(object):
 
     def details(self):
         return self.template % self.details_data()
-
-
-
-

@@ -1,9 +1,11 @@
-from json import loads
+from json import loads, dumps
 from io import StringIO
 from mock import MagicMock
 from soktest import TestCase
 
 from baelfire.log import TaskLogger, Logger
+
+PREFIX = 'baelfire.log.'
 
 
 class TaskLoggerTest(TestCase):
@@ -56,6 +58,34 @@ class TaskLoggerTest(TestCase):
         saved_data = loads(self.mocks['open'].return_value.getvalue())
 
         self.assertEqual([self.log.tasks['myname']], saved_data)
+
+    def test_save_when_no_data_were_logged(self):
+        """Should do nothing."""
+        iobuffer = StringIO()
+        self.add_mock('builtins.open', return_value=iobuffer)
+        self.add_mock_object(iobuffer, 'close')
+
+        self.log.save()
+
+        self.assertEqual(0, self.mocks['open'].call_count)
+
+    def test_read_when_log_does_not_exists(self):
+        """Should return empty list."""
+        self.add_mock(PREFIX + 'os')
+        self.mocks['os'].path.exists.return_value = False
+
+        self.assertEqual([], TaskLogger.read())
+
+    def test_read_when_log_exists(self):
+        """Should return logged data."""
+        self.add_mock(PREFIX + 'os')
+        self.mocks['os'].path.exists.return_value = True
+
+        data = {'data': 'logged'}
+        iobuffer = StringIO(dumps(data))
+        self.add_mock('builtins.open', return_value=iobuffer)
+
+        self.assertEqual(data, TaskLogger.read())
 
 
 class LoggerTest(TestCase):

@@ -19,7 +19,7 @@ class Graph(object):
     def close(self):
         self.datalog.write(b'}\n')
 
-    def open_lastlog(self):
+    def read_lastlog(self):
         self.lastlog = TaskLogger.read()
 
     def generate_png(self):
@@ -28,20 +28,24 @@ class Graph(object):
         spp = Popen(['dot', '-x', '-Tpng'],
                     stdin=self.datalog, stdout=filepipe)
         spp.wait()
+        filepipe.close()
 
     def write(self, data):
         self.datalog.write(data.encode('utf-8'))
 
+    def generate_task_visualization(self, task):
+        visualization = TaskVisualization(task)
+        self.write(visualization.details())
+
+        for dependency in visualization.dependencys():
+            self.write(dependency.details())
+
     def __call__(self):
         self.open()
-        self.open_lastlog()
+        self.read_lastlog()
 
         for task in self.lastlog:
-            visualization = TaskVisualization(task)
-            self.write(visualization.details())
-
-            for dependency in visualization.dependencys():
-                self.write(dependency.details())
+            self.generate_task_visualization(task)
 
         self.close()
         self.generate_png()

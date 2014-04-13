@@ -40,16 +40,6 @@ class DependencyVisualization(Visualization):
             'path': self.path(),
         }
 
-    def details(self):
-        data = ''
-        if not self.is_link():
-            data = super().details()
-        data += self.connection()
-        return data
-
-    def connection(self):
-        return self.connection_template % self.connection_details()
-
     def connection_details(self):
         return {
             'left': self.parent.path(),
@@ -57,11 +47,18 @@ class DependencyVisualization(Visualization):
             'name': self.link_name(),
         }
 
+    def connection(self):
+        return self.connection_template % self.connection_details()
+
+    def details(self):
+        data = ''
+        if not self.is_link():
+            data = super().details()
+        data += self.connection()
+        return data
+
 
 class AlwaysRebuildVisualization(DependencyVisualization):
-
-    def color(self):
-        return 'green'
 
     def details(self):
         return ''

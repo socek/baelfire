@@ -19,7 +19,7 @@ def get_recipe_from_url(package_url):
 
 class InitFile(object):
 
-    filename = '.bael.init'
+    filename = '.baelfire.init'
 
     def __init__(self):
         self.package_url = None

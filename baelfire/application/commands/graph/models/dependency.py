@@ -69,6 +69,9 @@ class AlwaysRebuildVisualization(DependencyVisualization):
 
 class FileDependencyVisualization(DependencyVisualization):
 
+    def shape(self):
+        return 'folder'
+
     def name(self):
         return self.data['data']['filenames'][0]
 

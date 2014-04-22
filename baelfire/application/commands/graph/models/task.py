@@ -4,7 +4,7 @@ from.dependency import dependency_visualization
 
 class TaskVisualization(Visualization):
 
-    link_template = '"%(right)s" -> "%(left)s";\n'
+    link_template = '"%(right)s" -> "%(left)s" [style=dashed];\n'
 
     def name(self):
         return self.data['name']

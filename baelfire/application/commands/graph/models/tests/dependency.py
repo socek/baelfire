@@ -178,6 +178,10 @@ class FileDependencyVisualizationTest(TestCase):
         self.assertEqual(
             '/dependency_name?filename=filename', self.visualization.path())
 
+    def test_shape(self):
+        """Should return 'folder'."""
+        self.assertEqual('folder', self.visualization.shape())
+
 
 class DependencyVisualizationFunctionTest(TestCase):
 

@@ -116,4 +116,4 @@ class TaskVisualizationTest(TestCase):
         }
         data = self.visualization.links()
 
-        self.assertEqual('"/mylink" -> "/mypath";\n', data)
+        self.assertEqual('"/mylink" -> "/mypath" [style=dashed];\n', data)

@@ -59,6 +59,7 @@ class Recipe(object):
 
     def validate_dependencys(self):
         for task in self.tasks.values():
+            task.generate_links()
             task.generate_dependencys()
 
     def init_signals(self):

@@ -13,6 +13,7 @@ class Task(object):
 
     def __init__(self):
         self.kwargs = {}
+        self.links = []
 
     def assign_kwargs(self, **kwargs):
         self.kwargs.update(kwargs)
@@ -54,12 +55,27 @@ class Task(object):
     def pre_run(self):
         pass
 
+    def add_link(self, path, **kwargs):
+        task = self.recipe.get_task(path)
+        task.assign_kwargs(**kwargs)
+        self.links.append(task)
+
+    def generate_links(self):
+        pass
+
+    def run_links(self):
+        for link in self.links:
+            link.run()
+
     def logme(self, force, needed, success):
         logdata = {
             'force': force,
             'needed': needed,
             'success': success,
+            'links': [],
         }
+        for link in self.links:
+            logdata['links'].append(link.get_path())
         self.recipe.data_log.add_task(self, logdata)
         for dependency in self.dependencys:
             dependency.logme()
@@ -67,6 +83,7 @@ class Task(object):
     def run(self):
         try:
             self.pre_run()
+            self.run_links()
             force = self.kwargs.pop('force', False)
             success = None
             needed = self.is_rebuild_needed()

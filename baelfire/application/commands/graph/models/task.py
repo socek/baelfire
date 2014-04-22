@@ -4,6 +4,8 @@ from.dependency import dependency_visualization
 
 class TaskVisualization(Visualization):
 
+    link_template = '"%(right)s" -> "%(left)s";\n'
+
     def name(self):
         return self.data['name']
 
@@ -44,3 +46,15 @@ class TaskVisualization(Visualization):
         names = [dependency['name']
                  for dependency in self.data['dependencys']]
         return 'AlwaysRebuild' in names
+
+    def link_data(self, link):
+        return {
+            'left': self.path(),
+            'right': link,
+        }
+
+    def links(self):
+        data = ''
+        for link in self.data['data']['links']:
+            data += self.link_template % self.link_data(link)
+        return data

@@ -98,3 +98,22 @@ class TaskVisualizationTest(TestCase):
         self.data['dependencys'] = [{'name': "AlwaysRebuild"}]
 
         self.assertEqual(True, self.visualization.is_always_rebuilding())
+
+    def test_link_data(self):
+        """Should return data generated from object methods."""
+        self.data['path'] = '/mypath'
+        data = self.visualization.link_data('mylink')
+        self.assertEqual({
+            'left': '/mypath',
+            'right': 'mylink',
+        }, data)
+
+    def test_links(self):
+        """Should return filled up templates."""
+        self.data['path'] = '/mypath'
+        self.data['data'] = {
+            'links': ['/mylink'],
+        }
+        data = self.visualization.links()
+
+        self.assertEqual('"/mylink" -> "/mypath";\n', data)

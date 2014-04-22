@@ -182,3 +182,45 @@ class TaskTest(TestCase):
         self.assertEqual('test', fp.read())
         fp.close()
         self.mocks['utime'].assert_called_once_with(path, None)
+
+    def test_add_link(self):
+        """Should add task to .links with assigned kwargs."""
+        link = ExampleTask()
+        recipe = MagicMock()
+        recipe.get_task.return_value = link
+        self.task.assign_recipe(recipe)
+
+        self.task.add_link('mypath', myarg=10)
+
+        recipe.get_task.assert_called_once_with('mypath')
+        self.assertEqual([link], self.task.links)
+        self.assertEqual({'myarg': 10}, link.kwargs)
+
+    def test_run_links(self):
+        """Should run all links assigned to a task."""
+        link = MagicMock()
+        recipe = MagicMock()
+        recipe.get_task.return_value = link
+        self.task.assign_recipe(recipe)
+        self.task.add_link('mypath')
+
+        self.task.run_links()
+
+        link.run.assert_called_once_with()
+
+    def test_logme(self):
+        """Should log data to a recipe logger."""
+        link = MagicMock()
+        recipe = MagicMock()
+        recipe.get_task.return_value = link
+        self.task.assign_recipe(recipe)
+        self.task.add_link('mypath')
+
+        self.task.logme('force', 'needed', 'success')
+
+        recipe.data_log.add_task.assert_called_once_with(self.task, {
+            'force': 'force',
+            'needed': 'needed',
+            'success': 'success',
+            'links': [link.get_path.return_value],
+        })

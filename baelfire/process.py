@@ -13,8 +13,6 @@ class Process(object):
 
     def prepare_args(self, args, kwargs):
         kwargs['shell'] = kwargs.get('shell', True)
-        kwargs['stdout'] = kwargs.get('stdout', PIPE)
-        kwargs['stderr'] = kwargs.get('stderr', PIPE)
 
     def pipes(self):
         try:
@@ -31,10 +29,7 @@ class Process(object):
             log(data)
 
     def run(self):
-        while self.spp.poll() is None:
-            self._pipes = self.pipes()
-            self.write_to_log('stdout', 'info')
-            self.write_to_log('stderr', 'warning')
+        self.spp.wait()
 
     def post_run(self):
         if self.recipe.aborting is True:

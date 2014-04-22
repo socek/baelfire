@@ -78,25 +78,6 @@ class ProcessTest(TestCase):
         log.assert_called_once_with(
             data.strip.return_value)
 
-    def test_run(self):
-        """Should write pipe read to a logs when process is running."""
-        self.process.spp = MagicMock()
-
-        def one():
-            return 1
-
-        def two():
-            self.process.spp.poll.side_effect = one
-            return None
-        self.process.spp.poll.side_effect = two
-        self.add_mock_object(self.process, 'pipes')
-        self.add_mock_object(self.process, 'write_to_log')
-
-        self.process.run()
-
-        self.assertEqual(2, self.process.spp.poll.call_count)
-        self.assertEqual(2, self.process.write_to_log.call_count)
-
     def test_post_run_when_aborting(self):
         """Should raise CommandAborted when recipe is set to aborting state."""
         self.recipe.aborting = True
@@ -123,5 +104,4 @@ class ProcessTest(TestCase):
 
         self.process()
 
-        self.mocks['Popen'].assert_called_once_with(
-            stderr=PIPE, shell=True, stdout=PIPE)
+        self.mocks['Popen'].assert_called_once_with(shell=True)

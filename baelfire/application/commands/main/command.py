@@ -30,5 +30,7 @@ class RunTask(Command):
     def make(self):
         self.recipe = self.get_recipe()
         self.gather_tasks()
-        self.run_tasks()
-        self.recipe.data_log.save()
+        try:
+            self.run_tasks()
+        finally:
+            self.recipe.data_log.save()

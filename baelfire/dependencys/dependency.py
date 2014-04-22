@@ -48,7 +48,9 @@ class Dependency(object):
         self._log_method('validate_parent')
         self._log_method('validate_dependency')
         self._log_method('run_parent')
-        return self._log_method('make')
+        result = self._log_method('make')
+        self.logdata['result'] = result
+        return result
 
     def logme(self):
         if self.logdata is None:

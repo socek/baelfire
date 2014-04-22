@@ -27,10 +27,13 @@ class DependencyVisualization(Visualization):
             return self.path()
 
     def color(self):
-        return 'brown'
+        if self.data['data']['result']:
+            return 'green'
+        else:
+            return 'brown'
 
     def shape(self):
-        return 'circle'
+        return 'triangle'
 
     def details_data(self):
         return {
@@ -68,6 +71,12 @@ class FileDependencyVisualization(DependencyVisualization):
 
     def name(self):
         return self.data['data']['filenames'][0]
+
+    def path(self):
+        return '/%s?filename=%s' % (
+            self.data['name'],
+            self.data['data']['filenames'][0],
+        )
 
 transform = {
     'AlwaysRebuild': AlwaysRebuildVisualization,

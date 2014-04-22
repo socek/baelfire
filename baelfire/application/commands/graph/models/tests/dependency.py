@@ -53,23 +53,29 @@ class DependencyVisualizationTest(TestCase):
         self.assertEqual('/parent/depname', self.visualization.right_path())
 
     def test_color(self):
-        """Should return brown."""
-
+        """Should return brown on fail."""
+        self.data['data'] = {'result': False}
         self.assertEqual('brown', self.visualization.color())
+
+    def test_color_on_success(self):
+        """Should return green on success."""
+        self.data['data'] = {'result': True}
+        self.assertEqual('green', self.visualization.color())
 
     def test_shape(self):
         """Should return circle."""
 
-        self.assertEqual('circle', self.visualization.shape())
+        self.assertEqual('triangle', self.visualization.shape())
 
     def test_details_data(self):
         """Should return data generated from object methods."""
         self.data['name'] = 'depname'
+        self.data['data'] = {'result': True}
         self.parent.path.return_value = '/parent'
 
         self.assertEqual({
-            'color': 'brown',
-            'shape': 'circle',
+            'color': 'green',
+            'shape': 'triangle',
             'name': 'depname',
             'path': '/parent/depname',
         }, self.visualization.details_data())
@@ -100,13 +106,26 @@ class DependencyVisualizationTest(TestCase):
     def test_details_when_not_a_link(self):
         """Should return template filled up with .data"""
         self.parent.path.return_value = '/1parentpath'
-        self.data['data'] = {}
+        self.data['data'] = {'result': False}
         self.data['name'] = 'depname'
 
         data = self.visualization.details()
 
         self.assertEqual(
-            '''"/1parentpath/depname" [label="depname",shape=circle,regular=1,style=filled,fillcolor=brown];
+            '''"/1parentpath/depname" [label="depname",shape=triangle,regular=1,style=filled,fillcolor=brown];
+"/1parentpath/depname" -> "/1parentpath" [label="depname"];
+''', data)
+
+    def test_details_when_not_a_link_with_success(self):
+        """Should return template filled up with .data"""
+        self.parent.path.return_value = '/1parentpath'
+        self.data['data'] = {'result': True}
+        self.data['name'] = 'depname'
+
+        data = self.visualization.details()
+
+        self.assertEqual(
+            '''"/1parentpath/depname" [label="depname",shape=triangle,regular=1,style=filled,fillcolor=green];
 "/1parentpath/depname" -> "/1parentpath" [label="depname"];
 ''', data)
 
@@ -150,6 +169,14 @@ class FileDependencyVisualizationTest(TestCase):
         self.data['data'] = {'filenames': ['filename']}
 
         self.assertEqual('filename', self.visualization.name())
+
+    def test_path(self):
+        """Should return /(dependency name)?filename=(first filname)"""
+        self.data['name'] = 'dependency_name'
+        self.data['data'] = {'filenames': ['filename']}
+
+        self.assertEqual(
+            '/dependency_name?filename=filename', self.visualization.path())
 
 
 class DependencyVisualizationFunctionTest(TestCase):

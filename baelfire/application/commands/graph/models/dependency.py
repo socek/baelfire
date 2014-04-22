@@ -2,7 +2,7 @@ from .visualization import Visualization
 
 
 class DependencyVisualization(Visualization):
-    connection_template = '"%(right)s" -> "%(left)s" [label="%(name)s"];\n'
+    connection_template = '"%(right)s" -> "%(left)s";\n'
 
     def __init__(self, data, parent):
         super().__init__(data)

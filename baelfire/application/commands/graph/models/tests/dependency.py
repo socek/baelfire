@@ -101,7 +101,7 @@ class DependencyVisualizationTest(TestCase):
         data = self.visualization.connection()
 
         self.assertEqual(
-            '"/2parentpath" -> "/1parentpath" [label="depname"];\n', data)
+            '"/2parentpath" -> "/1parentpath";\n', data)
 
     def test_details_when_not_a_link(self):
         """Should return template filled up with .data"""
@@ -113,7 +113,7 @@ class DependencyVisualizationTest(TestCase):
 
         self.assertEqual(
             '''"/1parentpath/depname" [label="depname",shape=triangle,regular=1,style=filled,fillcolor=brown];
-"/1parentpath/depname" -> "/1parentpath" [label="depname"];
+"/1parentpath/depname" -> "/1parentpath";
 ''', data)
 
     def test_details_when_not_a_link_with_success(self):
@@ -126,7 +126,7 @@ class DependencyVisualizationTest(TestCase):
 
         self.assertEqual(
             '''"/1parentpath/depname" [label="depname",shape=triangle,regular=1,style=filled,fillcolor=green];
-"/1parentpath/depname" -> "/1parentpath" [label="depname"];
+"/1parentpath/depname" -> "/1parentpath";
 ''', data)
 
     def test_details_when_is_a_link(self):
@@ -138,7 +138,7 @@ class DependencyVisualizationTest(TestCase):
         data = self.visualization.details()
 
         self.assertEqual(
-            '''"/2parentpath" -> "/1parentpath" [label="depname"];
+            '''"/2parentpath" -> "/1parentpath";
 ''', data)
 
 

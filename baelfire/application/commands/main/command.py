@@ -1,5 +1,5 @@
 from ..command import Command
-from baelfire.error import OnlyOneTaskInARowError
+from baelfire.error import OnlyOneTaskInARowError, CommandAborted
 
 
 class RunTask(Command):
@@ -32,5 +32,7 @@ class RunTask(Command):
         self.gather_tasks()
         try:
             self.run_tasks()
+        except CommandAborted:
+            self.recipe.log.warning('>> Command aborted!')
         finally:
             self.recipe.data_log.save()

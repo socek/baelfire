@@ -1,12 +1,13 @@
 import logging
+from mock import MagicMock
 
 from soktest import TestCase
 
 from ..command import RunTask
 from baelfire.task import Task
 from baelfire.recipe import Recipe
-from baelfire.error import OnlyOneTaskInARowError
 from baelfire.dependencys import AlwaysRebuild
+from baelfire.error import OnlyOneTaskInARowError, CommandAborted
 
 PREFIX = 'baelfire.application.commands.main.command.'
 
@@ -95,3 +96,24 @@ class RunTaskTest(TestCase):
         self.command.make()
 
         self.assertEqual(1, task.made)
+
+    def test_make_on_command_abort(self):
+        """Should break running tasks on CommandAborted raised."""
+        task1 = MagicMock()
+        task1.was_runned.return_value = False
+        task1.run.side_effect = CommandAborted()
+
+        task2 = MagicMock()
+        task2.was_runned.return_value = False
+
+        self.command.run_list = [task1, task2]
+
+        recipe = MagicMock()
+        self.add_mock_object(self.command, 'get_recipe', return_value=recipe)
+        self.add_mock_object(self.command, 'gather_tasks')
+
+        self.command.make()
+
+        task1.run.assert_called_once_with()
+        self.assertEqual(0, task2.run.call_count)
+        recipe.log.warning.assert_called_once_with('>> Command aborted!')

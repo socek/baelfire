@@ -1,7 +1,6 @@
 from os import utime
 
 from .process import Process
-from baelfire.error import CommandAborted
 
 
 class Task(object):
@@ -83,10 +82,12 @@ class Task(object):
 
     def run(self):
         try:
-            self.pre_run()
-            self.run_links()
             force = self.kwargs.pop('force', False)
             success = None
+            needed = False
+
+            self.pre_run()
+            self.run_links()
             needed = self.is_rebuild_needed()
 
             if needed or force:
@@ -116,10 +117,7 @@ class Task(object):
     def command(self, *args, **kwargs):
         """Run external command."""
         process = Process(self)
-        try:
-            return process(*args, **kwargs)
-        except CommandAborted:
-            self.recipe.log.warning('>> Command aborted!')
+        return process(*args, **kwargs)
 
     def touch(self, path):
         """touch(filename) -> None

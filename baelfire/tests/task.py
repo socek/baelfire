@@ -225,16 +225,3 @@ class TaskTest(TestCase):
             'success': 'success',
             'links': [link.get_path.return_value],
         })
-
-    def test_command_when_CommandAborted_raised(self):
-        """Should log 'Command aborted' text."""
-        self.add_mock(PREFIX + 'Process')
-        self.mocks['Process'].return_value.side_effect = CommandAborted()
-        recipe = MagicMock()
-        self.task.assign_recipe(recipe)
-
-        self.task.command('something')
-
-        self.mocks['Process'].assert_called_once_with(self.task)
-        self.mocks['Process'].return_value.assert_called_once_with('something')
-        recipe.log.warning.assert_called_once_with('>> Command aborted!')

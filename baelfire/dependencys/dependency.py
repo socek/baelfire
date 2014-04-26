@@ -43,6 +43,7 @@ class Dependency(object):
     def __call__(self):
         self.logdata = {
             'runned': True,
+            'result': None,
         }
         self._log_method('validate_task')
         self._log_method('validate_parent')

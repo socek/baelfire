@@ -1,7 +1,7 @@
 from mock import MagicMock
 from soktest import TestCase
 
-from baelfire.error import RecipeNotFoundError, CommandAborted, CommandError
+from baelfire.error import RecipeNotFoundError, CommandError
 from baelfire.application.commands.command import Command
 from baelfire.application.application import run, Application
 
@@ -68,6 +68,18 @@ class ApplicationTest(TestCase):
 
         self.assertEqual(
             5,
+            self.mocks['ArgumentParser'].return_value.add_argument.call_count)
+
+    def test_create_parser_when_recipe_in_application(self):
+        """Should not add -r argument when recipe is already assigned to
+        application,"""
+        self.app.recipe = 'myrecipe'
+        self.add_mock(PREFIX + 'ArgumentParser')
+
+        self.app.create_parser()
+
+        self.assertEqual(
+            4,
             self.mocks['ArgumentParser'].return_value.add_argument.call_count)
 
     def test_parse_command_line(self):

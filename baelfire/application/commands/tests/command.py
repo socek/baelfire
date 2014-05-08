@@ -53,7 +53,10 @@ class CommandTest(TestCase):
 
     def test_get_recipe_not(self):
         """Should raise RecipeNotFoundError if no recipe in init file or
-        command switch."""
+        command switch or in application."""
+        application = MagicMock()
+        application.recipe = None
+        self.command.assign_application(application)
         self.add_mock('baelfire.application.commands.init.models.path')
         self.mocks['path'].exists.return_value = False
         self.assertRaises(RecipeNotFoundError, self.command.get_recipe)
@@ -62,6 +65,9 @@ class CommandTest(TestCase):
         """Should use get_recipe_from_url from init.models"""
         self.command.raw_args = {'recipe': 'module:klass'}
         self.add_mock(PREFIX + 'get_recipe_from_url')
+        application = MagicMock()
+        application.recipe = None
+        self.command.assign_application(application)
 
         result = self.command.get_recipe()
 
@@ -72,15 +78,28 @@ class CommandTest(TestCase):
             'module:klass')
 
     def test_get_recipe_from_initfile(self):
-        """Should rerurn recipe from init file."""
+        """Should rerurn recipe from init file if no recipe in application or
+        command switch."""
         self.add_mock(PREFIX + 'InitFile')
         self.mocks['InitFile'].return_value.is_present.return_value = True
+        application = MagicMock()
+        application.recipe = None
+        self.command.assign_application(application)
 
         recipe = self.mocks[
             'InitFile'].return_value.get_recipe.return_value.return_value
         self.assertEqual(recipe, self.command.get_recipe())
         recipe = self.mocks[
             'InitFile'].return_value.get_recipe.assert_called_once_with()
+
+    def test_get_recipe_from_application(self):
+        """Should return recipe from application if it is not None."""
+        application = MagicMock()
+        application.recipe = 'myrecipe'
+        self.command.assign_application(application)
+
+        result = self.command.get_recipe()
+        self.assertEqual('myrecipe', result)
 
 
 class ExampleTriggeredCommand(TriggeredCommand):

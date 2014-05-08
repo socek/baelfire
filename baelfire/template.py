@@ -32,7 +32,6 @@ class TemplateTask(Task):
         task_file = sys.modules[self.__module__].__file__
         self.add_dependecy(FileChanged(task_file))
 
-
     def jinja(self):
         """Jinja2 environment generator."""
         if self._jinja is None:

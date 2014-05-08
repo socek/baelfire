@@ -15,9 +15,9 @@ class Command(object):
     def assign_application(self, application):
         self.application = application
 
-    def __call__(self, args=(), raw_args={}):
+    def __call__(self, args=(), raw_args=None):
         self.args = args
-        self.raw_args = raw_args
+        self.raw_args = raw_args or {}
         self.make()
 
     @property
@@ -26,7 +26,10 @@ class Command(object):
 
     def get_recipe(self):
         """Gets recipe from command switch or init file."""
-        if self.raw_args.get('recipe', None) is not None:
+        application_recipe = getattr(self.application, 'recipe', None)
+        if application_recipe is not None:
+            return application_recipe
+        elif self.raw_args.get('recipe', None) is not None:
             return get_recipe_from_url(self.raw_args['recipe'])()
         else:
             initfile = InitFile()

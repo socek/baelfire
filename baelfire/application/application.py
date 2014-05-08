@@ -11,11 +11,12 @@ from baelfire.error import RecipeNotFoundError, CommandError
 
 class Application(object):
 
-    def __init__(self):
+    def __init__(self, recipe=None):
         self.commands = {}
         self.options = {}
         self.gather_options()
         self.gather_commands()
+        self.recipe = recipe
 
     def gather_commands(self):
         self.add_command(Init())
@@ -37,10 +38,11 @@ class Application(object):
         for name, command in self.commands.items():
             command.assign_argument(self.parser)
 
-        self.parser.add_argument(
-            '-r', '--recipe', dest='recipe',
-            help='Use this recipe.',
-        )
+        if self.recipe is None:
+            self.parser.add_argument(
+                '-r', '--recipe', dest='recipe',
+                help='Use this recipe.',
+            )
 
     def parse_command_line(self):
         self.raw_args = vars(self.parser.parse_args())

@@ -56,6 +56,14 @@ class Task(object):
     def pre_run(self):
         pass
 
+    def pre_invoked_tasks(self):
+        pass
+
+    def invoke_task(self, path, **kwargs):
+        task = self.recipe.get_task(path)
+        task.assign_kwargs(**kwargs)
+        task.run()
+
     def add_link(self, path, **kwargs):
         task = self.recipe.get_task(path)
         task.assign_kwargs(**kwargs)
@@ -98,6 +106,7 @@ class Task(object):
 
     def _make(self):
         self._log['success'] = False
+        self.pre_invoked_tasks()
         self.log.task(self.name)
         self.make(**self.kwargs)
         self._log['success'] = True

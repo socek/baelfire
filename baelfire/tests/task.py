@@ -239,3 +239,15 @@ class TaskTest(TestCase):
         self.task.run()
 
         self.assertEqual(0, self.mocks['_make'].call_count)
+
+    def test_invoke_task(self):
+        """Should run specyfic task with kwargs assign."""
+        self.task.recipe = MagicMock()
+
+        self.task.invoke_task('/somewhere', data=10)
+
+        task = self.task.recipe.get_task.return_value
+
+        self.task.recipe.get_task.assert_called_once_with('/somewhere')
+        task.assign_kwargs.assert_called_once_with(data=10)
+        task.run.assert_called_once_with()

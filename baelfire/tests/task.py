@@ -230,3 +230,12 @@ class TaskTest(TestCase):
             'success': 'success',
             'links': [link.get_path.return_value],
         })
+
+    def test_run_when_task_was_runned_before(self):
+        """Should do nothing if task was runned earlier."""
+        self.task.runned = True
+        self.add_mock_object(self.task, '_make')
+
+        self.task.run()
+
+        self.assertEqual(0, self.mocks['_make'].call_count)

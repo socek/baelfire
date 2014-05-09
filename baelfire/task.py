@@ -77,14 +77,15 @@ class Task(object):
             dependency.logme()
 
     def run(self):
-        self._log = {}
-        try:
-            self._before_make()
-            if self._log['needed'] or self._log['force']:
-                self._make()
-        finally:
-            self.logme()
-            self.runned = True
+        if self.runned is False:
+            self._log = {}
+            try:
+                self._before_make()
+                if self._log['needed'] or self._log['force']:
+                    self._make()
+            finally:
+                self.logme()
+                self.runned = True
 
     def _before_make(self):
         self._log['force'] = self.kwargs.pop('force', False)

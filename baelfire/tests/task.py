@@ -258,3 +258,18 @@ class TaskTest(TestCase):
         self.task.touchme()
 
         self.mocks['touch'].assert_called_once_with('/tmp')
+
+    def test_is_output_file_avalible_to_build_when_outputfile_not_set(self):
+        """Should return False when output file is not set."""
+        self.add_mock_object(self.task, 'get_output_file', return_value=None)
+
+        self.assertEqual(False, self.task.is_output_file_avalible_to_build())
+
+    def test_is_output_file_avalible_to_build(self):
+        """Should return true when output file is and file is not existing."""
+        self.add_mock_object(
+            self.task, 'get_output_file', return_value='something')
+        self.add_mock(PREFIX + 'path')
+        self.mocks['path'].exists.return_value = False
+
+        self.assertEqual(True, self.task.is_output_file_avalible_to_build())

@@ -106,3 +106,10 @@ class TemplateTaskTest(TestCase):
 
         finally:
             shutil.rmtree(test_path, True)
+
+    def test_generate_dependencys_when_check_template_is_false(self):
+        """Should not add any dependency when check_template is setted to
+        False."""
+        self.template.check_template = False
+        self.template.generate_dependencys()
+        self.assertEqual([], self.template.dependencys)

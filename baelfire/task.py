@@ -1,4 +1,4 @@
-from os import utime
+from os import utime, path
 
 from .process import Process
 
@@ -50,8 +50,15 @@ class Task(object):
         for dependency in self.dependencys:
             dependency_rule = dependency()
             need_rebuild = need_rebuild or dependency_rule
+        need_rebuild = need_rebuild or self.is_output_file_avalible_to_build()
 
         return need_rebuild
+
+    def is_output_file_avalible_to_build(self):
+        if self.get_output_file() is None:
+            return False
+        else:
+            return not path.exists(self.get_output_file())
 
     def pre_run(self):
         pass

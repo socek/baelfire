@@ -11,6 +11,7 @@ class TemplateTask(Task):
     templates_dir = 'templates'
 
     def __init__(self, *args, **kwargs):
+        self.check_template = kwargs.pop('check_template', True)
         super().__init__(*args, **kwargs)
         self._jinja = None
 
@@ -28,9 +29,10 @@ class TemplateTask(Task):
     def generate_dependencys(self):
         """Generates FileChanged dependency for template file and task file.
         generate_dependencys method is not needed now."""
-        self.add_dependecy(FileChanged(self.template_absolute_path()))
-        task_file = sys.modules[self.__module__].__file__
-        self.add_dependecy(FileChanged(task_file))
+        if self.check_template is True:
+            self.add_dependecy(FileChanged(self.template_absolute_path()))
+            task_file = sys.modules[self.__module__].__file__
+            self.add_dependecy(FileChanged(task_file))
 
     def jinja(self):
         """Jinja2 environment generator."""

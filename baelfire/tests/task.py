@@ -216,8 +216,13 @@ class TaskTest(TestCase):
         recipe.get_task.return_value = link
         self.task.assign_recipe(recipe)
         self.task.add_link('mypath')
+        self.task._log = {
+            'force': 'force',
+            'needed': 'needed',
+            'success': 'success',
+        }
 
-        self.task.logme('force', 'needed', 'success')
+        self.task.logme()
 
         recipe.data_log.add_task.assert_called_once_with(self.task, {
             'force': 'force',

@@ -14,6 +14,7 @@ class Task(object):
     def __init__(self):
         self.kwargs = {}
         self.links = []
+        self.runned = False
 
     def assign_kwargs(self, **kwargs):
         self.kwargs.update(kwargs)
@@ -67,36 +68,38 @@ class Task(object):
         for link in self.links:
             link.run()
 
-    def logme(self, force, needed, success):
-        logdata = {
-            'force': force,
-            'needed': needed,
-            'success': success,
-            'links': [],
-        }
+    def logme(self):
+        self._log['links'] = []
         for link in self.links:
-            logdata['links'].append(link.get_path())
-        self.recipe.data_log.add_task(self, logdata)
+            self._log['links'].append(link.get_path())
+        self.recipe.data_log.add_task(self, self._log)
         for dependency in self.dependencys:
             dependency.logme()
 
     def run(self):
+        self._log = {}
         try:
-            force = self.kwargs.pop('force', False)
-            success = None
-            needed = False
-
-            self.pre_run()
-            self.run_links()
-            needed = self.is_rebuild_needed()
-
-            if needed or force:
-                success = False
-                self.log.task(self.name)
-                self.make(**self.kwargs)
-                success = True
+            self._before_make()
+            if self._log['needed'] or self._log['force']:
+                self._make()
         finally:
-            self.logme(force, needed, success)
+            self.logme()
+            self.runned = True
+
+    def _before_make(self):
+        self._log['force'] = self.kwargs.pop('force', False)
+        self._log['success'] = None
+        self._log['needed'] = False
+
+        self.pre_run()
+        self.run_links()
+        self._log['needed'] = self.is_rebuild_needed()
+
+    def _make(self):
+        self._log['success'] = False
+        self.log.task(self.name)
+        self.make(**self.kwargs)
+        self._log['success'] = True
 
     def was_runned(self):
         """Was this task runned?"""

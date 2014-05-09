@@ -5,7 +5,6 @@ from soktest import TestCase
 
 from baelfire.task import Task
 from .recipe import ExampleRecipe
-from baelfire.error import CommandAborted
 from baelfire.dependencys import Dependency
 
 PREFIX = 'baelfire.task.'

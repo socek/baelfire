@@ -60,9 +60,7 @@ class Task(object):
         pass
 
     def invoke_task(self, path, **kwargs):
-        task = self.recipe.get_task(path)
-        task.assign_kwargs(**kwargs)
-        task.run()
+        self.task(path, **kwargs).run()
 
     def add_link(self, path, **kwargs):
         task = self.recipe.get_task(path)
@@ -144,3 +142,8 @@ class Task(object):
 
     def touchme(self):
         self.touch(self.get_output_file())
+
+    def task(self, url, **kwargs):
+        task = self.recipe.get_task(url)
+        task.assign_kwargs(**kwargs)
+        return task

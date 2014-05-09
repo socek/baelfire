@@ -141,3 +141,6 @@ class Task(object):
             utime(path, None)
         finally:
             fhandle.close()
+
+    def touchme(self):
+        self.touch(self.get_output_file())

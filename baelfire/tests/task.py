@@ -251,3 +251,11 @@ class TaskTest(TestCase):
         self.task.recipe.get_task.assert_called_once_with('/somewhere')
         task.assign_kwargs.assert_called_once_with(data=10)
         task.run.assert_called_once_with()
+
+    def test_touchme(self):
+        """Should touch file returned by get_output_file."""
+        self.add_mock_object(self.task, 'touch')
+
+        self.task.touchme()
+
+        self.mocks['touch'].assert_called_once_with('/tmp')

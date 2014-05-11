@@ -112,7 +112,7 @@ class Task(object):
         self._log['success'] = False
         self.pre_invoked_tasks()
         self.log.task(self.name)
-        self.make(**self.kwargs)
+        self.make()
         self._log['success'] = True
 
     def was_runned(self):

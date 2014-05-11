@@ -70,8 +70,7 @@ class Task(object):
         self.task(path, **kwargs).run()
 
     def add_link(self, path, **kwargs):
-        task = self.recipe.get_task(path)
-        task.assign_kwargs(**kwargs)
+        task = self.recipe.task(path, **kwargs)
         self.links.append(task)
 
     def generate_links(self):
@@ -151,6 +150,4 @@ class Task(object):
         self.touch(self.get_output_file())
 
     def task(self, url, **kwargs):
-        task = self.recipe.get_task(url)
-        task.assign_kwargs(**kwargs)
-        return task
+        return self.recipe.task(url, **kwargs)

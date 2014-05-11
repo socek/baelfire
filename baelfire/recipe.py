@@ -45,17 +45,23 @@ class Recipe(object):
         self.tasks[task.get_path()] = task
         task.assign_recipe(self)
 
-    def get_task(self, url):
-        url = urlparse(url)
-        path = url.path
-        kwargs = parse_qs(url.query)
-
+    def task(self, path, **kwargs):
+        for key, value in kwargs.items():
+            if not type(value) in [list, tuple]:
+                kwargs[key] = [value]
         try:
             task = self.tasks[path]
             task.assign_kwargs(**kwargs)
             return task
         except KeyError:
             raise TaskNotFoundError(path)
+
+    def task_from_url(self, url):
+        url = urlparse(url)
+        path = url.path
+        kwargs = parse_qs(url.query)
+        task = self.task(path, **kwargs)
+        return task
 
     def validate_dependencys(self):
         for task in self.tasks.values():

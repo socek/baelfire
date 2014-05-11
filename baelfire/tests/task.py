@@ -187,20 +187,19 @@ class TaskTest(TestCase):
         """Should add task to .links with assigned kwargs."""
         link = ExampleTask()
         recipe = MagicMock()
-        recipe.get_task.return_value = link
+        recipe.task.return_value = link
         self.task.assign_recipe(recipe)
 
         self.task.add_link('mypath', myarg=10)
 
-        recipe.get_task.assert_called_once_with('mypath')
+        recipe.task.assert_called_once_with('mypath', myarg=10)
         self.assertEqual([link], self.task.links)
-        self.assertEqual({'myarg': 10}, link.kwargs)
 
     def test_run_links(self):
         """Should run all links assigned to a task."""
         link = MagicMock()
         recipe = MagicMock()
-        recipe.get_task.return_value = link
+        recipe.task.return_value = link
         self.task.assign_recipe(recipe)
         self.task.add_link('mypath')
 
@@ -212,7 +211,7 @@ class TaskTest(TestCase):
         """Should log data to a recipe logger."""
         link = MagicMock()
         recipe = MagicMock()
-        recipe.get_task.return_value = link
+        recipe.task.return_value = link
         self.task.assign_recipe(recipe)
         self.task.add_link('mypath')
         self.task._log = {
@@ -245,10 +244,9 @@ class TaskTest(TestCase):
 
         self.task.invoke_task('/somewhere', data=10)
 
-        task = self.task.recipe.get_task.return_value
+        task = self.task.recipe.task.return_value
 
-        self.task.recipe.get_task.assert_called_once_with('/somewhere')
-        task.assign_kwargs.assert_called_once_with(data=10)
+        self.task.recipe.task.assert_called_once_with('/somewhere', data=10)
         task.run.assert_called_once_with()
 
     def test_touchme(self):

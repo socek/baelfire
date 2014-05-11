@@ -94,12 +94,12 @@ class RecipeTest(TestCase):
         self.assertEqual(self.recipe, task.recipe)
         self.assertEqual({'/exampletask': task}, self.recipe.tasks)
 
-    def test_get_task(self):
+    def test_task_from_url(self):
         """Should return task with assigned kwargs from url."""
         source_task = ExampleTask()
         self.recipe.add_task(source_task)
 
-        task = self.recipe.get_task(
+        task = self.recipe.task_from_url(
             '/exampletask?arg=something&arg=somethin2&second_arg=metoo')
 
         self.assertEqual(task, source_task)
@@ -108,11 +108,20 @@ class RecipeTest(TestCase):
             'second_arg': ['metoo'],
         }, task.kwargs)
 
-    def test_get_task_bad_name(self):
+    def test_task_bad_name(self):
         """Should raise TaskNotFoundError when task is not found."""
-
         self.assertRaises(
             TaskNotFoundError,
-            self.recipe.get_task,
+            self.recipe.task,
             '/exampletask?arg=something&arg=somethin2&second_arg=metoo',
         )
+
+    def test_kwargs(self):
+        """Should transform all kwargs arguments into lists."""
+        self.recipe.add_task(ExampleTask())
+
+        task = self.recipe.task('/exampletask', one=(1,), two=[2, ], three=3)
+
+        self.assertEqual((1,), task.kwargs['one'])
+        self.assertEqual([2, ], task.kwargs['two'])
+        self.assertEqual([3, ], task.kwargs['three'])

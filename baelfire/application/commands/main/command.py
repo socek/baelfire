@@ -13,7 +13,7 @@ class RunTask(Command):
         self.run_list = []
         task_paths = []
         for taskurl in self.args:
-            task = self.recipe.get_task(taskurl)
+            task = self.recipe.task_from_url(taskurl)
 
             task_path = task.get_path()
             if task_path in task_paths:

@@ -12,7 +12,7 @@ class ListTasksTest(TestCase):
         self.command = ListTasks()
         self.add_mock_object(self.command, 'get_recipe')
 
-    def test_get_tasks_to_print(self):
+    def test_tasks_to_print(self):
         """Should return only tasks which is not hidden."""
         task_1 = MagicMock()
         task_1.hide = False
@@ -21,7 +21,7 @@ class ListTasksTest(TestCase):
         self.command.recipe = self.command.get_recipe()
         self.command.recipe.tasks.values.return_value = [task_1, task_2]
 
-        tasks = self.command.get_tasks_to_print()
+        tasks = self.command.tasks_to_print()
 
         self.assertEqual([task_1, ], list(tasks))
 
@@ -36,7 +36,7 @@ class ListTasksTest(TestCase):
 
         self.add_mock_object(
             self.command,
-            'get_tasks_to_print',
+            'tasks_to_print',
             return_value=[task_1, task_2])
 
         sizes = self.command.count_columns_width()
@@ -54,7 +54,7 @@ class ListTasksTest(TestCase):
 
         self.add_mock_object(
             self.command,
-            'get_tasks_to_print',
+            'tasks_to_print',
             return_value=[task_1])
 
         self.add_mock('builtins.print')

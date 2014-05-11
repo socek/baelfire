@@ -11,7 +11,7 @@ class ListTasks(TriggeredCommand):
                          '--list',
                          help='Lists tasks')
 
-    def get_tasks_to_print(self):
+    def tasks_to_print(self):
         method = lambda task: not task.hide
         return filter(method, self.recipe.tasks.values())
 
@@ -20,7 +20,7 @@ class ListTasks(TriggeredCommand):
             'names': self.names_minimal_size,
             'paths': self.paths_minimal_size,
         }
-        for task in self.get_tasks_to_print():
+        for task in self.tasks_to_print():
             sizes['names'] = max(len(task.name), sizes['names'])
             sizes['paths'] = max(len(task.get_path()), sizes['paths'])
 
@@ -39,7 +39,7 @@ class ListTasks(TriggeredCommand):
         text += template % ('Name', 'Path', 'Help')
         text += template % ('----', '----', '----')
 
-        for task in self.get_tasks_to_print():
+        for task in self.tasks_to_print():
             text += template % (
                 task.name,
                 task.get_path(),

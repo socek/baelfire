@@ -37,6 +37,7 @@ class Graph(object):
         visualization = TaskVisualization(task)
         self.write(visualization.details())
         self.write(visualization.links())
+        self.write(visualization.invoked())
 
         for dependency in visualization.dependencys():
             self.write(dependency.details())

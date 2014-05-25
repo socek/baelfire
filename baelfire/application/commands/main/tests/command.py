@@ -70,6 +70,7 @@ class RunTaskTest(TestCase):
     def test_run_tasks(self):
         """Should run all the tasks from run_list, but only once."""
         recipe = Recipe()
+        recipe.init_loggers()
         recipe.log.task_log.setLevel(logging.CRITICAL)
         task = ExampleTask()
         recipe.add_task(task)
@@ -84,6 +85,7 @@ class RunTaskTest(TestCase):
     def test_make(self):
         """Should get recipe, gather tasks and run them."""
         recipe = Recipe()
+        recipe.init_loggers()
         recipe.log.task_log.setLevel(logging.CRITICAL)
         task = ExampleTask()
         recipe.add_task(task)

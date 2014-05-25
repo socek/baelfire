@@ -29,6 +29,7 @@ class RunTask(Command):
 
     def make(self):
         self.recipe = self.get_recipe()
+        self.recipe.init_loggers()
         self.gather_tasks()
         try:
             self.run_tasks()

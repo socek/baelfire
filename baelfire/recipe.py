@@ -17,14 +17,17 @@ class Recipe(object):
         self._spp = None
         self.aborting = False
         self.data_log = TaskLogger()
-        self.log = Logger()
         self.init_settings({'minimal version': VERSION}, {})
+        self.log = None
 
         self.create_settings()
         self.gather_recipes()
         self.gather_tasks()
         self.validate_dependencys()
         self.init_signals()
+
+    def init_loggers(self):
+        self.log = Logger()
 
     def init_settings(self, settings, paths):
         self._settings = Settings(settings)

@@ -2,7 +2,7 @@ from .visualization import Visualization
 
 
 class DependencyVisualization(Visualization):
-    connection_template = '"%(right)s" -> "%(left)s";\n'
+    connection_template = '"%(right)s" -> "%(left)s" [color="%(color)s"];\n'
 
     def __init__(self, data, parent):
         super().__init__(data)
@@ -48,6 +48,7 @@ class DependencyVisualization(Visualization):
             'left': self.parent.path(),
             'right': self.right_path(),
             'name': self.link_name(),
+            'color': self.color(),
         }
 
     def connection(self):
@@ -73,7 +74,7 @@ class FileDependencyVisualization(DependencyVisualization):
         return 'folder'
 
     def name(self):
-        return self.data['data']['filenames'][0]
+        return self.data['data']['filenames'][0].replace('/', '\n/')
 
     def path(self):
         return '/%s?filename=%s' % (

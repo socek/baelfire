@@ -77,13 +77,14 @@ class GraphTest(TestCase):
         dependency = MagicMock()
         visualization.dependencys.return_value = [dependency]
         visualization.links.return_value = 'links'
+        visualization.invoked.return_value = 'invoked'
         dependency.details.return_value = 'dependency'
 
         self.graph.generate_task_visualization({})
 
         self.graph.datalog.seek(0)
         self.assertEqual(
-            b'digraph {\ntasklinksdependency', self.graph.datalog.read())
+            b'digraph {\ntasklinksinvokeddependency', self.graph.datalog.read())
 
         self.graph.close()
 

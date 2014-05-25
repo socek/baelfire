@@ -218,6 +218,7 @@ class TaskTest(TestCase):
             'force': 'force',
             'needed': 'needed',
             'success': 'success',
+            'invoked': [],
         }
 
         self.task.logme()
@@ -227,6 +228,7 @@ class TaskTest(TestCase):
             'needed': 'needed',
             'success': 'success',
             'links': [link.get_path.return_value],
+            'invoked': [],
         })
 
     def test_run_when_task_was_runned_before(self):
@@ -241,6 +243,7 @@ class TaskTest(TestCase):
     def test_invoke_task(self):
         """Should run specyfic task with kwargs assign."""
         self.task.recipe = MagicMock()
+        self.task._log = {'invoked': []}
 
         self.task.invoke_task('/somewhere', data=10)
 
@@ -248,6 +251,7 @@ class TaskTest(TestCase):
 
         self.task.recipe.task.assert_called_once_with('/somewhere', data=10)
         task.run.assert_called_once_with()
+        self.assertEqual({'invoked': ['/somewhere']}, self.task._log)
 
     def test_touchme(self):
         """Should touch file returned by get_output_file."""

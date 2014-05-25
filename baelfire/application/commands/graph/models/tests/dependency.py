@@ -83,25 +83,28 @@ class DependencyVisualizationTest(TestCase):
     def test_connection_details(self):
         """Should return data generated from object methods."""
         self.parent.path.return_value = '/1parentpath'
-        self.data['data'] = {'parent': {'path': '/2parentpath'}}
+        self.data['data'] = {
+            'parent': {'path': '/2parentpath'}, 'result': False}
         self.data['name'] = 'depname'
 
         data = self.visualization.connection_details()
         self.assertEqual({
             'left': '/1parentpath',
             'name': 'depname',
-            'right': '/2parentpath'}, data)
+            'right': '/2parentpath',
+            'color': 'brown'}, data)
 
     def test_connection(self):
         """Should return template filled up with .data"""
         self.parent.path.return_value = '/1parentpath'
-        self.data['data'] = {'parent': {'path': '/2parentpath'}}
+        self.data['data'] = {
+            'parent': {'path': '/2parentpath'}, 'result': False}
         self.data['name'] = 'depname'
 
         data = self.visualization.connection()
 
         self.assertEqual(
-            '"/2parentpath" -> "/1parentpath";\n', data)
+            '"/2parentpath" -> "/1parentpath" [color="brown"];\n', data)
 
     def test_details_when_not_a_link(self):
         """Should return template filled up with .data"""
@@ -113,7 +116,7 @@ class DependencyVisualizationTest(TestCase):
 
         self.assertEqual(
             '''"/1parentpath/depname" [label="depname",shape=triangle,regular=1,style=filled,fillcolor=brown];
-"/1parentpath/depname" -> "/1parentpath";
+"/1parentpath/depname" -> "/1parentpath" [color="brown"];
 ''', data)
 
     def test_details_when_not_a_link_with_success(self):
@@ -126,19 +129,20 @@ class DependencyVisualizationTest(TestCase):
 
         self.assertEqual(
             '''"/1parentpath/depname" [label="depname",shape=triangle,regular=1,style=filled,fillcolor=green];
-"/1parentpath/depname" -> "/1parentpath";
+"/1parentpath/depname" -> "/1parentpath" [color="green"];
 ''', data)
 
     def test_details_when_is_a_link(self):
         """Should return template filled up with .data"""
         self.parent.path.return_value = '/1parentpath'
-        self.data['data'] = {'parent': {'path': '/2parentpath'}}
+        self.data['data'] = {
+            'parent': {'path': '/2parentpath'}, 'result': False}
         self.data['name'] = 'depname'
 
         data = self.visualization.details()
 
         self.assertEqual(
-            '''"/2parentpath" -> "/1parentpath";
+            '''"/2parentpath" -> "/1parentpath" [color="brown"];
 ''', data)
 
 

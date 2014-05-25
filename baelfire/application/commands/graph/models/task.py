@@ -5,6 +5,7 @@ from.dependency import dependency_visualization
 class TaskVisualization(Visualization):
 
     link_template = '"%(right)s" -> "%(left)s" [style=dashed];\n'
+    invoked_template = '"%(right)s" -> "%(left)s" [style=dotted];\n'
 
     def name(self):
         return self.data['name']
@@ -24,8 +25,13 @@ class TaskVisualization(Visualization):
         return 'grey'
 
     def shape(self):
+        def has_no_dependencys():
+            return len(self.data['dependencys']) == 0 and \
+                self.data['data']['output_file'] is None
         if self.is_always_rebuilding():
             return 'circle'
+        elif has_no_dependencys():
+            return 'hexagon'
         else:
             return 'box'
 
@@ -58,3 +64,15 @@ class TaskVisualization(Visualization):
         for link in self.data['data']['links']:
             data += self.link_template % self.link_data(link)
         return data
+
+    def invoked(self):
+        data = ''
+        for path in self.data['data']['invoked']:
+            data += self.invoked_template % self.invoked_data(path)
+        return data
+
+    def invoked_data(self, path):
+        return {
+            'left': self.path(),
+            'right': path,
+        }

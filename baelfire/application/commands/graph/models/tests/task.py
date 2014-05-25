@@ -61,7 +61,18 @@ class TaskVisualizationTest(TestCase):
         self.add_mock_object(self.visualization,
                              'is_always_rebuilding',
                              return_value=False)
+        self.visualization.data['dependencys'] = [1]
         self.assertEqual('box', self.visualization.shape())
+
+    def test_shape_when_empty_dependency_list(self):
+        """Should return hexagon when task has no dependency and not
+        output_file setted."""
+        self.add_mock_object(self.visualization,
+                             'is_always_rebuilding',
+                             return_value=False)
+        self.visualization.data['dependencys'] = []
+        self.visualization.data['data']['output_file'] = None
+        self.assertEqual('hexagon', self.visualization.shape())
 
     def test_details_data(self):
         """Should return data generated from object methods."""
@@ -70,6 +81,7 @@ class TaskVisualizationTest(TestCase):
         self.data['data']['success'] = None
         self.data['data']['force'] = False
         self.data['data']['needed'] = False
+        self.data['dependencys'] = [1]
         self.add_mock_object(self.visualization,
                              'is_always_rebuilding',
                              return_value=False)
@@ -117,3 +129,13 @@ class TaskVisualizationTest(TestCase):
         data = self.visualization.links()
 
         self.assertEqual('"/mylink" -> "/mypath" [style=dashed];\n', data)
+
+    def test_invoked(self):
+        """invoked should return filled up templates."""
+        self.data['path'] = '/mypath'
+        self.data['data'] = {
+            'invoked': ['/myinvoked'],
+        }
+
+        expected = '"/myinvoked" -> "/mypath" [style=dotted];\n'
+        self.assertEqual(expected, self.visualization.invoked())

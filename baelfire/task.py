@@ -68,6 +68,7 @@ class Task(object):
 
     def invoke_task(self, path, **kwargs):
         self.task(path, **kwargs).run()
+        self._log['invoked'].append(path)
 
     def add_link(self, path, **kwargs):
         task = self.recipe.task(path, **kwargs)
@@ -103,6 +104,8 @@ class Task(object):
         self._log['force'] = self.kwargs.pop('force', False)
         self._log['success'] = None
         self._log['needed'] = False
+        self._log['output_file'] = self.get_output_file()
+        self._log['invoked'] = []
 
         self.pre_run()
         self.run_links()
@@ -151,3 +154,6 @@ class Task(object):
 
     def task(self, url, **kwargs):
         return self.recipe.task(url, **kwargs)
+
+    def generate_dependencys(self):
+        pass

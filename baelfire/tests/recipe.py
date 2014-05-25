@@ -42,11 +42,10 @@ class RecipeTest(TestCase):
         self.assertEqual(None, self.recipe.parent)
 
     def test_validate_dependencys(self):
-        """Should raise error, when no generate_dependencys method
-        specyfied."""
+        """Should do nothing (test for code coverage)."""
         task = Task()
         self.recipe.add_task(task)
-        self.assertRaises(AttributeError, self.recipe.validate_dependencys)
+        self.assertEqual(None, self.recipe.validate_dependencys())
 
     def test_add_recipe(self):
         """Should set recipe it's parent to self, and add this recipe to

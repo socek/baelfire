@@ -42,6 +42,7 @@ class ApplicationTest(TestCase):
             [
                 'GraphCommand',
                 'Init',
+                'ListAllTasks',
                 'ListTasks',
                 'RunTask',
             ],
@@ -67,7 +68,7 @@ class ApplicationTest(TestCase):
                          self.app.parser)
 
         self.assertEqual(
-            5,
+            6,
             self.mocks['ArgumentParser'].return_value.add_argument.call_count)
 
     def test_create_parser_when_recipe_in_application(self):
@@ -79,7 +80,7 @@ class ApplicationTest(TestCase):
         self.app.create_parser()
 
         self.assertEqual(
-            4,
+            5,
             self.mocks['ArgumentParser'].return_value.add_argument.call_count)
 
     def test_parse_command_line(self):

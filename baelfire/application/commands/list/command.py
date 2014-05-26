@@ -11,9 +11,11 @@ class ListTasks(TriggeredCommand):
                          '--list',
                          help='Lists tasks')
 
+    def get_filter(self, task):
+        return not task.hide
+
     def tasks_to_print(self):
-        method = lambda task: not task.hide
-        return filter(method, self.recipe.tasks.values())
+        return filter(self.get_filter, self.recipe.tasks.values())
 
     def count_columns_width(self):
         sizes = {
@@ -47,3 +49,14 @@ class ListTasks(TriggeredCommand):
             )
 
         print(text)
+
+
+class ListAllTasks(ListTasks):
+
+    def __init__(self):
+        super(ListTasks, self).__init__('-a',
+                                        '--list-all',
+                                        help='List all tasks.')
+
+    def get_filter(self, task):
+        return True

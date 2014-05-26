@@ -2,7 +2,7 @@ from mock import MagicMock
 
 from soktest import TestCase
 
-from ..command import ListTasks
+from ..command import ListTasks, ListAllTasks
 
 
 class ListTasksTest(TestCase):
@@ -65,3 +65,24 @@ class ListTasksTest(TestCase):
  ----      ----         ----
  my name   short path   my help
 """)
+
+
+class ListAllTasksTest(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.command = ListAllTasks()
+        self.add_mock_object(self.command, 'get_recipe')
+
+    def test_tasks_to_print(self):
+        """tasks_to_print should return all tasks."""
+        task_1 = MagicMock()
+        task_1.hide = False
+        task_2 = MagicMock()
+        task_2.hide = True
+        self.command.recipe = self.command.get_recipe()
+        self.command.recipe.tasks.values.return_value = [task_1, task_2]
+
+        tasks = self.command.tasks_to_print()
+
+        self.assertEqual([task_1, task_2], list(tasks))

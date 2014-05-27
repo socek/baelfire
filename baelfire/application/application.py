@@ -6,6 +6,7 @@ from .commands.init.command import Init
 from .commands.main.command import RunTask
 from .commands.list.command import ListTasks, ListAllTasks, PathsList
 from .commands.graph.command import GraphCommand
+from .commands.actual_recipe.command import ActualRecipe
 from baelfire.error import RecipeNotFoundError, CommandError
 
 
@@ -25,6 +26,7 @@ class Application(object):
         self.add_command(GraphCommand())
         self.add_command(ListAllTasks())
         self.add_command(PathsList())
+        self.add_command(ActualRecipe())
 
     def gather_options(self):
         self.option_names = [

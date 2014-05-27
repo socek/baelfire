@@ -157,3 +157,16 @@ class Task(object):
 
     def generate_dependencys(self):
         pass
+
+    def ask_for(self, key, label):
+        """ask_for(self, key, label) -> str
+        Returns value from task args or ask for it from stdin.
+        """
+        values = self.kwargs.get(key, [None])
+        return values[0] or input(label + ': ')
+
+    def ask_for_setting(self, key, label):
+        """ask_for(self, key, label) -> None
+        Set setting with value from task args or ask for it from stdin.
+        """
+        self.settings[key] = self.ask_for(key, label)

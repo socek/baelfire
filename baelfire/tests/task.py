@@ -275,3 +275,34 @@ class TaskTest(TestCase):
         self.mocks['path'].exists.return_value = False
 
         self.assertEqual(True, self.task.is_output_file_avalible_to_build())
+
+    def test_ask_for_on_kwargs(self):
+        """.ask_for should return data from kwargs"""
+        self.task.kwargs['test'] = ['something']
+
+        result = self.task.ask_for('test', 'mylabel')
+
+        self.assertEqual('something', result)
+
+    def test_ask_for(self):
+        """.ask_for should ask for value from stdin when value not present in
+        kwargs."""
+        self.add_mock('builtins.input')
+
+        result = self.task.ask_for('test', 'mylabel')
+
+        self.assertEqual(self.mocks['input'].return_value, result)
+        self.mocks['input'].assert_called_once_with('mylabel: ')
+
+    def test_ask_for_setting(self):
+        """.ask_for_setting should ask_for value and put it in the settings."""
+        settings = {}
+        recipe = ExampleRecipe()
+        recipe._settings = settings
+        self.task.assign_recipe(recipe)
+        self.add_mock('builtins.input')
+
+        self.task.ask_for_setting('test', 'mylabel')
+
+        self.assertEqual(self.mocks['input'].return_value, settings['test'])
+        self.mocks['input'].assert_called_once_with('mylabel: ')

@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 
 from .commands.init.command import Init
 from .commands.main.command import RunTask
-from .commands.list.command import ListTasks, ListAllTasks
+from .commands.list.command import ListTasks, ListAllTasks, PathsList
 from .commands.graph.command import GraphCommand
 from baelfire.error import RecipeNotFoundError, CommandError
 
@@ -24,6 +24,7 @@ class Application(object):
         self.add_command(ListTasks())
         self.add_command(GraphCommand())
         self.add_command(ListAllTasks())
+        self.add_command(PathsList())
 
     def gather_options(self):
         self.option_names = [

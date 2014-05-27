@@ -1,7 +1,13 @@
-from ..command import TriggeredCommand
+from ..command import TriggeredCommand, Command
 
 
-class ListTasks(TriggeredCommand):
+class ListTasksMixin(object):
+
+    def tasks_to_print(self):
+        return filter(self.get_filter, self.recipe.tasks.values())
+
+
+class ListTasks(TriggeredCommand, ListTasksMixin):
 
     names_minimal_size = 4
     paths_minimal_size = 4
@@ -13,9 +19,6 @@ class ListTasks(TriggeredCommand):
 
     def get_filter(self, task):
         return not task.hide
-
-    def tasks_to_print(self):
-        return filter(self.get_filter, self.recipe.tasks.values())
 
     def count_columns_width(self):
         sizes = {
@@ -51,12 +54,32 @@ class ListTasks(TriggeredCommand):
         print(text)
 
 
-class ListAllTasks(ListTasks):
+class ListAllTasks(TriggeredCommand, ListTasksMixin):
 
     def __init__(self):
-        super(ListTasks, self).__init__('-a',
-                                        '--list-all',
-                                        help='List all tasks.')
+        super().__init__('-a',
+                         '--list-all',
+                         help='List all tasks.')
 
     def get_filter(self, task):
         return True
+
+
+class PathsList(Command, ListTasksMixin):
+
+    def __init__(self):
+        super().__init__(
+            '-p',
+            '--paths',
+            help='List all paths (for autocomplete)',
+            const='',
+            nargs='?')
+
+    def get_filter(self, task):
+        return task.get_path().startswith(self.args)
+
+    def make(self):
+        self.recipe = self.get_recipe()
+        paths = [task.get_path() for task in self.tasks_to_print()]
+        if len(paths) > 0:
+            print('\n'.join(paths))

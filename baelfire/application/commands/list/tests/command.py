@@ -2,7 +2,7 @@ from mock import MagicMock
 
 from soktest import TestCase
 
-from ..command import ListTasks, ListAllTasks
+from ..command import ListTasks, ListAllTasks, PathsList
 
 
 class ListTasksTest(TestCase):
@@ -86,3 +86,46 @@ class ListAllTasksTest(TestCase):
         tasks = self.command.tasks_to_print()
 
         self.assertEqual([task_1, task_2], list(tasks))
+
+
+class PathsListTest(TestCase):
+
+    def setUp(self):
+        super().setUp()
+        self.command = PathsList()
+        self.add_mock_object(self.command, 'get_recipe')
+        self.add_mock('builtins.print')
+        self.tasks = []
+        self.mocks['get_recipe'].return_value.tasks.values.\
+            return_value = self.tasks
+        self._add_task_mock('/one')
+        self._add_task_mock('/two')
+        self._add_task_mock('/three')
+        self.command.args = ''
+
+    def _add_task_mock(self, path):
+        task = MagicMock()
+        task.get_path.return_value = path
+        self.tasks.append(task)
+
+    def test_make(self):
+        """make should print all tasks when no .args specyfied"""
+        self.command.make()
+
+        self.mocks['print'].assert_called_once_with(
+            '/one\n/two\n/three')
+
+    def test_make_good(self):
+        """make should print all tasks starting with .args"""
+        self.command.args = '/t'
+        self.command.make()
+
+        self.mocks['print'].assert_called_once_with(
+            '/two\n/three')
+
+    def test_make_fail(self):
+        """make should not print anything if no path found"""
+        self.command.args = '/asdasd'
+        self.command.make()
+
+        self.assertEqual(0, self.mocks['print'].call_count)

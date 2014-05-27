@@ -44,6 +44,7 @@ class ApplicationTest(TestCase):
                 'Init',
                 'ListAllTasks',
                 'ListTasks',
+                'PathsList',
                 'RunTask',
             ],
             sorted(list(self.app.commands)))
@@ -68,7 +69,7 @@ class ApplicationTest(TestCase):
                          self.app.parser)
 
         self.assertEqual(
-            6,
+            7,
             self.mocks['ArgumentParser'].return_value.add_argument.call_count)
 
     def test_create_parser_when_recipe_in_application(self):
@@ -80,7 +81,7 @@ class ApplicationTest(TestCase):
         self.app.create_parser()
 
         self.assertEqual(
-            5,
+            6,
             self.mocks['ArgumentParser'].return_value.add_argument.call_count)
 
     def test_parse_command_line(self):

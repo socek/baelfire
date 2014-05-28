@@ -44,6 +44,12 @@ class Task(object):
         else:
             return self.path
 
+    @classmethod
+    def get_path_dotted(cls):
+        module_name = cls.__module__
+        recipe_name = cls.__name__
+        return '%s:%s' % (module_name, recipe_name)
+
     def is_rebuild_needed(self):
         need_rebuild = False
 
@@ -67,8 +73,9 @@ class Task(object):
         pass
 
     def invoke_task(self, path, **kwargs):
-        self.task(path, **kwargs).run()
-        self._log['invoked'].append(path)
+        task = self.task(path, **kwargs)
+        task.run()
+        self._log['invoked'].append(task.get_path_dotted())
 
     def add_link(self, path, **kwargs):
         task = self.recipe.task(path, **kwargs)
@@ -84,7 +91,7 @@ class Task(object):
     def logme(self):
         self._log['links'] = []
         for link in self.links:
-            self._log['links'].append(link.get_path())
+            self._log['links'].append(link.get_path_dotted())
         self.recipe.data_log.add_task(self, self._log)
         for dependency in self.dependencys:
             dependency.logme()

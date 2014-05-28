@@ -82,6 +82,7 @@ class RecipeTest(TestCase):
         self.assertEqual(id(recipe.settings), id(self.recipe.settings))
         self.assertEqual(id(recipe.paths), id(self.recipe.paths))
         self.assertEqual(id(recipe.tasks), id(self.recipe.tasks))
+        self.assertEqual(id(recipe.tasks_dotted), id(self.recipe.tasks_dotted))
         self.assertEqual(id(recipe.data_log), id(self.recipe.data_log))
 
     def test_add_task(self):
@@ -92,6 +93,9 @@ class RecipeTest(TestCase):
 
         self.assertEqual(self.recipe, task.recipe)
         self.assertEqual({'/exampletask': task}, self.recipe.tasks)
+        self.assertEqual(
+            {'baelfire.tests.recipe:ExampleTask': task},
+            self.recipe.tasks_dotted)
 
     def test_task_from_url(self):
         """Should return task with assigned kwargs from url."""
@@ -119,7 +123,8 @@ class RecipeTest(TestCase):
         """Should transform all kwargs arguments into lists."""
         self.recipe.add_task(ExampleTask())
 
-        task = self.recipe.task('/exampletask', one=(1,), two=[2, ], three=3)
+        task = self.recipe.task(
+            'baelfire.tests.recipe:ExampleTask', one=(1,), two=[2, ], three=3)
 
         self.assertEqual((1,), task.kwargs['one'])
         self.assertEqual([2, ], task.kwargs['two'])
@@ -133,7 +138,7 @@ class RecipeTest(TestCase):
         self.assertRaises(
             RuntimeError,
             self.recipe.set_task_options,
-            '/exampletask',
+            'baelfire.tests.recipe:ExampleTask',
             {'elo': 'somethin2'})
 
     def test_set_task_options(self):
@@ -141,6 +146,7 @@ class RecipeTest(TestCase):
         task = ExampleTask()
         self.recipe.add_task(task)
 
-        self.recipe.set_task_options('/exampletask', {'hide': 'somethin2'})
+        self.recipe.set_task_options(
+            'baelfire.tests.recipe:ExampleTask', {'hide': 'somethin2'})
 
         self.assertEqual('somethin2', task.hide)

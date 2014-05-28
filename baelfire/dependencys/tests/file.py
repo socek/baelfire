@@ -207,6 +207,6 @@ class ParentFileChangedTest(TestCase):
                 'parent': {
                     'file': self.parent.filename,
                     'name': 'ExampleTask',
-                    'path': '/exampletask'},
+                    'path': 'baelfire.dependencys.tests.file:ExampleTask'},
                 'runned': False},
             self.dependency.logdata)

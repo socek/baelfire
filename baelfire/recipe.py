@@ -15,6 +15,7 @@ class Recipe(object):
     def __init__(self):
         self.recipes = []
         self._tasks = {}
+        self._tasks_dotted = {}
         self.parent = None
         self._spp = None
         self.aborting = False
@@ -51,24 +52,35 @@ class Recipe(object):
 
     def add_task(self, task):
         self.tasks[task.get_path()] = task
+        self.tasks_dotted[task.get_path_dotted()] = task
         task.assign_recipe(self)
 
-    def task(self, path, **kwargs):
+    def task(self, path, method=None, **kwargs):
         for key, value in kwargs.items():
             if not type(value) in [list, tuple]:
                 kwargs[key] = [value]
+
+        method = self._dot_searcher if method is None else method
+
         try:
-            task = self.tasks[path]
+            task = method(path)
             task.assign_kwargs(**kwargs)
             return task
         except KeyError:
             raise TaskNotFoundError(path)
 
+    def _dot_searcher(self, path):
+        path = path if type(path) is str else path.get_path_dotted()
+        return self.tasks_dotted[path]
+
+    def _path_searcher(self, path):
+        return self.tasks[path]
+
     def task_from_url(self, url):
         url = urlparse(url)
         path = url.path
         kwargs = parse_qs(url.query)
-        task = self.task(path, **kwargs)
+        task = self.task(path, method=self._path_searcher, **kwargs)
         return task
 
     def validate_dependencys(self):
@@ -94,6 +106,13 @@ class Recipe(object):
             return self._tasks
         else:
             return self.parent.tasks
+
+    @property
+    def tasks_dotted(self):
+        if self.parent is None:
+            return self._tasks_dotted
+        else:
+            return self.parent.tasks_dotted
 
     @property
     def settings(self):

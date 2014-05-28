@@ -14,7 +14,7 @@ class TaskLogger(object):
     def add_task(self, task, data):
         self.tasks[task.name] = {
             'name': task.name,
-            'path': task.get_path(),
+            'path': task.get_path_dotted(),
             'data': data,
             'dependencys': [],
         }

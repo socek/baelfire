@@ -227,7 +227,7 @@ class TaskTest(TestCase):
             'force': 'force',
             'needed': 'needed',
             'success': 'success',
-            'links': [link.get_path.return_value],
+            'links': [link.get_path_dotted.return_value],
             'invoked': [],
         })
 
@@ -251,7 +251,8 @@ class TaskTest(TestCase):
 
         self.task.recipe.task.assert_called_once_with('/somewhere', data=10)
         task.run.assert_called_once_with()
-        self.assertEqual({'invoked': ['/somewhere']}, self.task._log)
+        self.assertEqual(
+            {'invoked': [task.get_path_dotted.return_value]}, self.task._log)
 
     def test_touchme(self):
         """Should touch file returned by get_output_file."""

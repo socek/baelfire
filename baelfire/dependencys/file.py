@@ -62,7 +62,7 @@ class ParentFileChanged(FileChanged):
         super()._add_log_data()
         self.logdata['parent'] = {
             'name': self.parent.name,
-            'path': self.parent.get_path(),
+            'path': self.parent.get_path_dotted(),
             'file': self.parent.get_output_file(),
         }
 

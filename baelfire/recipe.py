@@ -10,6 +10,8 @@ from .signals import SignalHandling
 
 class Recipe(object):
 
+    AVALIBLE_TASK_OPTIONS = ['hide']
+
     def __init__(self):
         self.recipes = []
         self._tasks = {}
@@ -25,6 +27,9 @@ class Recipe(object):
         self.gather_tasks()
         self.validate_dependencys()
         self.init_signals()
+
+        self.final_settings()
+        self.final()
 
     def init_loggers(self):
         self.log = Logger()
@@ -103,3 +108,17 @@ class Recipe(object):
             return self._paths
         else:
             return self.parent.paths
+
+    def set_task_options(self, path, options={}):
+        task = self.task(path)
+        for key, value in options.items():
+            if key not in self.AVALIBLE_TASK_OPTIONS:
+                raise RuntimeError('Option "%s" is not avalible!' % (key,))
+
+            setattr(task, key, value)
+
+    def final_settings(self):
+        pass
+
+    def final(self):
+        pass

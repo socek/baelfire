@@ -124,3 +124,23 @@ class RecipeTest(TestCase):
         self.assertEqual((1,), task.kwargs['one'])
         self.assertEqual([2, ], task.kwargs['two'])
         self.assertEqual([3, ], task.kwargs['three'])
+
+    def test_set_task_options_fail(self):
+        """set_task_options should raise RuntimeError when invalid option is
+        specyfied."""
+        self.recipe.add_task(ExampleTask())
+
+        self.assertRaises(
+            RuntimeError,
+            self.recipe.set_task_options,
+            '/exampletask',
+            {'elo': 'somethin2'})
+
+    def test_set_task_options(self):
+        """set_task_options should set an option to a task"""
+        task = ExampleTask()
+        self.recipe.add_task(task)
+
+        self.recipe.set_task_options('/exampletask', {'hide': 'somethin2'})
+
+        self.assertEqual('somethin2', task.hide)

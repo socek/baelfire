@@ -3,7 +3,7 @@ import sys
 from jinja2 import Environment, PackageLoader
 
 from baelfire.task import Task
-from baelfire.dependencys import FileChanged
+from baelfire.dependencies import FileChanged
 
 
 class TemplateTask(Task):
@@ -26,9 +26,9 @@ class TemplateTask(Task):
                             self.templates_dir,
                             self.get_template_path())
 
-    def generate_dependencys(self):
+    def generate_dependencies(self):
         """Generates FileChanged dependency for template file and task file.
-        generate_dependencys method is not needed now."""
+        generate_dependencies method is not needed now."""
         if self.check_template is True:
             self.add_dependecy(FileChanged(self.template_absolute_path()))
             task_file = sys.modules[self.__module__].__file__

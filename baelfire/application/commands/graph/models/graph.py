@@ -39,7 +39,7 @@ class Graph(object):
         self.write(visualization.links())
         self.write(visualization.invoked())
 
-        for dependency in visualization.dependencys():
+        for dependency in visualization.dependencies():
             self.write(dependency.details())
 
     def __call__(self):

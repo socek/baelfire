@@ -25,12 +25,12 @@ class TaskVisualization(Visualization):
         return 'grey'
 
     def shape(self):
-        def has_no_dependencys():
-            return len(self.data['dependencys']) == 0 and \
+        def has_no_dependencies():
+            return len(self.data['dependencies']) == 0 and \
                 self.data['data']['output_file'] is None
         if self.is_always_rebuilding():
             return 'circle'
-        elif has_no_dependencys():
+        elif has_no_dependencies():
             return 'hexagon'
         else:
             return 'box'
@@ -43,14 +43,14 @@ class TaskVisualization(Visualization):
             'name': self.name(),
         }
 
-    def dependencys(self):
-        for dependency in self.data['dependencys']:
+    def dependencies(self):
+        for dependency in self.data['dependencies']:
             cls = dependency_visualization(dependency['name'])
             yield cls(dependency, self)
 
     def is_always_rebuilding(self):
         names = [dependency['name']
-                 for dependency in self.data['dependencys']]
+                 for dependency in self.data['dependencies']]
         return 'AlwaysRebuild' in names
 
     def link_data(self, link):

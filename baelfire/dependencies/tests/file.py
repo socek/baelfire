@@ -12,7 +12,7 @@ from ..file import (FileChanged,
                     FileDependency,
                     ParentFileChanged)
 
-PREFIX = 'baelfire.dependencys.file.'
+PREFIX = 'baelfire.dependencies.file.'
 
 
 class ExampleTask(ExampleTaskBase):
@@ -207,6 +207,6 @@ class ParentFileChangedTest(TestCase):
                 'parent': {
                     'file': self.parent.filename,
                     'name': 'ExampleTask',
-                    'path': 'baelfire.dependencys.tests.file:ExampleTask'},
+                    'path': 'baelfire.dependencies.tests.file:ExampleTask'},
                 'runned': False},
             self.dependency.logdata)

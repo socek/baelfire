@@ -7,7 +7,7 @@ class Task(object):
 
     recipe = None
     path = None
-    dependencys = None
+    dependencies = None
     hide = False
     help = ''
 
@@ -21,11 +21,11 @@ class Task(object):
 
     def assign_recipe(self, recipe):
         self.recipe = recipe
-        self.dependencys = []
+        self.dependencies = []
 
     def add_dependecy(self, dependency):
         dependency.assign_task(self)
-        self.dependencys.append(dependency)
+        self.dependencies.append(dependency)
 
     def get_output_file(self):
         return None
@@ -53,7 +53,7 @@ class Task(object):
     def is_rebuild_needed(self):
         need_rebuild = False
 
-        for dependency in self.dependencys:
+        for dependency in self.dependencies:
             dependency_rule = dependency()
             need_rebuild = need_rebuild or dependency_rule
         need_rebuild = need_rebuild or self.is_output_file_avalible_to_build()
@@ -93,7 +93,7 @@ class Task(object):
         for link in self.links:
             self._log['links'].append(link.get_path_dotted())
         self.recipe.data_log.add_task(self, self._log)
-        for dependency in self.dependencys:
+        for dependency in self.dependencies:
             dependency.logme()
 
     def run(self):
@@ -162,7 +162,7 @@ class Task(object):
     def task(self, url, **kwargs):
         return self.recipe.task(url, **kwargs)
 
-    def generate_dependencys(self):
+    def generate_dependencies(self):
         pass
 
     def ask_for(self, key, label):

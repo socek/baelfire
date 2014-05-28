@@ -26,7 +26,7 @@ class Recipe(object):
         self.create_settings()
         self.gather_recipes()
         self.gather_tasks()
-        self.validate_dependencys()
+        self.validate_dependencies()
         self.init_signals()
 
         self.final_settings()
@@ -83,10 +83,10 @@ class Recipe(object):
         task = self.task(path, method=self._path_searcher, **kwargs)
         return task
 
-    def validate_dependencys(self):
+    def validate_dependencies(self):
         for task in self.tasks.values():
             task.generate_links()
-            task.generate_dependencys()
+            task.generate_dependencies()
 
     def init_signals(self):
         self.signal_handling = SignalHandling(self)

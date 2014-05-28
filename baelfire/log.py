@@ -16,11 +16,11 @@ class TaskLogger(object):
             'name': task.name,
             'path': task.get_path_dotted(),
             'data': data,
-            'dependencys': [],
+            'dependencies': [],
         }
 
     def add_dependecy(self, task, dependency, data):
-        self.tasks[task.name]['dependencys'].append({
+        self.tasks[task.name]['dependencies'].append({
             'name': dependency.name,
             'data': data,
         })

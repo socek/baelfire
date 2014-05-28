@@ -6,7 +6,7 @@ from soktest import TestCase
 from ..command import RunTask
 from baelfire.task import Task
 from baelfire.recipe import Recipe
-from baelfire.dependencys import AlwaysRebuild
+from baelfire.dependencies import AlwaysRebuild
 from baelfire.error import OnlyOneTaskInARowError, CommandAborted
 
 PREFIX = 'baelfire.application.commands.main.command.'
@@ -18,7 +18,7 @@ class ExampleTask(Task):
         super().__init__()
         self.made = 0
 
-    def generate_dependencys(self):
+    def generate_dependencies(self):
         self.add_dependecy(AlwaysRebuild())
 
     def make(self):
@@ -27,7 +27,7 @@ class ExampleTask(Task):
 
 class SecondTask(Task):
 
-    def generate_dependencys(self):
+    def generate_dependencies(self):
         pass
 
 
@@ -74,7 +74,7 @@ class RunTaskTest(TestCase):
         recipe.log.task_log.setLevel(logging.CRITICAL)
         task = ExampleTask()
         recipe.add_task(task)
-        recipe.validate_dependencys()
+        recipe.validate_dependencies()
 
         self.command.run_list = [task, task]
 
@@ -89,7 +89,7 @@ class RunTaskTest(TestCase):
         recipe.log.task_log.setLevel(logging.CRITICAL)
         task = ExampleTask()
         recipe.add_task(task)
-        recipe.validate_dependencys()
+        recipe.validate_dependencies()
 
         self.command.args = ['/exampletask']
         self.command.recipe = recipe

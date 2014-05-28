@@ -35,7 +35,7 @@ class Command(object):
             initfile = InitFile()
             if initfile.is_present():
                 initfile.load()
-                initfile.install_dependencys()
+                initfile.install_dependencies()
                 return initfile.get_recipe()()
 
         raise RecipeNotFoundError()

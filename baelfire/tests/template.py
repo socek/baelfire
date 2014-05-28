@@ -44,19 +44,19 @@ class TemplateTaskTest(TestCase):
         path = self.template.template_absolute_path()
         self.assertEqual('/main/templates/template.jinja2', path)
 
-    def test_generate_dependencys(self):
+    def test_generate_dependencies(self):
         """Should add FileChanged dependency for template file and this file.
         """
         self.add_mock_object(self.template, 'module')
         self.mocks['module'].return_value.__file__ = '/main/child'
 
-        self.template.generate_dependencys()
+        self.template.generate_dependencies()
 
-        dependency = self.template.dependencys[0]
+        dependency = self.template.dependencies[0]
         self.assertEqual(
             ['/main/templates/template.jinja2'], dependency.filenames)
 
-        dependency = self.template.dependencys[1]
+        dependency = self.template.dependencies[1]
         self.assertEqual([__file__], dependency.filenames)
 
     def test_jinja_when_new(self):
@@ -107,9 +107,9 @@ class TemplateTaskTest(TestCase):
         finally:
             shutil.rmtree(test_path, True)
 
-    def test_generate_dependencys_when_check_template_is_false(self):
+    def test_generate_dependencies_when_check_template_is_false(self):
         """Should not add any dependency when check_template is setted to
         False."""
         self.template.check_template = False
-        self.template.generate_dependencys()
-        self.assertEqual([], self.template.dependencys)
+        self.template.generate_dependencies()
+        self.assertEqual([], self.template.dependencies)

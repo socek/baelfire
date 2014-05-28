@@ -5,7 +5,7 @@ from soktest import TestCase
 
 from baelfire.task import Task
 from .recipe import ExampleRecipe
-from baelfire.dependencys import Dependency
+from baelfire.dependencies import Dependency
 
 PREFIX = 'baelfire.task.'
 
@@ -29,10 +29,10 @@ class ExampleTask(Task):
         self.dep_2 = ExampleDependency(False)
         self.dep_3 = ExampleDependency(False)
 
-    def get_dependencys(self):
+    def get_dependencies(self):
         return [self.dep_1, self.dep_2, self.dep_3]
 
-    def generate_dependencys(self):
+    def generate_dependencies(self):
         self.add_dependecy(self.dep_1)
         self.add_dependecy(self.dep_2)
         self.add_dependecy(self.dep_3)
@@ -99,7 +99,7 @@ class TaskTest(TestCase):
         self.task.dep_2.return_value = True
         recipe = ExampleRecipe()
         self.task.assign_recipe(recipe)
-        self.task.generate_dependencys()
+        self.task.generate_dependencies()
 
         self.assertEqual(True, self.task.is_rebuild_needed())
 
@@ -113,7 +113,7 @@ class TaskTest(TestCase):
         """Should run make when rebuild is needed."""
         self.add_mock_object(self.task, 'is_rebuild_needed', return_value=True)
         self.task.recipe = MagicMock()
-        self.task.dependencys = []
+        self.task.dependencies = []
         self.task.run()
 
         self.assertEqual(True, self.task.made)

@@ -69,13 +69,13 @@ class GraphTest(TestCase):
         filepipe.close.assert_called_once_with()
 
     def test_generate_task_visualization(self):
-        """Should write task visualization and its dependencys."""
+        """Should write task visualization and its dependencies."""
         self.graph.open()
         self.add_mock(PREFIX + 'TaskVisualization')
         visualization = self.mocks['TaskVisualization'].return_value
         visualization.details.return_value = 'task'
         dependency = MagicMock()
-        visualization.dependencys.return_value = [dependency]
+        visualization.dependencies.return_value = [dependency]
         visualization.links.return_value = 'links'
         visualization.invoked.return_value = 'invoked'
         dependency.details.return_value = 'dependency'

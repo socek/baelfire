@@ -23,7 +23,7 @@ class TaskLoggerTest(TestCase):
         self.assertEqual({
             'name': 'myname',
             'data': {'this': 'is data'},
-            'dependencys': [],
+            'dependencies': [],
             'path': task.get_path_dotted.return_value,
         }, self.log.tasks['myname'])
 
@@ -31,13 +31,13 @@ class TaskLoggerTest(TestCase):
         """Should add dependency log to a task log."""
         task = MagicMock()
         task.name = 'myname'
-        self.log.tasks[task.name] = {'dependencys': []}
+        self.log.tasks[task.name] = {'dependencies': []}
         dependency = MagicMock()
         dependency.name = 'depname'
 
         self.log.add_dependecy(task, dependency, {'this': 'is data'})
 
-        element = self.log.tasks['myname']['dependencys'][0]
+        element = self.log.tasks['myname']['dependencies'][0]
 
         self.assertEqual({'name': 'depname', 'data': {'this': 'is data'}},
                          element)

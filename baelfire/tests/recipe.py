@@ -8,7 +8,7 @@ from baelfire import VERSION
 
 class ExampleTask(Task):
 
-    def generate_dependencys(self):
+    def generate_dependencies(self):
         pass
 
 
@@ -41,11 +41,11 @@ class RecipeTest(TestCase):
         self.assertEqual([], self.recipe.recipes)
         self.assertEqual(None, self.recipe.parent)
 
-    def test_validate_dependencys(self):
+    def test_validate_dependencies(self):
         """Should do nothing (test for code coverage)."""
         task = Task()
         self.recipe.add_task(task)
-        self.assertEqual(None, self.recipe.validate_dependencys())
+        self.assertEqual(None, self.recipe.validate_dependencies())
 
     def test_add_recipe(self):
         """Should set recipe it's parent to self, and add this recipe to

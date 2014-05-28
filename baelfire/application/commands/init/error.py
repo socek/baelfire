@@ -16,4 +16,4 @@ class RecipePackageNotValidError(Exception):
 
 class RecipeInstallError(Exception):
 
-    """Raised when install dependencys or tests for recipe failed."""
+    """Raised when install dependencies or tests for recipe failed."""

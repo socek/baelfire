@@ -61,7 +61,7 @@ class TaskVisualizationTest(TestCase):
         self.add_mock_object(self.visualization,
                              'is_always_rebuilding',
                              return_value=False)
-        self.visualization.data['dependencys'] = [1]
+        self.visualization.data['dependencies'] = [1]
         self.assertEqual('box', self.visualization.shape())
 
     def test_shape_when_empty_dependency_list(self):
@@ -70,7 +70,7 @@ class TaskVisualizationTest(TestCase):
         self.add_mock_object(self.visualization,
                              'is_always_rebuilding',
                              return_value=False)
-        self.visualization.data['dependencys'] = []
+        self.visualization.data['dependencies'] = []
         self.visualization.data['data']['output_file'] = None
         self.assertEqual('hexagon', self.visualization.shape())
 
@@ -81,7 +81,7 @@ class TaskVisualizationTest(TestCase):
         self.data['data']['success'] = None
         self.data['data']['force'] = False
         self.data['data']['needed'] = False
-        self.data['dependencys'] = [1]
+        self.data['dependencies'] = [1]
         self.add_mock_object(self.visualization,
                              'is_always_rebuilding',
                              return_value=False)
@@ -93,12 +93,12 @@ class TaskVisualizationTest(TestCase):
             'shape': 'box',
         }, self.visualization.details_data())
 
-    def test_dependencys(self):
+    def test_dependencies(self):
         """Should yield visualization of every dependency."""
-        self.data['dependencys'] = [{'name': 'one'}]
+        self.data['dependencies'] = [{'name': 'one'}]
         self.add_mock(PREFIX + 'dependency_visualization')
 
-        data = list(self.visualization.dependencys())
+        data = list(self.visualization.dependencies())
 
         self.mocks['dependency_visualization'].assert_called_once_with('one')
         cls = self.mocks['dependency_visualization'].return_value
@@ -107,7 +107,7 @@ class TaskVisualizationTest(TestCase):
 
     def test_is_always_rebuilding_when_alwaysrebuild_in_depenencys(self):
         """Should return true."""
-        self.data['dependencys'] = [{'name': "AlwaysRebuild"}]
+        self.data['dependencies'] = [{'name': "AlwaysRebuild"}]
 
         self.assertEqual(True, self.visualization.is_always_rebuilding())
 

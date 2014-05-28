@@ -34,7 +34,7 @@ class Init(Command):
             self.validate_package()
             self.validate_setup()
 
-            self.initfile.install_dependencys()
+            self.initfile.install_dependencies()
             self.initfile.save()
         except RecipePackageNotValidError as er:
             print(er)

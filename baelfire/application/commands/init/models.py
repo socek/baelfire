@@ -64,7 +64,7 @@ class InitFile(object):
             return not path.exists(self.filename) or \
                 path.getmtime(self.filename) < path.getmtime(self.setup_path)
 
-    def install_dependencys(self):
+    def install_dependencies(self):
         if self.is_reinstall_needed():
             spp = Popen(['python', self.setup_path, 'test'])
             spp.wait()

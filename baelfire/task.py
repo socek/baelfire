@@ -17,27 +17,40 @@ class Task(object):
         self.runned = False
 
     def assign_kwargs(self, **kwargs):
+        """assign_kwargs(self, **kwargs) -> None
+        Assign command line keyword args to this task."""
         self.kwargs.update(kwargs)
 
     def assign_recipe(self, recipe):
+        """assign_recipe(self, recipe) -> None
+        Assign recipe to this task.
+        """
         self.recipe = recipe
         self.dependencies = []
 
     def add_dependecy(self, dependency):
+        """add_dependecy(self, dependency) -> None
+        Add dependency to this task."""
         dependency.assign_task(self)
         self.dependencies.append(dependency)
 
     def get_output_file(self):
+        """get_output_file(self) -> None
+        Return output file for this task.
+        This method should be overloaded.
+        """
         return None
 
     @property
     def name(self):
+        """name(self) -> str
+        Return name of this task.
+        """
         return self.__class__.__name__
 
     def get_path(self):
         """get_path(self) -> str
-        Returns path (for using in command line) of the tasks provided by class
-        value path, or just classname if path == None.
+        Gets path used in command line.
         """
         if self.path is None:
             return '/' + self.__class__.__name__.lower()
@@ -46,11 +59,17 @@ class Task(object):
 
     @classmethod
     def get_path_dotted(cls):
+        """get_path_dotted(cls) -> None
+        Gets dotted path of the class.
+        """
         module_name = cls.__module__
         recipe_name = cls.__name__
         return '%s:%s' % (module_name, recipe_name)
 
     def is_rebuild_needed(self):
+        """is_rebuild_needed(self) -> bool
+        Check every dependency and return true if one of them is activated.
+        """
         need_rebuild = False
 
         for dependency in self.dependencies:
@@ -61,34 +80,61 @@ class Task(object):
         return need_rebuild
 
     def is_output_file_avalible_to_build(self):
+        """is_output_file_avalible_to_build(self) -> bool
+        Can this task file be builded?
+        """
         if self.get_output_file() is None:
             return False
         else:
             return not path.exists(self.get_output_file())
 
     def pre_run(self):
+        """pre_run(self) -> None
+        Run before checking the dependencies.
+        This method should be overloaded.
+        """
         pass
 
     def pre_invoked_tasks(self):
+        """pre_invoked_tasks(self) -> None
+        Run tasks needed to be run before this task.
+        This method should be overloaded.
+        """
         pass
 
     def invoke_task(self, path, **kwargs):
+        """invoke_task(self, path, **kwargs) -> None
+        Run task before this task.
+        """
         task = self.task(path, **kwargs)
         task.run()
         self._log['invoked'].append(task.get_path_dotted())
 
     def add_link(self, path, **kwargs):
+        """add_link(self, path, **kwargs) -> None
+        Add linked task.
+        """
         task = self.recipe.task(path, **kwargs)
         self.links.append(task)
 
     def generate_links(self):
+        """generate_links(self) -> None
+        Method called to generate all linked tasks.
+        This method should be overloaded.
+        """
         pass
 
     def run_links(self):
+        """run_links(self) -> None
+        Run all linked tasks.
+        """
         for link in self.links:
             link.run()
 
     def logme(self):
+        """logme(self) -> None
+        Saves log data.
+        """
         self._log['links'] = []
         for link in self.links:
             self._log['links'].append(link.get_path_dotted())
@@ -97,6 +143,9 @@ class Task(object):
             dependency.logme()
 
     def run(self):
+        """run(self) -> None
+        Run if not runned before.
+        """
         if self.runned is False:
             self._log = {}
             try:
@@ -108,6 +157,9 @@ class Task(object):
                 self.runned = True
 
     def _before_make(self):
+        """_before_make(self) -> None
+        Prepere for make task.
+        """
         self._log['force'] = self.kwargs.pop('force', False)
         self._log['success'] = None
         self._log['needed'] = False
@@ -119,6 +171,9 @@ class Task(object):
         self._log['needed'] = self.is_rebuild_needed()
 
     def _make(self):
+        """_make(self) -> None
+        Make with logging.
+        """
         self._log['success'] = False
         self.pre_invoked_tasks()
         self.log.task(self.name)
@@ -126,7 +181,9 @@ class Task(object):
         self._log['success'] = True
 
     def was_runned(self):
-        """Was this task runned?"""
+        """was_runned(self) -> bool
+        Was this task runned?
+        """
         return self.name in self.recipe.data_log.tasks
 
     @property
@@ -142,7 +199,8 @@ class Task(object):
         return self.recipe.log
 
     def command(self, *args, **kwargs):
-        """Run external command."""
+        """command(self, *args, **kwargs) -> Subproccess
+        Run external command."""
         process = Process(self)
         return process(*args, **kwargs)
 
@@ -157,12 +215,22 @@ class Task(object):
             fhandle.close()
 
     def touchme(self):
+        """touchme(self) -> None
+        Touch output_file.
+        """
         self.touch(self.get_output_file())
 
     def task(self, url, **kwargs):
+        """task(self, url, **kwargs) -> Task
+        Get different task from recipe.
+        """
         return self.recipe.task(url, **kwargs)
 
     def generate_dependencies(self):
+        """generate_dependencies(self) -> None
+        Method called to generate all dependencies.
+        This method should be overloaded.
+        """
         pass
 
     def ask_for(self, key, label):

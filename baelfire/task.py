@@ -17,25 +17,32 @@ class Task(object):
         self.runned = False
 
     def assign_kwargs(self, **kwargs):
-        """assign_kwargs(self, **kwargs) -> None
-        Assign command line keyword args to this task."""
+        """
+        Assign command line keyword args to this task.
+
+        :param {kwargs}: parameters to assign
+        """
         self.kwargs.update(kwargs)
 
     def assign_recipe(self, recipe):
-        """assign_recipe(self, recipe) -> None
+        """
         Assign recipe to this task.
+
+        :param recipe: baelfire.recipe.Recipe instance
         """
         self.recipe = recipe
         self.dependencies = []
 
     def add_dependecy(self, dependency):
-        """add_dependecy(self, dependency) -> None
-        Add dependency to this task."""
+        """Add dependency to this task.
+
+        :param recipe: baelfire.dependencies.dependency.Dependency instance
+        """
         dependency.assign_task(self)
         self.dependencies.append(dependency)
 
     def get_output_file(self):
-        """get_output_file(self) -> None
+        """
         Return output file for this task.
         This method should be overloaded.
         """
@@ -43,13 +50,13 @@ class Task(object):
 
     @property
     def name(self):
-        """name(self) -> str
+        """
         Return name of this task.
         """
         return self.__class__.__name__
 
     def get_path(self):
-        """get_path(self) -> str
+        """
         Gets path used in command line.
         """
         if self.path is None:
@@ -59,7 +66,7 @@ class Task(object):
 
     @classmethod
     def get_path_dotted(cls):
-        """get_path_dotted(cls) -> None
+        """
         Gets dotted path of the class.
         """
         module_name = cls.__module__
@@ -67,7 +74,7 @@ class Task(object):
         return '%s:%s' % (module_name, recipe_name)
 
     def is_rebuild_needed(self):
-        """is_rebuild_needed(self) -> bool
+        """
         Check every dependency and return true if one of them is activated.
         """
         need_rebuild = False
@@ -80,7 +87,7 @@ class Task(object):
         return need_rebuild
 
     def is_output_file_avalible_to_build(self):
-        """is_output_file_avalible_to_build(self) -> bool
+        """
         Can this task file be builded?
         """
         if self.get_output_file() is None:
@@ -89,50 +96,55 @@ class Task(object):
             return not path.exists(self.get_output_file())
 
     def pre_run(self):
-        """pre_run(self) -> None
+        """
         Run before checking the dependencies.
         This method should be overloaded.
         """
         pass
 
     def pre_invoked_tasks(self):
-        """pre_invoked_tasks(self) -> None
+        """
         Run tasks needed to be run before this task.
         This method should be overloaded.
         """
         pass
 
     def invoke_task(self, path, **kwargs):
-        """invoke_task(self, path, **kwargs) -> None
-        Run task before this task.
+        """Run task before this task.
+
+        Keyword arguments:
+        :param path: path to a task or baelfire.task.Task instance
+        :param {kwargs}: parameters for tasks
         """
         task = self.task(path, **kwargs)
         task.run()
         self._log['invoked'].append(task.get_path_dotted())
 
     def add_link(self, path, **kwargs):
-        """add_link(self, path, **kwargs) -> None
-        Add linked task.
+        """Add linked task.
+
+        :param path: path to a task or baelfire.task.Task instance
+        :param [kwargs]: parameters for tasks
         """
         task = self.recipe.task(path, **kwargs)
         self.links.append(task)
 
     def generate_links(self):
-        """generate_links(self) -> None
+        """
         Method called to generate all linked tasks.
         This method should be overloaded.
         """
         pass
 
     def run_links(self):
-        """run_links(self) -> None
+        """
         Run all linked tasks.
         """
         for link in self.links:
             link.run()
 
     def logme(self):
-        """logme(self) -> None
+        """
         Saves log data.
         """
         self._log['links'] = []
@@ -143,7 +155,7 @@ class Task(object):
             dependency.logme()
 
     def run(self):
-        """run(self) -> None
+        """
         Run if not runned before.
         """
         if self.runned is False:
@@ -157,7 +169,7 @@ class Task(object):
                 self.runned = True
 
     def _before_make(self):
-        """_before_make(self) -> None
+        """
         Prepere for make task.
         """
         self._log['force'] = self.kwargs.pop('force', False)
@@ -171,7 +183,7 @@ class Task(object):
         self._log['needed'] = self.is_rebuild_needed()
 
     def _make(self):
-        """_make(self) -> None
+        """
         Make with logging.
         """
         self._log['success'] = False
@@ -181,7 +193,7 @@ class Task(object):
         self._log['success'] = True
 
     def was_runned(self):
-        """was_runned(self) -> bool
+        """
         Was this task runned?
         """
         return self.name in self.recipe.data_log.tasks
@@ -199,14 +211,20 @@ class Task(object):
         return self.recipe.log
 
     def command(self, *args, **kwargs):
-        """command(self, *args, **kwargs) -> Subproccess
-        Run external command."""
+        """
+        Run external command.
+
+        :param [args]: args for subproccess.Popen
+        :param {kwargs}: keyword args for subproccess.Popen
+        """
         process = Process(self)
         return process(*args, **kwargs)
 
     def touch(self, path):
-        """touch(filename) -> None
+        """
         Updates file access and modified times specified by path.
+
+        :param path: path to file
         """
         fhandle = open(path, 'a')
         try:
@@ -215,33 +233,43 @@ class Task(object):
             fhandle.close()
 
     def touchme(self):
-        """touchme(self) -> None
+        """
         Touch output_file.
         """
         self.touch(self.get_output_file())
 
-    def task(self, url, **kwargs):
-        """task(self, url, **kwargs) -> Task
-        Get different task from recipe.
+    def task(self, path, **kwargs):
         """
-        return self.recipe.task(url, **kwargs)
+        Get task from recipe.
+
+        :param path: path to a task or baelfire.task.Task instance
+        :param {kwargs}: parameters for tasks
+        """
+        return self.recipe.task(path, **kwargs)
 
     def generate_dependencies(self):
-        """generate_dependencies(self) -> None
+        """
         Method called to generate all dependencies.
         This method should be overloaded.
         """
         pass
 
     def ask_for(self, key, label):
-        """ask_for(self, key, label) -> str
+        """
         Returns value from task args or ask for it from stdin.
+
+        :param key: name of parameter which will be used in task url
+        :param label: label used on stdin input
         """
         values = self.kwargs.get(key, [None])
         return values[0] or input(label + ': ')
 
     def ask_for_setting(self, key, label):
-        """ask_for(self, key, label) -> None
+        """
         Set setting with value from task args or ask for it from stdin.
+
+        :param key: name of parameter which will be used in task url and in
+            settings
+        :param label: label used on stdin input
         """
         self.settings[key] = self.ask_for(key, label)

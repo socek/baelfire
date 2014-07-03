@@ -7,26 +7,50 @@ class Dependency(object):
 
     @property
     def name(self):
-        """Returns class name"""
+        """
+        Class name.
+        """
         return self.__class__.__name__
 
     def assign_task(self, task):
+        """
+        Assign task to this dependency.
+
+        :param task: Task instance
+        """
         self.task = task
 
     def assign_parent(self, parent):
+        """
+        Assign parent task to this dependency.
+
+        :param task: Task instance
+        """
         self.parent = parent
 
     def run_parent(self):
+        """
+        Run parent task if avalible.
+        """
         if self.parent is not None:
             self.parent.run()
 
     def validate_task(self):
+        """
+        Validate task assigned to this dependency.
+        """
         pass
 
     def validate_parent(self):
+        """
+        Validate parent task assigned to this dependency.
+        """
         pass
 
     def validate_dependency(self):
+        """
+        Validate this dependency.
+        """
         pass
 
     def _log_method(self, name):

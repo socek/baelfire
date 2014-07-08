@@ -43,8 +43,7 @@ class RecipeTest(TestCase):
 
     def test_validate_dependencies(self):
         """Should do nothing (test for code coverage)."""
-        task = Task()
-        self.recipe.add_task(task)
+        self.recipe.add_task(Task)
         self.assertEqual(None, self.recipe.validate_dependencies())
 
     def test_add_recipe(self):
@@ -86,10 +85,10 @@ class RecipeTest(TestCase):
         self.assertEqual(id(recipe.data_log), id(self.recipe.data_log))
 
     def test_add_task(self):
-        """Should set tasks it's parent to self, and add this task to
-        self.tasks."""
-        task = ExampleTask()
-        self.recipe.add_task(task)
+        """Should instance Task class, set tasks it's parent to self, and add
+        this task to self.tasks."""
+        self.recipe.add_task(ExampleTask)
+        task = self.recipe.task_from_url('/exampletask')
 
         self.assertEqual(self.recipe, task.recipe)
         self.assertEqual({'/exampletask': task}, self.recipe.tasks)
@@ -99,13 +98,12 @@ class RecipeTest(TestCase):
 
     def test_task_from_url(self):
         """Should return task with assigned kwargs from url."""
-        source_task = ExampleTask()
-        self.recipe.add_task(source_task)
+        self.recipe.add_task(ExampleTask)
 
         task = self.recipe.task_from_url(
             '/exampletask?arg=something&arg=somethin2&second_arg=metoo')
 
-        self.assertEqual(task, source_task)
+        self.assertTrue(isinstance(task, ExampleTask))
         self.assertEqual({
             'arg': ['something', 'somethin2'],
             'second_arg': ['metoo'],
@@ -121,7 +119,8 @@ class RecipeTest(TestCase):
 
     def test_kwargs(self):
         """Should transform all kwargs arguments into lists."""
-        self.recipe.add_task(ExampleTask())
+        self.recipe.add_task(ExampleTask)
+        task = self.recipe.task_from_url('/exampletask')
 
         task = self.recipe.task(
             'baelfire.tests.recipe:ExampleTask', one=(1,), two=[2, ], three=3)
@@ -133,7 +132,7 @@ class RecipeTest(TestCase):
     def test_set_task_options_fail(self):
         """set_task_options should raise RuntimeError when invalid option is
         specyfied."""
-        self.recipe.add_task(ExampleTask())
+        self.recipe.add_task(ExampleTask)
 
         self.assertRaises(
             RuntimeError,
@@ -143,10 +142,10 @@ class RecipeTest(TestCase):
 
     def test_set_task_options(self):
         """set_task_options should set an option to a task"""
-        task = ExampleTask()
-        self.recipe.add_task(task)
+        self.recipe.add_task(ExampleTask)
 
         self.recipe.set_task_options(
             'baelfire.tests.recipe:ExampleTask', {'hide': 'somethin2'})
+        task = self.recipe.task_from_url('/exampletask')
 
         self.assertEqual('somethin2', task.hide)

@@ -72,12 +72,13 @@ class Recipe(object):
         recipe._tasks.update(self._tasks)
         recipe.data_log = self.data_log
 
-    def add_task(self, task):
+    def add_task(self, task_class):
         """
         Add child task.
 
-        :param task: baelfire.task.Task instance
+        :param task: baelfire.task.Task class
         """
+        task = task_class()
         self.tasks[task.get_path()] = task
         self.tasks_dotted[task.get_path_dotted()] = task
         task.assign_recipe(self)

@@ -41,10 +41,10 @@ class RunTaskTest(TestCase):
     def test_gather_tasks(self):
         """Should gather the tasks and assign command line arguments."""
         recipe = Recipe()
-        task = ExampleTask()
-        recipe.add_task(task)
-        secondtask = SecondTask()
-        recipe.add_task(secondtask)
+        recipe.add_task(ExampleTask)
+        task = recipe.task_from_url('/exampletask')
+        recipe.add_task(SecondTask)
+        secondtask = recipe.task_from_url('/secondtask')
 
         self.command.args = ['/exampletask?data=test', '/secondtask']
         self.command.recipe = recipe
@@ -58,8 +58,7 @@ class RunTaskTest(TestCase):
     def test_gather_tasks_fail(self):
         """Should raise error when one task is forced to run more then once."""
         recipe = Recipe()
-        task = ExampleTask()
-        recipe.add_task(task)
+        recipe.add_task(ExampleTask)
 
         self.command.args = [
             '/exampletask?data=one', '/exampletask?second=two']
@@ -72,8 +71,9 @@ class RunTaskTest(TestCase):
         recipe = Recipe()
         recipe.init_loggers()
         recipe.log.task_log.setLevel(logging.CRITICAL)
-        task = ExampleTask()
-        recipe.add_task(task)
+        recipe.add_task(ExampleTask)
+        task = recipe.task_from_url('/exampletask')
+
         recipe.validate_dependencies()
 
         self.command.run_list = [task, task]
@@ -87,8 +87,8 @@ class RunTaskTest(TestCase):
         recipe = Recipe()
         recipe.init_loggers()
         recipe.log.task_log.setLevel(logging.CRITICAL)
-        task = ExampleTask()
-        recipe.add_task(task)
+        recipe.add_task(ExampleTask)
+        task = recipe.task_from_url('/exampletask')
         recipe.validate_dependencies()
 
         self.command.args = ['/exampletask']

@@ -262,7 +262,11 @@ class Task(object):
         :param label: label used on stdin input
         """
         values = self.kwargs.get(key, [None])
-        return values[0] or input(label + ': ')
+        if values[0] is None:
+            return input(label + ': ')
+        else:
+            print('%s: %s' % (label, values[0]))
+            return values[0]
 
     def ask_for_setting(self, key, label):
         """

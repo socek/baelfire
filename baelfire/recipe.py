@@ -59,6 +59,8 @@ class Recipe(object):
         """
         recipe.assign_parent(self)
         self.recipes.append(recipe)
+        self._tasks.update(recipe._tasks)
+        self._tasks_dotted.update(recipe._tasks_dotted)
 
     def assign_parent(self, recipe):
         """

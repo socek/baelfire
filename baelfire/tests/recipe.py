@@ -48,12 +48,15 @@ class RecipeTest(TestCase):
 
     def test_add_recipe(self):
         """Should set recipe it's parent to self, and add this recipe to
-        self.recipes."""
+        self.recipes and copy _tasks and _tasks_dotted."""
         recipe = Recipe()
         self.recipe.add_recipe(recipe)
 
         self.assertEqual(self.recipe, recipe.parent)
         self.assertEqual([recipe], self.recipe.recipes)
+
+        self.assertEqual(self.recipe._tasks, recipe._tasks)
+        self.assertEqual(self.recipe._tasks_dotted, recipe._tasks_dotted)
 
     def test_assign_parent(self):
         """Should assign parent to a recipe and update tasks, settings and

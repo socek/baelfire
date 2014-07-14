@@ -147,10 +147,19 @@ class TaskTest(TestCase):
     def test_log(self):
         """Should return log from recipe"""
         recipe = ExampleRecipe()
-        recipe.log = 'log'
+        recipe._log = 'log'
         self.task.assign_recipe(recipe)
 
         self.assertEqual('log', self.task.log)
+
+    def test_log_with_parent(self):
+        """Should return log from parent recipe if avalible"""
+        recipe = ExampleRecipe()
+        recipe._log = 'log'
+        recipe.parent = MagicMock()
+        self.task.assign_recipe(recipe)
+
+        self.assertEqual(recipe.parent.log, self.task.log)
 
     def test_command(self):
         """Should initialize Process with itself and transport args."""

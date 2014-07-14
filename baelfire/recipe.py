@@ -23,7 +23,7 @@ class Recipe(object):
         self.init_settings(
             {'minimal version': VERSION},
             {})
-        self.log = None
+        self._log = None
 
         self.create_settings()
         self.gather_recipes()
@@ -34,12 +34,19 @@ class Recipe(object):
         self.final_settings()
         self.final()
 
+    @property
+    def log(self):
+        if self.parent is None:
+            return self._log
+        else:
+            return self.parent.log
+
     def init_loggers(self):
         """
         Inits logger for running tasks. Should be run on the main recipe and
         only once per proccess.
         """
-        self.log = Logger()
+        self._log = Logger()
 
     def init_settings(self, settings, paths):
         """
@@ -59,8 +66,6 @@ class Recipe(object):
         """
         recipe.assign_parent(self)
         self.recipes.append(recipe)
-        self._tasks.update(recipe._tasks)
-        self._tasks_dotted.update(recipe._tasks_dotted)
 
     def assign_parent(self, recipe):
         """
@@ -72,7 +77,8 @@ class Recipe(object):
         recipe._settings.update(self._settings)
         recipe._paths.update(self._paths)
         recipe._tasks.update(self._tasks)
-        recipe.data_log = self.data_log
+        recipe._tasks_dotted.update(self._tasks_dotted)
+        self.data_log = recipe.data_log
 
     def add_task(self, task_class):
         """

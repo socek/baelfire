@@ -23,6 +23,10 @@ class TemplateTaskExample(TemplateTask):
         data['mytest'] = 'success'
         return data
 
+    @property
+    def paths(self):
+        return self._paths
+
 
 class TemplateTaskTest(TestCase):
 
@@ -30,26 +34,13 @@ class TemplateTaskTest(TestCase):
         super().setUp()
         self.recipe = MagicMock()
         self.template = TemplateTaskExample()
+        self.template._paths = {}
         self.template.assign_recipe(self.recipe)
-
-    def test_module(self):
-        """Should return mock module, because recipe is a MagicMock."""
-        expected_module = sys.modules['mock']
-        self.assertEqual(expected_module, self.template.module())
-
-    def test_template_absolute_path(self):
-        """Should return absolute path for a template."""
-        self.add_mock_object(self.template, 'module')
-        self.mocks['module'].return_value.__file__ = '/main/child'
-        path = self.template.template_absolute_path()
-        self.assertEqual('/main/templates/template.jinja2', path)
 
     def test_generate_dependencies(self):
         """Should add FileChanged dependency for template file and this file.
         """
-        self.add_mock_object(self.template, 'module')
-        self.mocks['module'].return_value.__file__ = '/main/child'
-
+        self.template._paths['templates'] = '/main/templates'
         self.template.generate_dependencies()
 
         dependency = self.template.dependencies[0]
@@ -62,6 +53,7 @@ class TemplateTaskTest(TestCase):
     def test_jinja_when_new(self):
         """Should generate new jinja2 envoritment."""
         self.assertEqual(None, self.template._jinja)
+        self.template._paths['templates'] = 'templates'
 
         env = self.template.jinja()
 
@@ -77,19 +69,20 @@ class TemplateTaskTest(TestCase):
         self.assertEqual(self.template._jinja, env)
 
     def test_generate_data(self):
-        """Should return dict with settings and paths from recipe."""
+        """Should return dict with settings and paths from recipe. Paths is set
+        to {} due the 'mock' of it."""
         data = self.template.generate_data()
 
         self.assertEqual(self.recipe.settings, data['settings'])
-        self.assertEqual(self.recipe.paths, data['paths'])
+        self.assertEqual({}, data['paths'])
 
     def test_make(self):
         """Should generate template from given file."""
         try:
-            self.add_mock_object(
-                self.template, 'module', return_value=sys.modules[__name__])
-            self.template.templates_dir = 'testdir'
-            test_path = os.path.dirname(self.template.template_absolute_path())
+            self.template._paths = {
+                'templates': os.path.abspath(
+                    os.path.join(os.getcwd(), 'testdir'))}
+            test_path = self.template.paths['templates']
             os.mkdir(test_path)
             template = open(self.template.template_absolute_path(), 'w')
             template.write("This is sample {{mytest}} template.")

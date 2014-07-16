@@ -1,6 +1,6 @@
 import os
 import sys
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, FileSystemLoader
 
 from baelfire.task import Task
 from baelfire.dependencies import FileChanged
@@ -8,22 +8,14 @@ from baelfire.dependencies import FileChanged
 
 class TemplateTask(Task):
 
-    templates_dir = 'templates'
-
     def __init__(self, *args, **kwargs):
         self.check_template = kwargs.pop('check_template', True)
         super().__init__(*args, **kwargs)
         self._jinja = None
 
-    def module(self):
-        """Module which store templates."""
-        return sys.modules[self.recipe.__module__]
-
     def template_absolute_path(self):
         """Absoluth path to a template."""
-        dirname = os.path.dirname(self.module().__file__)
-        return os.path.join(dirname,
-                            self.templates_dir,
+        return os.path.join(self.paths['templates'],
                             self.get_template_path())
 
     def generate_dependencies(self):
@@ -37,8 +29,7 @@ class TemplateTask(Task):
     def jinja(self):
         """Jinja2 environment generator."""
         if self._jinja is None:
-            loader = PackageLoader(self.module().__name__,
-                                   self.templates_dir)
+            loader = FileSystemLoader(self.paths['templates'])
             self._jinja = Environment(loader=loader)
         return self._jinja
 

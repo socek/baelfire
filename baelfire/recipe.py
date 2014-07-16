@@ -265,3 +265,4 @@ class Recipe(object):
             'recipe',
             None,
             os.path.dirname(inspect.getfile(self.__class__)))
+        self.set_path('templates', 'recipe', 'templates')

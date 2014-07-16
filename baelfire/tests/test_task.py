@@ -4,7 +4,7 @@ from mock import MagicMock
 from soktest import TestCase
 
 from baelfire.task import Task
-from .recipe import ExampleRecipe
+from .test_recipe import ExampleRecipe
 from baelfire.dependencies import Dependency
 
 PREFIX = 'baelfire.task.'

@@ -3,7 +3,7 @@ from mock import MagicMock
 from soktest import TestCase
 
 from baelfire.recipe import Recipe
-from baelfire.tests.task import ExampleTask
+from baelfire.tests.test_task import ExampleTask
 from ..dependency import Dependency, AlwaysRebuild
 
 

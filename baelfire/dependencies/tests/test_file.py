@@ -5,7 +5,7 @@ from tempfile import NamedTemporaryFile
 from soktest import TestCase
 
 from ..dependency import Dependency
-from baelfire.tests.task import ExampleTask as ExampleTaskBase, Task
+from baelfire.tests.test_task import ExampleTask as ExampleTaskBase, Task
 from baelfire.error import TaskMustHaveOutputFileError, CouldNotCreateFileError
 from ..file import (FileChanged,
                     FileDoesNotExists,
@@ -207,6 +207,7 @@ class ParentFileChangedTest(TestCase):
                 'parent': {
                     'file': self.parent.filename,
                     'name': 'ExampleTask',
-                    'path': 'baelfire.dependencies.tests.file:ExampleTask'},
+                    'path': 'baelfire.dependencies.tests'
+                            '.test_file:ExampleTask'},
                 'runned': False},
             self.dependency.logdata)

@@ -1,11 +1,13 @@
+import inspect
+import os
 from urllib.parse import urlparse, parse_qs
 
 from smallsettings import Settings, Paths
 
-from baelfire import VERSION
 from .error import TaskNotFoundError
 from .log import TaskLogger, Logger
 from .signals import SignalHandling
+from baelfire import VERSION
 
 
 class Recipe(object):
@@ -25,6 +27,7 @@ class Recipe(object):
             {})
         self._log = None
 
+        self.init_paths()
         self.create_settings()
         self.gather_recipes()
         self.gather_tasks()
@@ -252,3 +255,13 @@ class Recipe(object):
         creating recipe.
         This method should be overloaded.
         """
+
+    def init_paths(self):
+        """
+        Sets initial paths like "pwd" or "recipe_path"
+        """
+        self.set_path('cwd', None, os.getcwd())
+        self.set_path(
+            'recipe',
+            None,
+            os.path.dirname(inspect.getfile(self.__class__)))

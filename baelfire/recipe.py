@@ -155,6 +155,23 @@ class Recipe(object):
         """
         self.signal_handling = SignalHandling(self)
 
+    def set_path(self, name, dirname, basename):
+        """
+        Sets paths.
+
+        :param name: name of the path in .paths
+        :param dirname: name of parent path. None == no parent
+        :param basename: name of the dir or file. Can be list of folder names,
+            whcih will be joined to make a path.
+        """
+        if type(basename) not in (list, tuple):
+            basename = [basename]
+
+        if dirname is None:
+            self.paths[name] = basename
+        else:
+            self.paths[name] = ['%%(%s)s' % (dirname,)] + basename
+
     def create_settings(self):
         """
         Place your settings and paths here.

@@ -152,3 +152,23 @@ class RecipeTest(TestCase):
         task = self.recipe.task_from_url('/exampletask')
 
         self.assertEqual('somethin2', task.hide)
+
+    def test_set_path_when_basename_is_string(self):
+        """set_path should set paths with parent name and child joined."""
+        self.recipe.paths['parent'] = '/parent'
+        self.recipe.set_path('myname', 'parent', 'child')
+
+        self.assertEqual('/parent/child', self.recipe.paths['myname'])
+
+    def test_set_path_when_basename_is_list(self):
+        """set_path should set paths with parent name and childs joined."""
+        self.recipe.paths['parent'] = '/parent'
+        self.recipe.set_path('myname', 'parent', ['first', 'child'])
+
+        self.assertEqual('/parent/first/child', self.recipe.paths['myname'])
+
+    def test_set_path_when_parent_is_none(self):
+        """set_path should set child as root path"""
+        self.recipe.set_path('myname', None, ['root', 'child'])
+
+        self.assertEqual('root/child', self.recipe.paths['myname'])

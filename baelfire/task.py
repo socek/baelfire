@@ -203,6 +203,10 @@ class Task(object):
         return self.recipe.paths
 
     @property
+    def recipe_paths(self):
+        return self.recipe.recipe_paths
+
+    @property
     def settings(self):
         return self.recipe.settings
 

@@ -1,5 +1,4 @@
 import os
-import sys
 import shutil
 from jinja2 import Environment
 
@@ -33,6 +32,7 @@ class TemplateTaskTest(TestCase):
     def setUp(self):
         super().setUp()
         self.recipe = MagicMock()
+        self.recipe.recipe_paths = {}
         self.template = TemplateTaskExample()
         self.template._paths = {}
         self.template.assign_recipe(self.recipe)
@@ -40,7 +40,7 @@ class TemplateTaskTest(TestCase):
     def test_generate_dependencies(self):
         """Should add FileChanged dependency for template file and this file.
         """
-        self.template._paths['templates'] = '/main/templates'
+        self.template.recipe_paths['templates'] = '/main/templates'
         self.template.generate_dependencies()
 
         dependency = self.template.dependencies[0]
@@ -53,7 +53,7 @@ class TemplateTaskTest(TestCase):
     def test_jinja_when_new(self):
         """Should generate new jinja2 envoritment."""
         self.assertEqual(None, self.template._jinja)
-        self.template._paths['templates'] = 'templates'
+        self.template.recipe_paths['templates'] = 'templates'
 
         env = self.template.jinja()
 
@@ -79,10 +79,11 @@ class TemplateTaskTest(TestCase):
     def test_make(self):
         """Should generate template from given file."""
         try:
-            self.template._paths = {
+            self.template._paths = {}
+            self.recipe.recipe_paths = {
                 'templates': os.path.abspath(
                     os.path.join(os.getcwd(), 'testdir'))}
-            test_path = self.template.paths['templates']
+            test_path = self.template.recipe_paths['templates']
             os.mkdir(test_path)
             template = open(self.template.template_absolute_path(), 'w')
             template.write("This is sample {{mytest}} template.")

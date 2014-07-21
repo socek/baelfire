@@ -15,7 +15,7 @@ class TemplateTask(Task):
 
     def template_absolute_path(self):
         """Absoluth path to a template."""
-        return os.path.join(self.paths['templates'],
+        return os.path.join(self.recipe_paths['templates'],
                             self.get_template_path())
 
     def generate_dependencies(self):
@@ -29,7 +29,7 @@ class TemplateTask(Task):
     def jinja(self):
         """Jinja2 environment generator."""
         if self._jinja is None:
-            loader = FileSystemLoader(self.paths['templates'])
+            loader = FileSystemLoader(self.recipe_paths['templates'])
             self._jinja = Environment(loader=loader)
         return self._jinja
 
@@ -38,6 +38,7 @@ class TemplateTask(Task):
         data = {}
         data['settings'] = self.settings
         data['paths'] = self.paths
+        data['recipe_paths'] = self.recipe_paths
         return data
 
     def make(self):

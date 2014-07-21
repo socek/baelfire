@@ -60,6 +60,7 @@ class Recipe(object):
         """
         self._settings = Settings(settings)
         self._paths = Paths(paths)
+        self.recipe_paths = Paths()
 
     def add_recipe(self, recipe):
         """
@@ -158,7 +159,7 @@ class Recipe(object):
         """
         self.signal_handling = SignalHandling(self)
 
-    def set_path(self, name, dirname, basename):
+    def set_path(self, name, dirname, basename, destination='paths'):
         """
         Sets paths.
 
@@ -170,10 +171,11 @@ class Recipe(object):
         if type(basename) not in (list, tuple):
             basename = [basename]
 
+        paths = getattr(self, destination)
         if dirname is None:
-            self.paths[name] = basename
+            paths[name] = basename
         else:
-            self.paths[name] = ['%%(%s)s' % (dirname,)] + basename
+            paths[name] = ['%%(%s)s' % (dirname,)] + basename
 
     def create_settings(self):
         """
@@ -264,5 +266,6 @@ class Recipe(object):
         self.set_path(
             'recipe',
             None,
-            os.path.dirname(inspect.getfile(self.__class__)))
-        self.set_path('templates', 'recipe', 'templates')
+            os.path.dirname(inspect.getfile(self.__class__)),
+            'recipe_paths')
+        self.set_path('templates', 'recipe', 'templates', 'recipe_paths')

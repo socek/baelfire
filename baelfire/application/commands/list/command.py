@@ -53,7 +53,7 @@ class ListTasks(TriggeredCommand, ListTasksMixin):
                          help='Lists tasks')
 
     def get_filter(self, task):
-        return not task.hide
+        return not task.hide and self.get_recipe()._filter_task(task)
 
 
 class ListAllTasks(TriggeredCommand, ListTasksMixin):

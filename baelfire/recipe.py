@@ -278,3 +278,9 @@ class Recipe(object):
         Return prefix from recipe. This method is for inheritance reasons.
         """
         return self.prefix
+
+    def _filter_task(self, task):
+        """
+        Filter tasks for printing in list command.
+        """
+        return True

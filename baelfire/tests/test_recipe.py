@@ -183,3 +183,8 @@ class RecipeTest(TestCase):
         self.recipe.set_path('myname', None, ['root', 'child'])
 
         self.assertEqual('root/child', self.recipe.paths['myname'])
+
+    def test_filter_task(self):
+        """._filter_task should return True always. It means, print all tasks.
+        """
+        self.assertEqual(True, self.recipe._filter_task(None))

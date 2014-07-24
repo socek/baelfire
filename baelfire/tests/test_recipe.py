@@ -41,6 +41,14 @@ class RecipeTest(TestCase):
         self.assertEqual([], self.recipe.recipes)
         self.assertEqual(None, self.recipe.parent)
 
+    def test_init_with_parent_false(self):
+        """Should not run validate_dependencies on init when is_parent is set
+        to False."""
+        self.add_mock_object(ExampleRecipe, 'validate_dependencies')
+        ExampleRecipe(False)
+
+        self.assertEqual(0, self.mocks['validate_dependencies'].call_count)
+
     def test_validate_dependencies(self):
         """Should do nothing (test for code coverage)."""
         self.recipe.add_task(Task)

@@ -14,7 +14,7 @@ class Recipe(object):
 
     AVAILABLE_TASK_OPTIONS = ['hide']
 
-    def __init__(self):
+    def __init__(self, is_parent=True):
         self.recipes = []
         self._tasks = {}
         self._tasks_dotted = {}
@@ -31,11 +31,13 @@ class Recipe(object):
         self.create_settings()
         self.gather_recipes()
         self.gather_tasks()
-        self.validate_dependencies()
         self.init_signals()
 
         self.final_settings()
         self.final()
+
+        if is_parent:
+            self.validate_dependencies()
 
     @property
     def log(self):

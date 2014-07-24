@@ -12,7 +12,7 @@ from baelfire import VERSION
 
 class Recipe(object):
 
-    AVALIBLE_TASK_OPTIONS = ['hide']
+    AVAILABLE_TASK_OPTIONS = ['hide']
 
     def __init__(self):
         self.recipes = []
@@ -238,8 +238,8 @@ class Recipe(object):
         """
         task = self.task(path)
         for key, value in options.items():
-            if key not in self.AVALIBLE_TASK_OPTIONS:
-                raise RuntimeError('Option "%s" is not avalible!' % (key,))
+            if key not in self.AVAILABLE_TASK_OPTIONS:
+                raise RuntimeError('Option "%s" is not available!' % (key,))
 
             setattr(task, key, value)
 

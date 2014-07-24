@@ -60,9 +60,9 @@ class Task(object):
         Gets path used in command line.
         """
         if self.path is None:
-            return '/' + self.__class__.__name__.lower()
+            return self.recipe.get_prefix() + '/' + self.__class__.__name__.lower()
         else:
-            return self.path
+            return self.recipe.get_prefix() + self.path
 
     @classmethod
     def get_path_dotted(cls):

@@ -80,6 +80,8 @@ class FileChangedTest(TestCase):
         """Should throw TaskMustHaveOutputFileError when task has no output
         file."""
         task = Task()
+        task.recipe = MagicMock()
+        task.recipe.prefix = ''
         self.dependency.assign_task(task)
         self.assertRaises(
             TaskMustHaveOutputFileError,

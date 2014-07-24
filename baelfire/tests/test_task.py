@@ -1,11 +1,12 @@
 import os
-from mock import MagicMock
+from mock import MagicMock, create_autospec
 
 from soktest import TestCase
 
-from baelfire.task import Task
 from .test_recipe import ExampleRecipe
 from baelfire.dependencies import Dependency
+from baelfire.recipe import Recipe
+from baelfire.task import Task
 
 PREFIX = 'baelfire.task.'
 
@@ -61,13 +62,17 @@ class TaskTest(TestCase):
         """Should return path which is in self.path"""
         task = ExampleTask()
         task.path = '/sometask'
+        task.recipe = create_autospec(Recipe())
+        task.recipe.get_prefix.return_value = '/prefix'
 
-        self.assertEqual('/sometask', task.get_path())
+        self.assertEqual('/prefix/sometask', task.get_path())
 
     def test_get_path_without_path(self):
         """Should return generated path from class name when self.path is
         None"""
         task = ExampleTask()
+        task.recipe = create_autospec(Recipe())
+        task.recipe.get_prefix.return_value = ''
 
         self.assertEqual('/exampletask', task.get_path())
 

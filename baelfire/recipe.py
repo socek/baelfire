@@ -13,6 +13,7 @@ from baelfire import VERSION
 class Recipe(object):
 
     AVAILABLE_TASK_OPTIONS = ['hide']
+    prefix = ''
 
     def __init__(self, is_parent=True):
         self.recipes = []
@@ -93,9 +94,9 @@ class Recipe(object):
         :param task: baelfire.task.Task class
         """
         task = task_class()
+        task.assign_recipe(self)
         self.tasks[task.get_path()] = task
         self.tasks_dotted[task.get_path_dotted()] = task
-        task.assign_recipe(self)
 
     def task(self, path, method=None, **kwargs):
         """
@@ -271,3 +272,9 @@ class Recipe(object):
             os.path.dirname(inspect.getfile(self.__class__)),
             'recipe_paths')
         self.set_path('templates', 'recipe', 'templates', 'recipe_paths')
+
+    def get_prefix(self):
+        """
+        Return prefix from recipe. This method is for inheritance reasons.
+        """
+        return self.prefix

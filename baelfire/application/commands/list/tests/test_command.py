@@ -78,8 +78,10 @@ class ListAllTasksTest(TestCase):
         """tasks_to_print should return all tasks."""
         task_1 = MagicMock()
         task_1.hide = False
+        task_1.get_path.return_value = '/one'
         task_2 = MagicMock()
         task_2.hide = True
+        task_2.get_path.return_value = '/two'
         self.command.recipe = self.command.get_recipe()
         self.command.recipe.tasks.values.return_value = [task_1, task_2]
 
@@ -113,7 +115,7 @@ class PathsListTest(TestCase):
         self.command.make()
 
         self.mocks['print'].assert_called_once_with(
-            '/one\n/two\n/three')
+            '/one\n/three\n/two')
 
     def test_make_good(self):
         """make should print all tasks starting with .args"""
@@ -121,7 +123,7 @@ class PathsListTest(TestCase):
         self.command.make()
 
         self.mocks['print'].assert_called_once_with(
-            '/two\n/three')
+            '/three\n/two')
 
     def test_make_fail(self):
         """make should not print anything if no path found"""

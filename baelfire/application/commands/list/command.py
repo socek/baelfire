@@ -7,7 +7,9 @@ class ListTasksMixin(object):
     paths_minimal_size = 4
 
     def tasks_to_print(self):
-        return filter(self.get_filter, self.recipe.tasks.values())
+        return sorted(
+            filter(self.get_filter, self.recipe.tasks.values()),
+            key=lambda task: task.get_path())
 
     def make(self):
         self.recipe = self.get_recipe()

@@ -74,3 +74,22 @@ class FileDoesNotExists(FileDependency):
             if not exists(filename):
                 return True
         return False
+
+
+class PathsBased(object):
+
+    def __init__(self, paths, *args, **kwargs):
+        self.paths = paths
+        super().__init__(*args, **kwargs)
+
+    def get_filenames(self):
+        for filename in self.filenames:
+            yield self.paths[filename]
+
+
+class PathsBasedFileChanged(PathsBased, FileChanged):
+    pass
+
+
+class PathsBasedFileDoesNotExists(PathsBased, FileDoesNotExists):
+    pass

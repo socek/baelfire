@@ -5,12 +5,15 @@ from tempfile import NamedTemporaryFile
 from soktest import TestCase
 
 from ..dependency import Dependency
-from baelfire.tests.test_task import ExampleTask as ExampleTaskBase, Task
-from baelfire.error import TaskMustHaveOutputFileError, CouldNotCreateFileError
 from ..file import (FileChanged,
                     FileDoesNotExists,
                     FileDependency,
-                    ParentFileChanged)
+                    ParentFileChanged,
+                    PathsBasedFileDoesNotExists,
+                    PathsBasedFileChanged)
+from baelfire.error import TaskMustHaveOutputFileError, CouldNotCreateFileError
+from baelfire.tests.test_task import ExampleTask as ExampleTaskBase, Task
+
 
 PREFIX = 'baelfire.dependencies.file.'
 
@@ -151,14 +154,14 @@ class FileChangedTest(TestCase):
 
         sleep(0.01)
         destination = NamedTemporaryFile(delete=False).name
-        self.dependency.filenames = [destination]
+        self.set_filename(destination)
 
         self.assertEqual(True, self.dependency())
 
     def test_make_file_not_changed(self):
         """Should return False if task file is newer then dependency file."""
         destination = NamedTemporaryFile(delete=False).name
-        self.dependency.filenames = [destination]
+        self.set_filename(destination)
 
         sleep(0.01)
         task = ExampleTask()
@@ -166,6 +169,20 @@ class FileChangedTest(TestCase):
         self.dependency.assign_task(task)
 
         self.assertEqual(False, self.dependency())
+
+    def set_filename(self, filename):
+        self.dependency.filenames = [filename]
+
+
+class PathsBasedFileChangedTest(FileChangedTest):
+
+    def setUp(self):
+        super().setUp()
+        self.paths = {'filename': 'example_file'}
+        self.dependency = PathsBasedFileChanged(self.paths, ['filename'])
+
+    def set_filename(self, filename):
+        self.paths['filename'] = filename
 
 
 class FileDoesNotExistsTest(TestCase):
@@ -179,6 +196,22 @@ class FileDoesNotExistsTest(TestCase):
         """Should return False, if all the files exists."""
         destination = NamedTemporaryFile(delete=False).name
         dependency = FileDoesNotExists([destination])
+        self.assertEqual(False, dependency())
+
+
+class PathsBasedFileDoesNotExistsTest(TestCase):
+
+    def test_success(self):
+        """Should return True, if on of file does not exist."""
+        paths = {'filename': '/tmp/something'}
+        dependency = PathsBasedFileDoesNotExists(paths, 'filename')
+        self.assertEqual(True, dependency())
+
+    def test_fail(self):
+        """Should return False, if all the files exists."""
+        destination = NamedTemporaryFile(delete=False).name
+        paths = {'filename': destination}
+        dependency = PathsBasedFileDoesNotExists(paths, 'filename')
         self.assertEqual(False, dependency())
 
 

@@ -60,7 +60,9 @@ class Task(object):
         Gets path used in command line.
         """
         if self.path is None:
-            return self.recipe.get_prefix() + '/' + self.__class__.__name__.lower()
+            return '%s/%s' % (
+                self.recipe.get_prefix(),
+                self.__class__.__name__.lower())
         else:
             return self.recipe.get_prefix() + self.path
 

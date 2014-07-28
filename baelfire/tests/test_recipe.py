@@ -1,3 +1,4 @@
+from mock import MagicMock
 from soktest import TestCase
 
 from baelfire.error import TaskNotFoundError
@@ -188,3 +189,36 @@ class RecipeTest(TestCase):
         """._filter_task should return True always. It means, print all tasks.
         """
         self.assertEqual(True, self.recipe._filter_task(None))
+
+    def test_get_task_by_url_normal(self):
+        """._get_task_by_url should return task when full url is provided"""
+        task = MagicMock()
+        self.recipe._tasks['/prefix/task'] = task
+        self.assertEqual(task, self.recipe._get_task_by_url('/prefix/task'))
+
+    def test_get_task_by_url_no_task_found_with_no_parent(self):
+        """._get_task_by_url should raise KeyError when url is not found and no
+        parent is present"""
+        task = MagicMock()
+        self.recipe._tasks['/prefix/task'] = task
+        self.assertRaises(
+            KeyError, self.recipe._get_task_by_url, '/prefix/task2')
+
+    def test_get_task_by_url_when_provided_without_prefix(self):
+        """._get_task_by_url should return task when url without prefix is
+        provided"""
+        task = MagicMock()
+        self.recipe.prefix = '/prefix'
+        self.recipe._tasks['/prefix/task'] = task
+        self.assertEqual(task, self.recipe._get_task_by_url('/task'))
+
+    def test_get_task_by_url_when_provided_without_prefix_and_no_parent(self):
+        """._get_task_by_url should return task when url without prefix is
+        provided and parent is present"""
+        task = MagicMock()
+        self.recipe.prefix = '/prefix'
+        self.recipe.parent = MagicMock()
+        self.recipe.parent.tasks = self.recipe._tasks
+        self.recipe._tasks['/prefix/task'] = task
+        self.assertRaises(
+            KeyError, self.recipe._get_task_by_url, '/task')

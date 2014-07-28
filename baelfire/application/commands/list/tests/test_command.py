@@ -1,8 +1,9 @@
-from mock import MagicMock
+from mock import MagicMock, create_autospec
 
 from soktest import TestCase
 
 from ..command import ListTasks, ListAllTasks, PathsList
+from baelfire.application.application import Application
 
 
 class ListTasksTest(TestCase):
@@ -11,6 +12,8 @@ class ListTasksTest(TestCase):
         super().setUp()
         self.command = ListTasks()
         self.add_mock_object(self.command, 'get_recipe')
+        get_prefix = self.mocks['get_recipe'].return_value.get_prefix
+        get_prefix.return_value = '/prefix'
 
     def test_tasks_to_print(self):
         """Should return only tasks which is not hidden."""
@@ -66,6 +69,13 @@ class ListTasksTest(TestCase):
  my name   short path   my help
 """)
 
+    def test_convert_path(self):
+        """convert_path should cut prefix from path"""
+        path = '/prefix/mypath'
+        self.assertEqual(
+            '/mypath',
+            self.command.convert_path(path))
+
 
 class ListAllTasksTest(TestCase):
 
@@ -95,14 +105,17 @@ class PathsListTest(TestCase):
     def setUp(self):
         super().setUp()
         self.command = PathsList()
+        self.command.application = create_autospec(Application)
         self.add_mock_object(self.command, 'get_recipe')
+        get_prefix = self.mocks['get_recipe'].return_value.get_prefix
+        get_prefix.return_value = '/prefix'
         self.add_mock('builtins.print')
         self.tasks = []
         self.mocks['get_recipe'].return_value.tasks.values.\
             return_value = self.tasks
-        self._add_task_mock('/one')
-        self._add_task_mock('/two')
-        self._add_task_mock('/three')
+        self._add_task_mock('/prefix/one')
+        self._add_task_mock('/prefix/two')
+        self._add_task_mock('/prefix/three')
         self.command.args = ''
 
     def _add_task_mock(self, path):
@@ -131,3 +144,11 @@ class PathsListTest(TestCase):
         self.command.make()
 
         self.assertEqual(0, self.mocks['print'].call_count)
+
+    def test_make_with_prefix(self):
+        """command should print prefixed paths when prefix is provided"""
+        self.command.args = '/prefix/t'
+        self.command.make()
+
+        self.mocks['print'].assert_called_once_with(
+            '/prefix/three\n/prefix/two')

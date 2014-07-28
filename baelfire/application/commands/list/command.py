@@ -12,7 +12,7 @@ class ListTasksMixin(object):
             key=lambda task: task.get_path())
 
     def convert_path(self, path):
-        prefix = self.application.recipe.get_prefix()
+        prefix = self.get_recipe().get_prefix()
         if path.startswith(prefix):
             return path[len(prefix):]
         else:

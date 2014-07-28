@@ -18,7 +18,6 @@ class Application(object):
         self.gather_options()
         self.gather_commands()
         self.recipe = recipe
-        self.prefix = recipe.prefix
 
     def gather_commands(self):
         self.add_command(Init())

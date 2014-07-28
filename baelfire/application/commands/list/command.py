@@ -11,6 +11,13 @@ class ListTasksMixin(object):
             filter(self.get_filter, self.recipe.tasks.values()),
             key=lambda task: task.get_path())
 
+    def convert_path(self, path):
+        prefix = self.application.recipe.get_prefix()
+        if path.startswith(prefix):
+            return path[len(prefix):]
+        else:
+            return path
+
     def make(self):
         self.recipe = self.get_recipe()
         sizes = self.count_columns_width()
@@ -25,7 +32,7 @@ class ListTasksMixin(object):
         for task in self.tasks_to_print():
             text += template % (
                 task.name,
-                task.get_path(),
+                self.convert_path(task.get_path()),
                 task.help,
             )
 
@@ -78,10 +85,20 @@ class PathsList(Command, ListTasksMixin):
             nargs='?')
 
     def get_filter(self, task):
-        return task.get_path().startswith(self.args)
+        converted_path = self.convert_path(task.get_path())
+        return (
+            task.get_path().startswith(self.args)
+            or converted_path.startswith(self.args))
 
     def make(self):
         self.recipe = self.get_recipe()
-        paths = [task.get_path() for task in self.tasks_to_print()]
+        paths = []
+        for task in self.tasks_to_print():
+            converted_path = self.convert_path(task.get_path())
+            if converted_path.startswith(self.args):
+                paths.append(converted_path)
+            else:
+                paths.append(task.get_path())
+
         if len(paths) > 0:
             print('\n'.join(paths))

@@ -146,7 +146,13 @@ class Recipe(object):
 
         :param path: path to the task
         """
-        return self.tasks[path]
+        try:
+            return self.tasks[path]
+        except KeyError:
+            if self.parent is None:
+                return self.tasks[self.prefix + path]
+            else:
+                raise
 
     def validate_dependencies(self):
         """

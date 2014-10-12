@@ -2,7 +2,7 @@ import inspect
 import os
 from urllib.parse import urlparse, parse_qs
 
-from smallsettings import Settings, Paths
+from morfdict import StringDict, PathDict
 
 from .error import TaskNotFoundError
 from .log import TaskLogger, Logger
@@ -61,9 +61,9 @@ class Recipe(object):
         :param settings: dict with default settings
         :param paths: dict with default paths
         """
-        self._settings = Settings(settings)
-        self._paths = Paths(paths)
-        self.recipe_paths = Paths()
+        self._settings = StringDict(settings)
+        self._paths = PathDict(paths)
+        self.recipe_paths = PathDict()
 
     def add_recipe(self, recipe):
         """
@@ -81,8 +81,8 @@ class Recipe(object):
         :param recipe: baelfire.recipe.Recipe instance
         """
         self.parent = recipe
-        recipe._settings.update(self._settings)
-        recipe._paths.update(self._paths)
+        recipe._settings.merge(self._settings)
+        recipe._paths.merge(self._paths)
         recipe._tasks.update(self._tasks)
         recipe._tasks_dotted.update(self._tasks_dotted)
         self.data_log = recipe.data_log
@@ -170,21 +170,15 @@ class Recipe(object):
 
     def set_path(self, name, dirname, basename, destination='paths'):
         """
-        Sets paths.
+        Sets paths. (deprecated)
 
         :param name: name of the path in .paths
         :param dirname: name of parent path. None == no parent
         :param basename: name of the dir or file. Can be list of folder names,
             whcih will be joined to make a path.
         """
-        if type(basename) not in (list, tuple):
-            basename = [basename]
-
         paths = getattr(self, destination)
-        if dirname is None:
-            paths[name] = basename
-        else:
-            paths[name] = ['%%(%s)s' % (dirname,)] + basename
+        paths.set_path(name, dirname, basename)
 
     def create_settings(self):
         """

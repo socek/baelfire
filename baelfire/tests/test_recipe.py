@@ -33,68 +33,19 @@ class RecipeTest(TestCase):
 
     def test_init(self):
         """Should init recipe and run methods in proper order."""
-        self.assertEqual(['create_settings',
-                          'gather_recipes',
-                          'gather_tasks',
-                          ],
-                         self.recipe.chronology)
+        self.assertEqual(
+            [
+                'create_settings',
+                'gather_tasks',
+            ],
+            self.recipe.chronology,
+        )
         self.assertEqual(VERSION, self.recipe.settings['minimal version'])
-        self.assertEqual([], self.recipe.recipes)
-        self.assertEqual(None, self.recipe.parent)
-
-    def test_init_with_parent_false(self):
-        """Should not run validate_dependencies on init when is_parent is set
-        to False."""
-        self.add_mock_object(ExampleRecipe, 'validate_dependencies')
-        ExampleRecipe(False)
-
-        self.assertEqual(0, self.mocks['validate_dependencies'].call_count)
 
     def test_validate_dependencies(self):
         """Should do nothing (test for code coverage)."""
         self.recipe.add_task(Task)
         self.assertEqual(None, self.recipe.validate_dependencies())
-
-    def test_add_recipe(self):
-        """Should set recipe it's parent to self, and add this recipe to
-        self.recipes and copy _tasks and _tasks_dotted."""
-        recipe = Recipe()
-        self.recipe.add_recipe(recipe)
-
-        self.assertEqual(self.recipe, recipe.parent)
-        self.assertEqual([recipe], self.recipe.recipes)
-
-        self.assertEqual(self.recipe._tasks, recipe._tasks)
-        self.assertEqual(self.recipe._tasks_dotted, recipe._tasks_dotted)
-
-    def test_assign_parent(self):
-        """Should assign parent to a recipe and update tasks, settings and
-        paths."""
-        recipe = Recipe()
-        recipe.settings['something'] = 'parent settings'
-        recipe.paths['something'] = 'parent paths'
-        recipe._tasks = {'something 1': 1, 'something': 'parent'}
-        self.recipe.settings['something'] = 'child settings'
-        self.recipe.paths['something'] = 'child paths'
-        self.recipe._tasks = {'something 2': 2, 'something': 'child'}
-
-        self.recipe.assign_parent(recipe)
-
-        self.assertEqual(recipe, self.recipe.parent)
-        self.assertEqual('child settings', self.recipe.settings['something'])
-        self.assertEqual('child paths', self.recipe.paths['something'])
-        self.assertEqual('child settings', recipe.settings['something'])
-        self.assertEqual('child paths', recipe.paths['something'])
-        self.assertEqual({
-            'something 1': 1,
-            'something 2': 2,
-            'something': 'child',
-        }, recipe.tasks)
-        self.assertEqual(id(recipe.settings), id(self.recipe.settings))
-        self.assertEqual(id(recipe.paths), id(self.recipe.paths))
-        self.assertEqual(id(recipe.tasks), id(self.recipe.tasks))
-        self.assertEqual(id(recipe.tasks_dotted), id(self.recipe.tasks_dotted))
-        self.assertEqual(id(recipe.data_log), id(self.recipe.data_log))
 
     def test_add_task(self):
         """Should instance Task class, set tasks it's parent to self, and add
@@ -211,14 +162,3 @@ class RecipeTest(TestCase):
         self.recipe.prefix = '/prefix'
         self.recipe._tasks['/prefix/task'] = task
         self.assertEqual(task, self.recipe._get_task_by_url('/task'))
-
-    def test_get_task_by_url_when_provided_without_prefix_and_no_parent(self):
-        """._get_task_by_url should return task when url without prefix is
-        provided and parent is present"""
-        task = MagicMock()
-        self.recipe.prefix = '/prefix'
-        self.recipe.parent = MagicMock()
-        self.recipe.parent.tasks = self.recipe._tasks
-        self.recipe._tasks['/prefix/task'] = task
-        self.assertRaises(
-            KeyError, self.recipe._get_task_by_url, '/task')

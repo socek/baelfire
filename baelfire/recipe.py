@@ -15,11 +15,9 @@ class Recipe(object):
     AVAILABLE_TASK_OPTIONS = ['hide']
     prefix = ''
 
-    def __init__(self, is_parent=True):
-        self.recipes = []
+    def __init__(self):
         self._tasks = {}
         self._tasks_dotted = {}
-        self.parent = None
         self._spp = None
         self.aborting = False
         self.data_log = TaskLogger()
@@ -30,22 +28,17 @@ class Recipe(object):
 
         self.init_paths()
         self.create_settings()
-        self.gather_recipes()
         self.gather_tasks()
         self.init_signals()
 
         self.final_settings()
         self.final()
 
-        if is_parent:
-            self.validate_dependencies()
+        self.validate_dependencies()
 
     @property
     def log(self):
-        if self.parent is None:
-            return self._log
-        else:
-            return self.parent.log
+        return self._log
 
     def init_loggers(self):
         """
@@ -64,28 +57,6 @@ class Recipe(object):
         self._settings = StringDict(settings)
         self._paths = PathDict(paths)
         self.recipe_paths = PathDict()
-
-    def add_recipe(self, recipe):
-        """
-        Adds child recipe.
-
-        :param recipe: baelfire.recipe.Recipe instance
-        """
-        recipe.assign_parent(self)
-        self.recipes.append(recipe)
-
-    def assign_parent(self, recipe):
-        """
-        Assign parent recipe.
-
-        :param recipe: baelfire.recipe.Recipe instance
-        """
-        self.parent = recipe
-        recipe._settings.merge(self._settings)
-        recipe._paths.merge(self._paths)
-        recipe._tasks.update(self._tasks)
-        recipe._tasks_dotted.update(self._tasks_dotted)
-        self.data_log = recipe.data_log
 
     def add_task(self, task_class):
         """
@@ -149,10 +120,7 @@ class Recipe(object):
         try:
             return self.tasks[path]
         except KeyError:
-            if self.parent is None:
-                return self.tasks[self.prefix + path]
-            else:
-                raise
+            return self.tasks[self.prefix + path]
 
     def validate_dependencies(self):
         """
@@ -186,12 +154,6 @@ class Recipe(object):
         This method should be overloaded.
         """
 
-    def gather_recipes(self):
-        """
-        Place your child recipes here.
-        This method should be overloaded.
-        """
-
     def gather_tasks(self):
         """
         Place your tasks here.
@@ -203,34 +165,22 @@ class Recipe(object):
         """
         All the tasks by url.
         """
-        if self.parent is None:
-            return self._tasks
-        else:
-            return self.parent.tasks
+        return self._tasks
 
     @property
     def tasks_dotted(self):
         """
         All the tasks by dotted path.
         """
-        if self.parent is None:
-            return self._tasks_dotted
-        else:
-            return self.parent.tasks_dotted
+        return self._tasks_dotted
 
     @property
     def settings(self):
-        if self.parent is None:
-            return self._settings
-        else:
-            return self.parent.settings
+        return self._settings
 
     @property
     def paths(self):
-        if self.parent is None:
-            return self._paths
-        else:
-            return self.parent.paths
+        return self._paths
 
     def set_task_options(self, path, options={}):
         """

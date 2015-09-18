@@ -12,8 +12,8 @@ class Dependency(object):
         self.parent = None
 
     def phase_init(self):
-        self.mylog['should_run'] = False
-        self.mylog['runned'] = False
+        self.mylog['should_build'] = False
+        self.mylog['builded'] = False
         self.mylog['success'] = False
         self.mylog['result'] = None
         self.mylog['index'] = self.parent.get_index()
@@ -25,14 +25,14 @@ class Dependency(object):
         pass
 
     def phase_validation(self):
-        self.mylog['should_run'] = True
-        result = self.should_run()
+        self.mylog['should_build'] = True
+        result = self.should_build()
         self.mylog['result'] = result
         return result
 
-    def phase_run(self):
-        self.mylog['runned'] = True
-        self.run()
+    def phase_build(self):
+        self.mylog['builded'] = True
+        self.build()
         self.mylog['success'] = True
 
     def set_parent(self, parent):
@@ -44,53 +44,25 @@ class Dependency(object):
             self.parent.mylog['dependencies'][self.name] = {}
         return self.parent.mylog['dependencies'][self.name]
 
-    def run(self):
+    @property
+    def settings(self):
+        return self.parent.settings
+
+    @property
+    def paths(self):
+        return self.parent.paths
+
+    def build(self):
         pass
 
 
 class AlwaysRebuild(Dependency):
 
-    def should_run(self):
+    def should_build(self):
         return True
 
 
 class NeverRebuild(Dependency):
 
-    def should_run(self):
-        return False
-
-
-class TaskDependency(Dependency):
-
-    def __init__(self, task):
-        super().__init__()
-        self.task = task
-
-    def phase_init(self):
-        super().phase_init()
-        self.task.phase_init()
-
-    def phase_data(self):
-        super().phase_data()
-        self.task.phase_data()
-
-    def phase_settings(self):
-        super().phase_settings()
-        self.task.phase_settings()
-
-    def set_parent(self, parent):
-        super().set_parent(parent)
-        self.task.set_parent(parent)
-
-    def should_run(self):
-        return self.task.phase_validation()
-
-    def run(self):
-        self.task.phase_myrun()
-
-
-class LinkTask(TaskDependency):
-
-    def should_run(self):
-        super().should_run()
+    def should_build(self):
         return False

@@ -57,8 +57,8 @@ class Task(object):
         self.phase_settings()
         self.phase_data()
         self.phase_validation()
-        self.phase_run()
-        self.phase_myrun()
+        self.phase_build()
+        self.phase_mybuild()
 
     def phase_init(self):
         self._settings = StringDict()
@@ -89,15 +89,15 @@ class Task(object):
             self.mylog['needtorun'] |= result
         return self.mylog['needtorun']
 
-    def phase_run(self):
+    def phase_build(self):
         for dependency in self._dependencies:
-            dependency.phase_run()
+            dependency.phase_build()
 
-    def phase_myrun(self):
-        if self.mylog['needtorun']:
+    def phase_mybuild(self):
+        if self.mylog['needtorun'] and not self.mylog['runned']:
             self.mylog['runned'] = True
             args, kwargs = self.myargs
-            self.make(*args, **kwargs)
+            self.build(*args, **kwargs)
             self.mylog['success'] = True
 
     def add_dependency(self, dependency):
@@ -125,5 +125,5 @@ class Task(object):
         self.datalog['last_index'] = index + 1
         return index
 
-    def make(self):
+    def build(self):
         pass

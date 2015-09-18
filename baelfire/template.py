@@ -1,12 +1,14 @@
 import os
 import sys
-from jinja2 import Environment, FileSystemLoader
 
-from baelfire.task import Task
+from jinja2 import Environment
+from jinja2 import FileSystemLoader
+
 from baelfire.dependencies import FileChanged
+from baelfire.task import FileTask
 
 
-class TemplateTask(Task):
+class TemplateTask(FileTask):
 
     def __init__(self, *args, **kwargs):
         self.check_template = kwargs.pop('check_template', True)

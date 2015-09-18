@@ -23,7 +23,8 @@ class Recipe(object):
         self.data_log = TaskLogger()
         self.init_settings(
             {'minimal version': VERSION},
-            {})
+            {},
+        )
         self._log = None
 
         self.init_paths()

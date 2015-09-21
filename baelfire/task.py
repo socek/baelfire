@@ -1,3 +1,4 @@
+from logging import getLogger
 from morfdict import PathDict
 from morfdict import StringDict
 
@@ -45,6 +46,10 @@ class Task(object):
             self.args[self.name] = ([], {})
         return self.args[self.name]
 
+    @property
+    def logger(self):
+        return getLogger(self.name)
+
     def __init__(self):
         self._dependencies = []
         self.parent = None
@@ -87,6 +92,7 @@ class Task(object):
         for dependency in self._dependencies:
             result = dependency.phase_validation()
             self.mylog['needtorun'] |= result
+        self.logger.debug('Need to run: %s', self.mylog['needtorun'])
         return self.mylog['needtorun']
 
     def phase_build(self):
@@ -95,10 +101,15 @@ class Task(object):
 
     def phase_mybuild(self):
         if self.mylog['needtorun'] and not self.mylog['runned']:
+            self.logger.info('Running')
             self.mylog['runned'] = True
-            args, kwargs = self.myargs
-            self.build(*args, **kwargs)
-            self.mylog['success'] = True
+            try:
+                args, kwargs = self.myargs
+                self.build(*args, **kwargs)
+                self.mylog['success'] = True
+            except Exception as error:
+                self.logger.error(str(error))
+                raise
 
     def add_dependency(self, dependency):
         self._dependencies.append(dependency)

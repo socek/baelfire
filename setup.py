@@ -5,6 +5,8 @@ install_requires = [
     'morfdict>=0.3.7',
     'pytest',
     'jinja2',
+    'mock',
+    'pytest-cov',
 ]
 
 if __name__ == '__main__':

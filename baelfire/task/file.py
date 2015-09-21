@@ -1,4 +1,4 @@
-from .dependencies.file import FileDoesNotExists
+from baelfire.dependencies.file import FileDoesNotExists
 from .task import Task
 
 

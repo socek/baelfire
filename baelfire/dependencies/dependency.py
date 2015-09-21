@@ -12,10 +12,10 @@ class Dependency(object):
         self.parent = None
 
     def phase_init(self):
-        self.mylog['should_build'] = False
+        self.mylog['phase_validation'] = False
         self.mylog['builded'] = False
         self.mylog['success'] = False
-        self.mylog['result'] = None
+        self.mylog['should_build'] = None
         self.mylog['index'] = self.parent.get_index()
 
     def phase_settings(self):
@@ -25,9 +25,9 @@ class Dependency(object):
         pass
 
     def phase_validation(self):
-        self.mylog['should_build'] = True
+        self.mylog['phase_validation'] = True
         result = self.should_build()
-        self.mylog['result'] = result
+        self.mylog['should_build'] = result
         return result
 
     def phase_build(self):
@@ -57,12 +57,19 @@ class Dependency(object):
 
 
 class AlwaysRebuild(Dependency):
+    """
+    Always rebuild this task.
+    """
 
     def should_build(self):
         return True
 
 
-class NeverRebuild(Dependency):
+class NoRebuild(Dependency):
+    """
+    This dependency will always return "do not rebuild". It is for testing
+    purpose.
+    """
 
     def should_build(self):
         return False

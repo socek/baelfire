@@ -31,11 +31,11 @@ class TaskDependency(Dependency):
         return self.task.phase_validation()
 
     def build(self):
+        self.task.phase_dependencies_build()
         self.task.phase_build()
-        self.task.phase_mybuild()
 
 
-class LinkTask(TaskDependency):
+class RunBefore(TaskDependency):
 
     """
     Build assigned task, but do not affect dependency checking.

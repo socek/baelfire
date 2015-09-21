@@ -2,7 +2,7 @@ from logging import getLogger
 from morfdict import PathDict
 from morfdict import StringDict
 
-from .parrented import parrented
+from baelfire.parrented import parrented
 
 
 class Task(object):
@@ -30,21 +30,10 @@ class Task(object):
         return self._datalog
 
     @property
-    @parrented
-    def args(self):
-        return self._args
-
-    @property
     def mylog(self):
         if self.name not in self.datalog:
             self.datalog[self.name] = {}
         return self.datalog[self.name]
-
-    @property
-    def myargs(self):
-        if self.name not in self.args:
-            self.args[self.name] = ([], {})
-        return self.args[self.name]
 
     @property
     def logger(self):
@@ -62,8 +51,8 @@ class Task(object):
         self.phase_settings()
         self.phase_data()
         self.phase_validation()
+        self.phase_dependencies_build()
         self.phase_build()
-        self.phase_mybuild()
 
     def phase_init(self):
         self._settings = StringDict()
@@ -95,17 +84,16 @@ class Task(object):
         self.logger.debug('Need to run: %s', self.mylog['needtorun'])
         return self.mylog['needtorun']
 
-    def phase_build(self):
+    def phase_dependencies_build(self):
         for dependency in self._dependencies:
             dependency.phase_build()
 
-    def phase_mybuild(self):
+    def phase_build(self):
         if self.mylog['needtorun'] and not self.mylog['runned']:
             self.logger.info('Running')
             self.mylog['runned'] = True
             try:
-                args, kwargs = self.myargs
-                self.build(*args, **kwargs)
+                self.build()
                 self.mylog['success'] = True
             except Exception as error:
                 self.logger.error(str(error))
@@ -115,19 +103,6 @@ class Task(object):
         self._dependencies.append(dependency)
         dependency.set_parent(self)
 
-    def set_myargs(self, *args, **kwargs):
-        self.set_args(self.name, *args, **kwargs)
-
-    def set_args(self, obj, *args, **kwargs):
-        name = self._name_or_cls(obj)
-        self.args[name] = (args, kwargs)
-
-    def _name_or_cls(self, obj):
-        if type(obj) is str:
-            return obj
-        else:
-            return obj.__module__ + '.' + obj.__name__
-
     def set_parent(self, parent):
         self.parent = parent
 
@@ -135,6 +110,3 @@ class Task(object):
         index = self.datalog['last_index']
         self.datalog['last_index'] = index + 1
         return index
-
-    def build(self):
-        pass

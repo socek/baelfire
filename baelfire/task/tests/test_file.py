@@ -1,3 +1,5 @@
+from tempfile import NamedTemporaryFile
+
 from baelfire.task import FileTask
 from os import unlink
 from os.path import exists
@@ -8,6 +10,12 @@ class ExampleFileTask(FileTask):
 
     def phase_settings(self):
         self.paths['file'] = ['/tmp', 'file.txt']
+
+    def build(self):
+        open(self.output, 'w').close()
+
+
+class ExampleSecondFileTask(FileTask):
 
     def build(self):
         open(self.output, 'w').close()
@@ -71,6 +79,33 @@ class TestFileTask(object):
                 'needtorun': False,
                 'runned': False,
                 'success': False,
+            },
+            'last_index': 1,
+        }
+
+    def test_raw_path(self):
+        ExampleSecondFileTask.output = NamedTemporaryFile().name
+        task = ExampleSecondFileTask()
+        task.run()
+
+        assert task.datalog == {
+            'baelfire.task.tests.test_file.ExampleSecondFileTask': {
+                'dependencies': {
+                    'baelfire.dependencies.file.FileDoesNotExists': {
+                        'builded': True,
+                        'filename': ExampleSecondFileTask.output,
+                        'index': 0,
+                        'phase_validation': True,
+                        'should_build': True,
+                        'success': True,
+                    },
+                },
+                'dependencies_run': [
+                    'baelfire.dependencies.file.FileDoesNotExists',
+                ],
+                'needtorun': True,
+                'runned': True,
+                'success': True,
             },
             'last_index': 1,
         }

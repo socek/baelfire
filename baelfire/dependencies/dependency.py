@@ -28,6 +28,12 @@ class Dependency(object):
         self.mylog['phase_validation'] = True
         result = self.should_build()
         self.mylog['should_build'] = result
+        self.parent.logger.debug(
+            'Dependency %(dependency)s result: %(result)r' % {
+                'dependency': self.name,
+                'result': result,
+            }
+        )
         return result
 
     def phase_build(self):
@@ -57,6 +63,7 @@ class Dependency(object):
 
 
 class AlwaysRebuild(Dependency):
+
     """
     Always rebuild this task.
     """
@@ -66,6 +73,7 @@ class AlwaysRebuild(Dependency):
 
 
 class NoRebuild(Dependency):
+
     """
     This dependency will always return "do not rebuild". It is for testing
     purpose.

@@ -6,9 +6,10 @@ from .dependency import Dependency
 
 class FileDependency(Dependency):
 
-    def __init__(self, name):
+    def __init__(self, name=None, raw_path=None):
         super().__init__()
         self.source_name = name
+        self.raw_path = raw_path
 
     def phase_data(self):
         super().phase_data()
@@ -16,7 +17,7 @@ class FileDependency(Dependency):
 
     @property
     def path(self):
-        return self.paths[self.source_name]
+        return self.raw_path or self.paths[self.source_name]
 
 
 class FileChanged(FileDependency):

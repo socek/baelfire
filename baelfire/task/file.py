@@ -9,4 +9,7 @@ class FileTask(Task):
         return self.paths[self.output_name]
 
     def create_dependecies(self):
-        self.add_dependency(FileDoesNotExists(self.output_name))
+        try:
+            self.add_dependency(FileDoesNotExists(self.output_name))
+        except AttributeError:
+            self.add_dependency(FileDoesNotExists(raw_path=self.output))

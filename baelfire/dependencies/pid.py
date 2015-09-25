@@ -3,29 +3,38 @@ import os
 from .dependency import Dependency
 
 
-class PidFileIsRunning(Dependency):
+class PidIsRunning(Dependency):
 
-    def __init__(self, path):
+    def __init__(self, pid=None, pid_file_name=None, pid_file_path=None):
         super().__init__()
-        self.path = path
+        self.pid = pid
+        self.pid_file_name = pid_file_name
+        self.pid_file_path = pid_file_path
 
     def get_pid(self):
-        with open(self.path, 'r') as pidfile:
+        if self.pid:
+            return self.pid
+        elif self.pid_file_name:
+            return self._get_pid_from_file(self.paths[self.pid_file_name])
+        else:
+            return self._get_pid_from_file(self.pid_file_path)
+
+    def _get_pid_from_file(self, path):
+        with open(path, 'r') as pidfile:
             return int(pidfile.read())
 
     def is_running(self):
         try:
             os.kill(self.get_pid(), 0)
+            return True
         except OSError:
             return False
-        else:
-            return True
 
-    def make(self):
+    def should_build(self):
         return self.is_running()
 
 
-class PidFileIsNotRunning(PidFileIsRunning):
+class PidIsNotRunning(PidIsRunning):
 
-    def make(self):
+    def should_build(self):
         return not self.is_running()

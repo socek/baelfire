@@ -13,7 +13,7 @@ class FileDependency(Dependency):
 
     def phase_data(self):
         super().phase_data()
-        self.mylog['filename'] = self.path
+        self.myreport['filename'] = self.path
 
     @property
     def path(self):

@@ -77,7 +77,7 @@ class TestTask(object):
         """
         task.run()
 
-        assert task.datalog == {
+        assert task.report == {
             'baelfire.task.tests.test_tasks.ExampleTask': {
                 'dependencies': {},
                 'dependencies_run': [],
@@ -91,7 +91,7 @@ class TestTask(object):
     def test_dependency_run(self, task):
         """
         AlwaysRebuild should indicate rebuilding task every time. NoRebuild
-        should not indicate rebuilding at any time. This test tests datalog for
+        should not indicate rebuilding at any time. This test tests report for
         dependencies.
         """
         task.add_dependency(AlwaysRebuild())
@@ -99,7 +99,7 @@ class TestTask(object):
 
         task.run()
 
-        assert task.datalog == {
+        assert task.report == {
             'baelfire.task.tests.test_tasks.ExampleTask': {
                 'dependencies': {
                     'baelfire.dependencies.dependency.AlwaysRebuild': {
@@ -130,7 +130,7 @@ class TestTask(object):
 
     def test_exception(self, task):
         """
-        .datalog should make success to false, when task building raise an
+        .report should make success to false, when task building raise an
         error.
         """
         task = ExampleFailingTask()
@@ -138,7 +138,7 @@ class TestTask(object):
         with raises(RuntimeError):
             task.run()
 
-        assert task.datalog == {
+        assert task.report == {
             'baelfire.task.tests.test_tasks.ExampleFailingTask': {
                 'dependencies': {
                     'baelfire.dependencies.dependency.AlwaysRebuild': {
@@ -164,7 +164,7 @@ class TestTask(object):
         When task is a child of another, it should share this properties:
             - settings
             - paths
-            - datalog
+            - report
         """
         parent = ExampleParent()
         child = ExampleChild()
@@ -174,7 +174,7 @@ class TestTask(object):
         parent.run()
 
         assert parent._data == child._data
-        assert parent.datalog == {
+        assert parent.report == {
             'baelfire.task.tests.test_tasks.ExampleChild': {
                 'dependencies': {
                     'baelfire.dependencies.dependency.AlwaysRebuild': {

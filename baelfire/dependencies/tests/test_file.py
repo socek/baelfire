@@ -24,17 +24,17 @@ class TestFileDependency(object):
 
     def test_phase_data(self):
         """
-        FileDependency should add filename in datalog.
+        FileDependency should add filename in report.
         """
         dependency = FileDependency('myname')
         parent = MagicMock()
         parent.paths = {'myname': 'success'}
-        parent.mylog = {'dependencies': {}}
+        parent.myreport = {'dependencies': {}}
         dependency.set_parent(parent)
 
         dependency.phase_data()
 
-        assert parent.mylog == {
+        assert parent.myreport == {
             'dependencies': {
                 'baelfire.dependencies.file.FileDependency': {
                     'filename': 'success',

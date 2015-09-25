@@ -12,11 +12,11 @@ class Dependency(object):
         self.parent = None
 
     def phase_init(self):
-        self.mylog['phase_validation'] = False
-        self.mylog['builded'] = False
-        self.mylog['success'] = False
-        self.mylog['should_build'] = None
-        self.mylog['index'] = self.parent.get_index()
+        self.myreport['phase_validation'] = False
+        self.myreport['builded'] = False
+        self.myreport['success'] = False
+        self.myreport['should_build'] = None
+        self.myreport['index'] = self.parent.get_index()
 
     def phase_settings(self):
         pass
@@ -25,9 +25,9 @@ class Dependency(object):
         pass
 
     def phase_validation(self):
-        self.mylog['phase_validation'] = True
+        self.myreport['phase_validation'] = True
         result = self.should_build()
-        self.mylog['should_build'] = result
+        self.myreport['should_build'] = result
         self.parent.logger.debug(
             'Dependency %(dependency)s result: %(result)r' % {
                 'dependency': self.name,
@@ -37,18 +37,18 @@ class Dependency(object):
         return result
 
     def phase_build(self):
-        self.mylog['builded'] = True
+        self.myreport['builded'] = True
         self.build()
-        self.mylog['success'] = True
+        self.myreport['success'] = True
 
     def set_parent(self, parent):
         self.parent = parent
 
     @property
-    def mylog(self):
-        if self.name not in self.parent.mylog['dependencies']:
-            self.parent.mylog['dependencies'][self.name] = {}
-        return self.parent.mylog['dependencies'][self.name]
+    def myreport(self):
+        if self.name not in self.parent.myreport['dependencies']:
+            self.parent.myreport['dependencies'][self.name] = {}
+        return self.parent.myreport['dependencies'][self.name]
 
     @property
     def settings(self):

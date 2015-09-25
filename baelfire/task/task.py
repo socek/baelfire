@@ -26,14 +26,14 @@ class Task(object):
 
     @property
     @parrented
-    def datalog(self):
-        return self._datalog
+    def report(self):
+        return self._report
 
     @property
-    def mylog(self):
-        if self.name not in self.datalog:
-            self.datalog[self.name] = {}
-        return self.datalog[self.name]
+    def myreport(self):
+        if self.name not in self.report:
+            self.report[self.name] = {}
+        return self.report[self.name]
 
     @property
     def logger(self):
@@ -57,16 +57,16 @@ class Task(object):
     def phase_init(self):
         self._settings = StringDict()
         self._paths = PathDict()
-        self._datalog = {'last_index': 0}
+        self._report = {'last_index': 0}
 
-        self.mylog['runned'] = False
-        self.mylog['needtorun'] = False
-        self.mylog['success'] = False
-        self.mylog['dependencies'] = {}
-        self.mylog['dependencies_run'] = []
+        self.myreport['runned'] = False
+        self.myreport['needtorun'] = False
+        self.myreport['success'] = False
+        self.myreport['dependencies'] = {}
+        self.myreport['dependencies_run'] = []
 
         for dependency in self._dependencies:
-            self.mylog['dependencies_run'].append(dependency.name)
+            self.myreport['dependencies_run'].append(dependency.name)
             dependency.phase_init()
 
     def phase_settings(self):
@@ -80,21 +80,21 @@ class Task(object):
     def phase_validation(self):
         for dependency in self._dependencies:
             result = dependency.phase_validation()
-            self.mylog['needtorun'] |= result
-        self.logger.debug('Need to run: %s', self.mylog['needtorun'])
-        return self.mylog['needtorun']
+            self.myreport['needtorun'] |= result
+        self.logger.debug('Need to run: %s', self.myreport['needtorun'])
+        return self.myreport['needtorun']
 
     def phase_dependencies_build(self):
         for dependency in self._dependencies:
             dependency.phase_build()
 
     def phase_build(self):
-        if self.mylog['needtorun'] and not self.mylog['runned']:
+        if self.myreport['needtorun'] and not self.myreport['runned']:
             self.logger.info('Running')
-            self.mylog['runned'] = True
+            self.myreport['runned'] = True
             try:
                 self.build()
-                self.mylog['success'] = True
+                self.myreport['success'] = True
             except Exception as error:
                 self.logger.error(str(error))
                 raise
@@ -107,6 +107,6 @@ class Task(object):
         self.parent = parent
 
     def get_index(self):
-        index = self.datalog['last_index']
-        self.datalog['last_index'] = index + 1
+        index = self.report['last_index']
+        self.report['last_index'] = index + 1
         return index

@@ -38,7 +38,7 @@ class TestFileTask(object):
         task.run()
 
         assert exists(task.output)
-        assert task.datalog == {
+        assert task.report == {
             'baelfire.task.tests.test_file.ExampleFileTask': {
                 'dependencies': {
                     'baelfire.dependencies.file.FileDoesNotExists': {
@@ -61,7 +61,7 @@ class TestFileTask(object):
         }
 
         task.run()
-        assert task.datalog == {
+        assert task.report == {
             'baelfire.task.tests.test_file.ExampleFileTask': {
                 'dependencies': {
                     'baelfire.dependencies.file.FileDoesNotExists': {
@@ -88,7 +88,7 @@ class TestFileTask(object):
         task = ExampleSecondFileTask()
         task.run()
 
-        assert task.datalog == {
+        assert task.report == {
             'baelfire.task.tests.test_file.ExampleSecondFileTask': {
                 'dependencies': {
                     'baelfire.dependencies.file.FileDoesNotExists': {

@@ -1,6 +1,7 @@
 from logging import getLogger
 from morfdict import PathDict
 from morfdict import StringDict
+from yaml import dump
 
 from baelfire.parrented import parrented
 
@@ -59,6 +60,8 @@ class Task(object):
         self._paths = PathDict()
         self._report = {'last_index': 0}
 
+        self.paths['report'] = '.baelfire.report'
+
         self.myreport['runned'] = False
         self.myreport['needtorun'] = False
         self.myreport['success'] = False
@@ -110,3 +113,7 @@ class Task(object):
         index = self.report['last_index']
         self.report['last_index'] = index + 1
         return index
+
+    def save_report(self):
+        with open(self.paths['report'], 'w') as file:
+            dump(self.report, file)

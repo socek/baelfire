@@ -1,5 +1,6 @@
 from pytest import fixture
 from pytest import raises
+from yaml import load
 
 from baelfire.task import Task
 from baelfire.dependencies import AlwaysRebuild
@@ -210,4 +211,38 @@ class TestTask(object):
                 'success': True
             },
             'last_index': 2,
+        }
+
+    def test_saving(self):
+        """
+        .save_report should save report to a file with yaml
+        """
+        task = ExampleFailingTask()
+
+        with raises(RuntimeError):
+            task.run()
+
+        task.save_report()
+
+        data = load(open(task.paths['report'], 'r').read())
+
+        assert data == {
+            'baelfire.task.tests.test_tasks.ExampleFailingTask': {
+                'dependencies': {
+                    'baelfire.dependencies.dependency.AlwaysRebuild': {
+                        'builded': True,
+                        'index': 0,
+                        'should_build': True,
+                        'phase_validation': True,
+                        'success': True,
+                    },
+                },
+                'dependencies_run': [
+                    'baelfire.dependencies.dependency.AlwaysRebuild',
+                ],
+                'needtorun': True,
+                'runned': True,
+                'success': False,
+            },
+            'last_index': 1,
         }

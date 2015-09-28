@@ -7,6 +7,7 @@ install_requires = [
     'jinja2',
     'mock',
     'pytest-cov',
+    'pyyaml',
 ]
 
 if __name__ == '__main__':
@@ -22,7 +23,7 @@ if __name__ == '__main__':
         license='Apache License 2.0',
         entry_points={
             'console_scripts': [
-                # 'bael = baelfire.application.application:run',
+                'bael=baelfire.application.application:run',
             ]
         },
     )

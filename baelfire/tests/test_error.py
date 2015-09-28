@@ -31,14 +31,6 @@ class TestErrors(object):
         er = error.OnlyOneTaskInARowError('task_me')
         assert str(er) == 'Error: Task "task_me" can be run only once!'
 
-    def test_bad_recipe_path_error(self):
-        er = error.BadRecipePathError()
-        assert str(er) == 'Error: Bad path for recipe!'
-
-    def test_recipe_not_found_error(self):
-        er = error.RecipeNotFoundError()
-        assert str(er) == 'Error: No recipe found!'
-
     def test_command_error(self):
         er = error.CommandError(11, 'text')
         assert str(er) == 'Error: Command error (11): text'

@@ -1,176 +1,82 @@
-from mock import MagicMock
-from soktest import TestCase
+# from mock import MagicMock
+from mock import patch
+from pytest import fixture
+from pytest import raises
+from pytest import yield_fixture
 
-from baelfire.error import RecipeNotFoundError, CommandError
-from baelfire.application.commands.command import Command
-from baelfire.application.application import run, Application
-
-PREFIX = 'baelfire.application.application.'
-
-
-class ExampleCommand(Command):
-
-    def __init__(self):
-        super().__init__('example')
-        self.made = False
-
-    def make(self):
-        self.made = True
+from baelfire.application.application import Application
+from baelfire.application.application import run
+from baelfire.error import TaskNotFoundError
+from baelfire.task import Task
 
 
-class RunTest(TestCase):
+class ExampleTask(Task):
 
-    def test_simple(self):
-        """Should initalize and run the Application class"""
-        self.add_mock(PREFIX + "Application")
+    def create_dependecies(self):
+        pass
 
-        run()
-
-        self.mocks['Application'].assert_called_once_with()
-        self.mocks['Application'].return_value.assert_called_once_with()
+    def build(self):
+        pass
 
 
-class ApplicationTest(TestCase):
+class TestApplication(object):
 
-    def setUp(self):
-        super().setUp()
-        self.app = Application()
+    @fixture
+    def app(self):
+        return Application()
 
-    def test_init(self):
-        """Should gather options and commands"""
-        self.assertEqual(
-            [
-                'ActualRecipe',
-                'GraphCommand',
-                'Init',
-                'ListAllTasks',
-                'ListTasks',
-                'PathsList',
-                'RunTask',
-            ],
-            sorted(list(self.app.commands)))
-        self.assertEqual({}, self.app.options)
-        self.assertEqual(['log'], self.app.option_names)
+    @yield_fixture
+    def parse_args(self, app):
+        app.create_parser()
+        with patch.object(app.parser, 'parse_args') as parse_args:
+            yield parse_args
 
-    def test_gather_commands(self):
-        """Should gather all commands and assign self as a application."""
-        self.app.commands = {}
-        self.app.gather_commands()
+    @yield_fixture
+    def import_task(self, app):
+        with patch.object(app, 'import_task') as mock:
+            yield mock
 
-        command_key = 'Init'
-        self.assertEqual(self.app, self.app.commands[command_key].application)
+    def test_run_without_args(self, app, parse_args):
+        with patch.object(app.parser, 'print_help') as print_help:
+            parse_args.return_value.task = None
 
-    def test_create_parser(self):
-        """Should create argument parser and add all commands to it."""
-        self.add_mock(PREFIX + 'ArgumentParser')
+            app.run_command_or_print_help()
 
-        self.app.create_parser()
+            print_help.assert_called_once_with()
 
-        self.assertEqual(self.mocks['ArgumentParser'].return_value,
-                         self.app.parser)
+    def test_run_with_task(self, app, parse_args):
+        parse_args.return_value.task = (
+            'baelfire.application.tests.test_application:ExampleTask'
+        )
+        with patch.object(ExampleTask, 'phase_build') as phase_build:
+            with patch.object(ExampleTask, 'save_report') as save_report:
+                app.run_command_or_print_help()
 
-        self.assertEqual(
-            8,
-            self.mocks['ArgumentParser'].return_value.add_argument.call_count)
+                save_report.assert_called_once_with()
+                phase_build.assert_called_once_with()
 
-    def test_create_parser_when_recipe_in_application(self):
-        """Should not add -r argument when recipe is already assigned to
-        application,"""
-        self.app.recipe = 'myrecipe'
-        self.add_mock(PREFIX + 'ArgumentParser')
+    def test_run_with_bad_task(self, app, parse_args):
+        parse_args.return_value.task = (
+            'baelfire.application.tests.test_application:BadTask'
+        )
+        with raises(TaskNotFoundError):
+            app.run_command_or_print_help()
 
-        self.app.create_parser()
+    def test_run_with_task_error(self, app, import_task, parse_args):
+        task = import_task.return_value.return_value
+        task.run.side_effect = RuntimeError
 
-        self.assertEqual(
-            7,
-            self.mocks['ArgumentParser'].return_value.add_argument.call_count)
+        with raises(RuntimeError):
+            app.run_command_or_print_help()
 
-    def test_parse_command_line(self):
-        """Should convert to dict parsed command line with removed unused
-        command arguments."""
-        self.app.parser = MagicMock()
-        self.app.parser.parse_args.return_value.__dict__ = {
-            'init': 'command',
-            'log': 'option',
-            'something': None,
-            'somethin2': [],
-            'and so on': False,
-        }
-        self.app.parse_command_line()
+        import_task.assert_called_once_with(parse_args.return_value.task)
 
-        self.assertEqual({'init': 'command', 'log': 'option'}, self.app.args)
+    def test_run(self):
+        parser_patcher = patch.object(Application, 'create_parser')
+        run_patcher = patch.object(Application, 'run_command_or_print_help')
+        with parser_patcher as create_parser:
+            with run_patcher as run_command_or_print_help:
+                run()
 
-    def test_convert_options(self):
-        """Should put into options command line arguments or False if not
-        present"""
-        self.app.args = {'log': 'mylog', 'something': 'else'}
-        self.app.convert_options()
-
-        self.assertEqual({'log': 'mylog'}, self.app.options)
-
-    def test_run_command_or_print_help_print_help(self):
-        """Should print help when no command specyfied."""
-        self.app.args = {}
-        self.app.parser = MagicMock()
-
-        self.app.run_command_or_print_help()
-
-        self.app.parser.print_help.assert_called_once_with()
-
-    def test_run_command_or_print_help_run_command(self):
-        """Should run command which is in .args"""
-        cmd = ExampleCommand()
-        self.app.args = {cmd.name: 'something'}
-        self.app.add_command(cmd)
-        self.app.raw_args = {}
-
-        self.app.run_command_or_print_help()
-
-        self.assertEqual(True, cmd.made)
-        self.assertEqual('something', cmd.args)
-
-    def test_call(self):
-        """Should create parser, parse line command, convert options and run
-        command"""
-        self.add_mock_object(self.app, 'create_parser')
-        self.add_mock_object(self.app, 'parse_command_line')
-        self.add_mock_object(self.app, 'convert_options')
-        self.add_mock_object(self.app, 'run_command_or_print_help')
-        self.app()
-
-        self.mocks['create_parser'].assert_called_once_with()
-        self.mocks['parse_command_line'].assert_called_once_with()
-        self.mocks['convert_options'].assert_called_once_with()
-        self.mocks['run_command_or_print_help'].assert_called_once_with()
-
-    def test_call_when_no_recipe_found(self):
-        """Should print error on screen."""
-        self.add_mock_object(self.app, 'create_parser')
-        self.add_mock_object(self.app, 'parse_command_line')
-        self.add_mock_object(self.app, 'convert_options')
-        error = RecipeNotFoundError()
-        self.add_mock_object(
-            self.app,
-            'run_command_or_print_help',
-            side_effect=error)
-        self.add_mock('builtins.print')
-
-        self.app()
-
-        self.mocks['print'].assert_called_once_with(error)
-
-    def test_call_when_CommandError_raised(self):
-        """Should print error from process."""
-        error = CommandError(1, 'my error')
-        self.add_mock_object(self.app, 'create_parser')
-        self.add_mock_object(self.app, 'parse_command_line')
-        self.add_mock_object(self.app, 'convert_options')
-        self.add_mock_object(
-            self.app,
-            'run_command_or_print_help',
-            side_effect=error)
-        self.add_mock('builtins.print')
-
-        self.app()
-
-        self.mocks['print'].assert_called_once_with(error)
+                create_parser.assert_called_once_with()
+                run_command_or_print_help.assert_called_once_with()

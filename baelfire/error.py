@@ -34,18 +34,6 @@ class OnlyOneTaskInARowError(Exception):
         return 'Error: Task "%s" can be run only once!' % (self.task)
 
 
-class BadRecipePathError(Exception):
-
-    def __str__(self):
-        return 'Error: Bad path for recipe!'
-
-
-class RecipeNotFoundError(Exception):
-
-    def __str__(self):
-        return 'Error: No recipe found!'
-
-
 class CommandError(Exception):
 
     def __init__(self, number, text=''):

@@ -16,3 +16,4 @@ test.txt
 build
 dist
 .baelfire.report
+.cache

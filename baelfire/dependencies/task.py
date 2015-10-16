@@ -14,6 +14,7 @@ class TaskDependency(Dependency):
     def phase_init(self):
         super().phase_init()
         self.task.phase_init()
+        self.myreport['task'] = self.task.name
 
     def phase_data(self):
         super().phase_data()

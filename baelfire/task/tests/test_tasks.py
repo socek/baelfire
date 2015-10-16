@@ -201,6 +201,7 @@ class TestTask(object):
                         'phase_validation': True,
                         'should_build': True,
                         'success': True,
+                        'task': 'baelfire.task.tests.test_tasks.ExampleChild',
                     }
                 },
                 'dependencies_run': [
@@ -208,7 +209,7 @@ class TestTask(object):
                 ],
                 'needtorun': True,
                 'runned': True,
-                'success': True
+                'success': True,
             },
             'last_index': 2,
         }

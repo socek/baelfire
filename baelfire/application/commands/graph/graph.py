@@ -6,6 +6,7 @@ from .visualizators import get_task
 class Graph(object):
 
     GRAPH_PATH = 'graph.dot'
+    get_task = get_task
 
     def __init__(self, path):
         self.path = path
@@ -20,6 +21,6 @@ class Graph(object):
             stream.write('digraph {\n')
             for key, element in self.report.items():
                 if type(element) is dict:
-                    visualization = get_task(key, element)
+                    visualization = self.get_task(key, element)
                     stream.write(visualization.render())
             stream.write('}\n')

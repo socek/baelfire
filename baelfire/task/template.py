@@ -6,6 +6,9 @@ from baelfire.task import FileTask
 
 
 class TemplateTask(FileTask):
+    """
+    Task which generate file from template
+    """
 
     def phase_settings(self):
         super().phase_settings()

@@ -7,6 +7,9 @@ from baelfire.parrented import parrented
 
 
 class Task(object):
+    """
+    Normal task.
+    """
 
     @property
     def name(self):
@@ -48,6 +51,9 @@ class Task(object):
         self.create_dependecies()
 
     def run(self):
+        """
+        Check all dependencies and rebuild if needed.
+        """
         self.phase_init()
         self.phase_settings()
         self.phase_data()
@@ -103,6 +109,9 @@ class Task(object):
                 raise
 
     def add_dependency(self, dependency):
+        """
+        Add dependency to task.
+        """
         self._dependencies.append(dependency)
         dependency.set_parent(self)
 
@@ -115,5 +124,8 @@ class Task(object):
         return index
 
     def save_report(self):
+        """
+        Save report file after task run.
+        """
         with open(self.paths['report'], 'w') as file:
             dump(self.report, file, default_flow_style=False)

@@ -3,6 +3,11 @@ from .task import Task
 
 
 class FileTask(Task):
+    """
+    Task which operates on files.
+
+    Need to implement ``FileTask.output_name`` parameter.
+    """
 
     @property
     def output(self):

@@ -8,6 +8,10 @@ from baelfire.error import CommandError
 
 
 class SubprocessTask(Task):
+    """
+    Task which will run external programs. This task will manage sending
+    proccess signals.
+    """
 
     def phase_init(self):
         super().phase_init()
@@ -28,6 +32,9 @@ class SubprocessTask(Task):
         self.spp and self.send_signal(signum)
 
     def popen(self, *args, **kwargs):
+        """
+        Run subprocess.Popen whitin the task.
+        """
         args, kwargs = self._set_default_args(args, kwargs)
         self._init_signals()
         self._popen(*args, **kwargs)

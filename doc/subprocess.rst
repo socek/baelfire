@@ -30,5 +30,26 @@ that just override ``_set_default_args`` method.
     $ python doc9.py
     something
 
-2.3.2 Pid dependecies
----------------------
+2.3.2 Pid dependencies
+----------------------
+``baelfire.dependencies.pid.PidIsRunning`` and ``baelfire.dependencies.pid.PidIsNotRunning``
+are dependencies which are designed to work with pid numbers. PidIsRunning will
+indicate build if pid is already running. PidIsNotRunning will only trigger build
+if pid is not running. ``PidIsRunning`` and ``PidIsNotRunning`` init method will
+accept pid in 3 ways:
+
+* pid - as a raw number
+* pid_file_name - pid file name from .paths
+* pid_file_path - raw pif file path
+
+.. literalinclude:: code/doc10.py
+    :language: python
+    :caption: doc10.py
+    :linenos:
+
+.. code-block:: bash
+
+    $ python doc10.py
+    sleep is still running...
+    - After Termination
+    sleep is not running!

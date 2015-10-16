@@ -4,6 +4,9 @@ from .dependency import Dependency
 
 
 class PidIsRunning(Dependency):
+    """
+    Trigger build if pid is running.
+    """
 
     def __init__(self, pid=None, pid_file_name=None, pid_file_path=None):
         super().__init__()
@@ -35,6 +38,9 @@ class PidIsRunning(Dependency):
 
 
 class PidIsNotRunning(PidIsRunning):
+    """
+    Trigger build if pid is not running.
+    """
 
     def should_build(self):
         return not self.is_running()

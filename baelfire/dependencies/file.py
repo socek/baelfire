@@ -5,6 +5,9 @@ from .dependency import Dependency
 
 
 class FileDependency(Dependency):
+    """
+    Base file dependency.
+    """
 
     def __init__(self, name=None, raw_path=None):
         super().__init__()
@@ -21,6 +24,9 @@ class FileDependency(Dependency):
 
 
 class FileChanged(FileDependency):
+    """
+    Trigger build if dependency file was changed.
+    """
 
     def should_build(self):
         try:
@@ -33,6 +39,9 @@ class FileChanged(FileDependency):
 
 
 class FileDoesNotExists(FileDependency):
+    """
+    Trigger build if dependency file does not exists.
+    """
 
     def should_build(self):
         return not exists(self.path)

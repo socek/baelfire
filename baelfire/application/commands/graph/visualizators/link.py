@@ -3,7 +3,10 @@ from .chooser import VisualizatorChooser
 
 class LinkVisualization(object):
     PREFIX = '\t\t\t'
-    LINK_TEMPLATE = '"%(left_url)s" -> "%(right_url)s";\n'
+    LINK_TEMPLATE = '"%(right_url)s" -> "%(left_url)s";\n'
+    HIDDEN_RIGHTS = [
+        'baelfire.dependencies.dependency.AlwaysRebuild',
+    ]
 
     def __init__(self, left_url, left, right_url, right):
         self.left_url = left_url
@@ -24,6 +27,8 @@ class LinkVisualization(object):
         }
 
     def render(self):
+        if self.right_url in self.HIDDEN_RIGHTS:
+            return ''
         return self.PREFIX + (self.LINK_TEMPLATE % self.link())
 
 

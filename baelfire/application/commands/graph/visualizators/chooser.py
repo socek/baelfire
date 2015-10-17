@@ -8,5 +8,5 @@ class VisualizatorChooser(object):
         self.visualizators[url] = visualizator
 
     def choose(self, url, report, *args, **kwargs):
-        visualizator = getattr(self, url, self.DEFAULT)
+        visualizator = self.visualizators.get(url, self.DEFAULT)
         return visualizator(url, report, *args, **kwargs)

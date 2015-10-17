@@ -4,12 +4,8 @@ from argparse import ArgumentParser
 from importlib import import_module
 from logging import getLogger
 
-# from .commands.init.command import Init
-# from .commands.main.command import RunTask
-# from .commands.list.command import ListTasks, ListAllTasks, PathsList
-# from .commands.graph.command import GraphCommand
-# from .commands.actual_recipe.command import ActualRecipe
 from baelfire.error import TaskNotFoundError
+from baelfire.application.commands.graph.graph import Graph
 
 log = getLogger(__name__)
 
@@ -23,8 +19,17 @@ class Application(object):
         self.parser = ArgumentParser()
 
         self.parser.add_argument(
-            '-t', '--task', dest='task',
+            '-t',
+            '--task',
+            dest='task',
             help='Run this task.',
+        )
+        self.parser.add_argument(
+            '-g',
+            '--graph',
+            dest='graph',
+            help='Draw task dependency graph.',
+            action="store_true",
         )
 
     def run_command_or_print_help(self):
@@ -33,10 +38,12 @@ class Application(object):
             task = self.import_task(args.task)()
             try:
                 task.run()
-                task.save_report()
+                report_path = task.save_report()
             except:
                 log.error('Error in %(report)s' % task.paths)
                 raise
+            if args.graph:
+                Graph(report_path).render()
         else:
             self.parser.print_help()
 

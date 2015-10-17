@@ -48,6 +48,7 @@ class TestApplication(object):
         parse_args.return_value.task = (
             'baelfire.application.tests.test_application:ExampleTask'
         )
+        parse_args.return_value.graph = False
         with patch.object(ExampleTask, 'phase_build') as phase_build:
             with patch.object(ExampleTask, 'save_report') as save_report:
                 app.run_command_or_print_help()

@@ -129,3 +129,4 @@ class Task(object):
         """
         with open(self.paths['report'], 'w') as file:
             dump(self.report, file, default_flow_style=False)
+        return self.paths['report']

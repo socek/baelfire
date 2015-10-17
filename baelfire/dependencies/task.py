@@ -4,7 +4,7 @@ from .dependency import Dependency
 class TaskDependency(Dependency):
 
     """
-    Should build parent task if assigned task has changed.
+    Trigger build parent task if assigned task has changed.
     """
 
     def __init__(self, task):

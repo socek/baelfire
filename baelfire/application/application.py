@@ -31,6 +31,12 @@ class Application(object):
             help='Draw task dependency graph.',
             action="store_true",
         )
+        self.parser.add_argument(
+            '-r',
+            '--graph-file',
+            dest='graph_file',
+            help='Draw graph from report file.',
+        )
 
     def run_command_or_print_help(self):
         args = self.parser.parse_args()
@@ -44,6 +50,8 @@ class Application(object):
                 raise
             if args.graph:
                 Graph(report_path).render()
+        elif args.graph_file:
+            Graph(args.graph_file).render()
         else:
             self.parser.print_help()
 

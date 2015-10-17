@@ -39,6 +39,7 @@ class TestApplication(object):
     def test_run_without_args(self, app, parse_args):
         with patch.object(app.parser, 'print_help') as print_help:
             parse_args.return_value.task = None
+            parse_args.return_value.graph_file = False
 
             app.run_command_or_print_help()
 

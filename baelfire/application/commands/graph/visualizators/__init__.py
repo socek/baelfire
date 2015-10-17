@@ -1,5 +1,5 @@
-from .task import get_task
+from .task import TaskVisualizatorChooser
 
 __all__ = [
-    'get_task',
+    'TaskVisualizatorChooser',
 ]

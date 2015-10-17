@@ -1,3 +1,6 @@
+from .chooser import VisualizatorChooser
+
+
 class LinkVisualization(object):
     PREFIX = '\t\t\t'
     LINK_TEMPLATE = '"%(left_url)s" -> "%(right_url)s";\n'
@@ -24,5 +27,8 @@ class LinkVisualization(object):
         return self.PREFIX + (self.LINK_TEMPLATE % self.link())
 
 
-def get_link(left_url, left, right_url, right):
-    return LinkVisualization(left_url, left, right_url, right)
+class LinkVisualizatorChooser(VisualizatorChooser):
+    DEFAULT = LinkVisualization
+
+    def generate_visualizators(self):
+        pass

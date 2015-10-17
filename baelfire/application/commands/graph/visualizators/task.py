@@ -1,10 +1,15 @@
-from .dependency import get_dependency
-from .link import get_link
+from .chooser import VisualizatorChooser
+from .dependency import DependencyVisualizatorChooser
+from .link import LinkVisualizatorChooser
 
 
 class TaskVisualization(object):
     PREFIX = '\t'
     TASK_TEMPLATE = '"%(url)s"[label="%(name)s"];\n'
+
+    class Configure(object):
+        dependency = DependencyVisualizatorChooser
+        link = LinkVisualizatorChooser
 
     def __init__(self, url, report):
         self.url = url
@@ -20,11 +25,11 @@ class TaskVisualization(object):
         self.rendered = ''
         self.rendered += self.PREFIX + (self.TASK_TEMPLATE % self.task())
         for url, dependency in self.report['dependencies'].items():
-            vdependency = get_dependency(
+            vdependency = self.Configure.dependency().choose(
                 url,
                 dependency,
             )
-            vlink = get_link(
+            vlink = self.Configure.link().choose(
                 self.url,
                 self.report,
                 url,
@@ -36,5 +41,8 @@ class TaskVisualization(object):
         return self.rendered
 
 
-def get_task(url, report):
-    return TaskVisualization(url, report)
+class TaskVisualizatorChooser(VisualizatorChooser):
+    DEFAULT = TaskVisualization
+
+    def generate_visualizators(self):
+        pass

@@ -1,7 +1,7 @@
 from subprocess import Popen
 from yaml import load
 
-from .visualizators import get_task
+from .visualizators import TaskVisualizatorChooser
 
 
 class Graph(object):
@@ -9,6 +9,7 @@ class Graph(object):
     class Config(object):
         dot_path = 'graph.dot'
         png_path = 'graph.png'
+        task = TaskVisualizatorChooser
 
     def __init__(self, path):
         self.path = path
@@ -27,12 +28,9 @@ class Graph(object):
             stream.write('digraph {\n')
             for key, element in self.report.items():
                 if type(element) is dict:
-                    visualization = self.get_task(key, element)
+                    visualization = self.Config.task().choose(key, element)
                     stream.write(visualization.render())
             stream.write('}\n')
-
-    def get_task(self, key, element):
-        return get_task(key, element)
 
     def generate_png_file(self):
         spp = Popen(

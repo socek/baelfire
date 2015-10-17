@@ -1,3 +1,6 @@
+from .chooser import VisualizatorChooser
+
+
 class DependencyVisualization(object):
     PREFIX = '\t\t'
     DEPENDENCY_TEMPLATE = '"%(url)s"[label="%(name)s"];\n'
@@ -26,16 +29,15 @@ class HiddenVisualization(DependencyVisualization):
         return ''
 
 
-PR = 'baelfire.dependencies.'
-VISUALIZATORS = {
-    PR + 'dependency.AlwaysRebuild': AlwaysRebuildVisualization,
-    PR + 'task.TaskDependency': HiddenVisualization,
-}
+class DependencyVisualizatorChooser(VisualizatorChooser):
+    DEFAULT = DependencyVisualization
 
-
-def get_dependency(url, report):
-    visualizator = VISUALIZATORS.get(
-        url,
-        DependencyVisualization,
-    )
-    return visualizator(url, report)
+    def generate_visualizators(self):
+        self.add_visualizator(
+            'baelfire.dependencies.dependency.AlwaysRebuild',
+            AlwaysRebuildVisualization,
+        )
+        self.add_visualizator(
+            'baelfire.dependencies.task.TaskDependency',
+            HiddenVisualization,
+        )

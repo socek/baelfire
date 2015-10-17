@@ -5,12 +5,14 @@ from .link import LinkVisualizatorChooser
 
 class TaskVisualization(object):
     PREFIX = '\t'
-    TASK_TEMPLATE = '"%(url)s"[label="%(name)s",fillcolor=%(fill)s,style=filled];\n'
-    ALWAYS_RUN_TASK_TEMPLATE = '"%(url)s"[label="%(name)s",fillcolor=%(fill)s,style=filled,shape=octagon];\n'
 
     class Configure(object):
         dependency = DependencyVisualizatorChooser
         link = LinkVisualizatorChooser
+
+    class Templates(object):
+        task = '"%(url)s"[label="%(name)s",fillcolor=%(fill)s,style=filled];\n'
+        always_run = '"%(url)s"[label="%(name)s",fillcolor=%(fill)s,style=filled,shape=octagon];\n'
 
     def __init__(self, url, report):
         self.url = url
@@ -53,10 +55,10 @@ class TaskVisualization(object):
         always_rebuild = 'baelfire.dependencies.dependency.AlwaysRebuild'
         if always_rebuild in self.report['dependencies']:
             self.rendered += (
-                self.PREFIX + (self.ALWAYS_RUN_TASK_TEMPLATE % self.task())
+                self.PREFIX + (self.Templates.always_run % self.task())
             )
         else:
-            self.rendered += self.PREFIX + (self.TASK_TEMPLATE % self.task())
+            self.rendered += self.PREFIX + (self.Templates.task % self.task())
 
 
 class TaskVisualizatorChooser(VisualizatorChooser):

@@ -82,3 +82,25 @@ class TestApplication(object):
 
                 create_parser.assert_called_once_with()
                 run_command_or_print_help.assert_called_once_with()
+
+    def test_task_with_grap(self, app, parse_args):
+        parse_args.return_value.task = (
+            'baelfire.application.tests.test_application:ExampleTask'
+        )
+        with patch('baelfire.application.application.Graph') as graph:
+            with patch.object(ExampleTask, 'phase_build') as phase_build:
+                with patch.object(ExampleTask, 'save_report') as save_report:
+                    app.run_command_or_print_help()
+
+                    save_report.assert_called_once_with()
+                    phase_build.assert_called_once_with()
+                    graph.assert_called_once_with(save_report.return_value)
+                    graph.return_value.render.assert_called_once_with()
+
+    def test_graph_drawing(self, app, parse_args):
+        parse_args.return_value.task = False
+        with patch('baelfire.application.application.Graph') as graph:
+            app.run_command_or_print_help()
+
+            graph.assert_called_once_with(parse_args.return_value.graph_file)
+            graph.return_value.render.assert_called_once_with()

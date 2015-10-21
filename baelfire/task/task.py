@@ -110,7 +110,7 @@ class Task(object):
 
     def add_dependency(self, dependency):
         """
-        Add dependency to task.
+        Add dependency to a task.
         """
         self._dependencies.append(dependency)
         dependency.set_parent(self)

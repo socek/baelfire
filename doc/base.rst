@@ -95,6 +95,7 @@ the SecondTask is rebuilded.
 
 2.1.4 Settings
 --------------
+
 Task class use `MorfDict <https://pythonhosted.org/MorfDict/>`_ ``StringDict``
 and ``PathDict`` for settings and paths. All linked tasks have the same settings
 and paths object, so we can edit in the parent if we want.
@@ -114,3 +115,23 @@ and paths object, so we can edit in the parent if we want.
 
 We create 2 tasks and make settings for both of them. From Parent task we can
 ovveride some settings within a child tasks.
+
+2.1.5 FileDict - saving settings to a file
+------------------------------------------
+
+Sometimes settings can be saved to a file and retrived from there. For example,
+name of the project we need only at the start and we can retrive it from disk
+next time.
+
+.. literalinclude:: code/doc11.py
+    :language: python
+    :caption: doc11.py
+    :linenos:
+
+.. code-block:: bash
+    $ (master ✗) $ python doc11.py
+    Description for something: testme
+    testme
+    $ (master ✗) $ python doc11.py
+    testme
+    $ (master ✗) $

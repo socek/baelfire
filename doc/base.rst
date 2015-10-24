@@ -129,6 +129,7 @@ next time.
     :linenos:
 
 .. code-block:: bash
+
     $ (master ✗) $ python doc11.py
     Description for something: testme
     testme

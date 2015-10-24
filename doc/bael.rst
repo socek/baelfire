@@ -13,13 +13,52 @@ command line named "bael"
 .. code-block:: bash
 
     usage: bael [-h] [-t TASK] [-g] [-r GRAPH_FILE]
+            [-l {debug,info,warning,error,critical}]
 
     optional arguments:
       -h, --help            show this help message and exit
+
+    Tasks:
+      Tasks related options
+
       -t TASK, --task TASK  Run this task.
       -g, --graph           Draw task dependency graph.
+
+    Other:
+      Other useful options
+
       -r GRAPH_FILE, --graph-file GRAPH_FILE
                             Draw graph from report file.
+
+    Logging::
+      Logging related options.
+
+      -l {debug,info,warning,error,critical}, --log-level {debug,info,warning,error,critical}
+                            Log level
+    (venv_baelfire)socek:~/projects/baelfire (master ✗) $ bael
+    usage: bael [-h] [-t TASK] [-g] [-r GRAPH_FILE]
+                [-l {debug,info,warning,error,critical}]
+
+    optional arguments:
+      -h, --help            show this help message and exit
+
+    Tasks:
+      Tasks related options
+
+      -t TASK, --task TASK  Run this task.
+      -g, --graph           Draw task dependency graph.
+
+    Other:
+      Other useful options
+
+      -r GRAPH_FILE, --graph-file GRAPH_FILE
+                            Draw graph from report file.
+
+    Logging::
+      Logging related options.
+
+      -l {debug,info,warning,error,critical}, --log-level {debug,info,warning,error,critical}
+                            Log level
 
 3.3 Running tasks
 -----------------

@@ -5,7 +5,7 @@
 ---------
 
 There is no need to create your own command lines just to run tasks. We created
-command line named "beal"
+command line named "bael"
 
 3.2 Help
 --------

@@ -26,7 +26,7 @@ class Graph(object):
         self.report = self.read_report()
         with open(self.Config.dot_path, 'w') as stream:
             stream.write('digraph {\n')
-            for key, element in self.report.items():
+            for key, element in sorted(self.report.items()):
                 if type(element) is dict:
                     visualization = self.Config.task().choose(key, element)
                     stream.write(visualization.render())

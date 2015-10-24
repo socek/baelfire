@@ -35,7 +35,7 @@ class TaskVisualization(object):
     def render(self):
         self.rendered = ''
         self.render_task()
-        for url, dependency in self.report['dependencies'].items():
+        for url, dependency in sorted(self.report['dependencies'].items()):
             vdependency = self.Configure.dependency().choose(
                 url,
                 dependency,

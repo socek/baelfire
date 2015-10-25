@@ -2,25 +2,19 @@ from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
 from baelfire.dependencies import FileChanged
+from baelfire.dependencies import FileDoesNotExists
 from baelfire.task import FileTask
 
 
-class TemplateTask(FileTask):
-    """
-    Task which generate file from template
-    """
+class BaseTemplateTask(FileTask):
 
     def phase_settings(self):
         super().phase_settings()
-        self.paths['jinja_templates'] = '.'
+        self.paths['jinja_templates'] = '/'
 
     @property
     def source(self):
         return self.paths[self.source_name]
-
-    def create_dependecies(self):
-        super().create_dependecies()
-        self.add_dependency(FileChanged(self.source_name))
 
     def jinja(self):
         """Jinja2 environment generator."""
@@ -46,3 +40,23 @@ class TemplateTask(FileTask):
 
     def get_template(self):
         return self.jinja().get_template(self.source)
+
+
+class TemplateTask(BaseTemplateTask):
+    """
+    Task which generate file from template.
+    """
+
+    def create_dependecies(self):
+        super().create_dependecies()
+        self.add_dependency(FileChanged(self.source_name))
+
+
+class FirstTemplateTask(BaseTemplateTask):
+    """
+    Task which generate file from template but only if output does not exists.
+    """
+
+    def create_dependecies(self):
+        super().create_dependecies()
+        self.add_dependency(FileDoesNotExists(self.source_name))

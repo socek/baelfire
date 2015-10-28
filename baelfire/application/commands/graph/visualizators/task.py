@@ -35,15 +35,15 @@ class TaskVisualization(object):
     def render(self):
         self.rendered = ''
         self.render_task()
-        for url, dependency in sorted(self.report['dependencies'].items()):
+        for dependency in self.report['dependencies']:
             vdependency = self.Configure.dependency().choose(
-                url,
+                dependency['name'],
                 dependency,
             )
             vlink = self.Configure.link().choose(
                 self.url,
                 self.report,
-                url,
+                dependency['name'],
                 dependency,
             )
             self.rendered += vdependency.render()
@@ -53,12 +53,15 @@ class TaskVisualization(object):
 
     def render_task(self):
         always_rebuild = 'baelfire.dependencies.dependency.AlwaysRebuild'
-        if always_rebuild in self.report['dependencies']:
+        if always_rebuild in self.get_dependencies_names():
             self.rendered += (
                 self.PREFIX + (self.Templates.always_run % self.task())
             )
         else:
             self.rendered += self.PREFIX + (self.Templates.task % self.task())
+
+    def get_dependencies_names(self):
+        return [item['name'] for item in self.report['dependencies']]
 
 
 class TaskVisualizatorChooser(VisualizatorChooser):

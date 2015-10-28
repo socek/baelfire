@@ -29,17 +29,14 @@ class TestFileDependency(object):
         dependency = FileDependency('myname')
         parent = MagicMock()
         parent.paths = {'myname': 'success'}
-        parent.myreport = {'dependencies': {}}
+        parent.myreport = {'dependencies': []}
         dependency.set_parent(parent)
 
         dependency.phase_data()
 
-        assert parent.myreport == {
-            'dependencies': {
-                'baelfire.dependencies.file.FileDependency': {
-                    'filename': 'success',
-                },
-            },
+        assert dependency.myreport == {
+            'filename': 'success',
+            'name': 'baelfire.dependencies.file.FileDependency',
         }
 
 

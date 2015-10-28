@@ -64,6 +64,7 @@ class Task(object):
     def phase_init(self):
         self._settings = StringDict()
         self._paths = PathDict()
+        self._paths['settings'] = self._settings
         self._report = {'last_index': 0}
 
         self.paths['report'] = '.baelfire.report'
@@ -71,11 +72,10 @@ class Task(object):
         self.myreport['runned'] = False
         self.myreport['needtorun'] = False
         self.myreport['success'] = False
-        self.myreport['dependencies'] = {}
-        self.myreport['dependencies_run'] = []
+        self.myreport['dependencies'] = []
 
         for dependency in self._dependencies:
-            self.myreport['dependencies_run'].append(dependency.name)
+            self.myreport['dependencies'].append(dependency.myreport)
             dependency.phase_init()
 
     def phase_settings(self):

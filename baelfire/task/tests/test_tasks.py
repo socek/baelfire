@@ -80,8 +80,7 @@ class TestTask(object):
 
         assert task.report == {
             'baelfire.task.tests.test_tasks.ExampleTask': {
-                'dependencies': {},
-                'dependencies_run': [],
+                'dependencies': [],
                 'needtorun': False,
                 'runned': False,
                 'success': False,
@@ -102,25 +101,23 @@ class TestTask(object):
 
         assert task.report == {
             'baelfire.task.tests.test_tasks.ExampleTask': {
-                'dependencies': {
-                    'baelfire.dependencies.dependency.AlwaysRebuild': {
+                'dependencies': [
+                    {
                         'builded': True,
                         'index': 0,
                         'should_build': True,
                         'phase_validation': True,
                         'success': True,
+                        'name': 'baelfire.dependencies.dependency.AlwaysRebuild',
                     },
-                    'baelfire.dependencies.dependency.NoRebuild': {
+                    {
                         'builded': True,
                         'index': 1,
                         'should_build': False,
                         'phase_validation': True,
                         'success': True,
+                        'name': 'baelfire.dependencies.dependency.NoRebuild',
                     },
-                },
-                'dependencies_run': [
-                    'baelfire.dependencies.dependency.AlwaysRebuild',
-                    'baelfire.dependencies.dependency.NoRebuild',
                 ],
                 'needtorun': True,
                 'runned': True,
@@ -141,17 +138,15 @@ class TestTask(object):
 
         assert task.report == {
             'baelfire.task.tests.test_tasks.ExampleFailingTask': {
-                'dependencies': {
-                    'baelfire.dependencies.dependency.AlwaysRebuild': {
+                'dependencies': [
+                    {
                         'builded': True,
                         'index': 0,
                         'should_build': True,
                         'phase_validation': True,
                         'success': True,
+                        'name': 'baelfire.dependencies.dependency.AlwaysRebuild',
                     },
-                },
-                'dependencies_run': [
-                    'baelfire.dependencies.dependency.AlwaysRebuild',
                 ],
                 'needtorun': True,
                 'runned': True,
@@ -177,35 +172,31 @@ class TestTask(object):
         assert parent._data == child._data
         assert parent.report == {
             'baelfire.task.tests.test_tasks.ExampleChild': {
-                'dependencies': {
-                    'baelfire.dependencies.dependency.AlwaysRebuild': {
+                'dependencies': [
+                    {
                         'builded': True,
                         'index': 1,
                         'should_build': True,
                         'phase_validation': True,
                         'success': True,
+                        'name': 'baelfire.dependencies.dependency.AlwaysRebuild',
                     },
-                },
-                'dependencies_run': [
-                    'baelfire.dependencies.dependency.AlwaysRebuild',
                 ],
                 'needtorun': True,
                 'runned': True,
                 'success': True,
             },
             'baelfire.task.tests.test_tasks.ExampleParent': {
-                'dependencies': {
-                    'baelfire.dependencies.task.TaskDependency': {
+                'dependencies': [
+                    {
                         'builded': True,
                         'index': 0,
                         'phase_validation': True,
                         'should_build': True,
                         'success': True,
                         'task': 'baelfire.task.tests.test_tasks.ExampleChild',
+                        'name': 'baelfire.dependencies.task.TaskDependency',
                     }
-                },
-                'dependencies_run': [
-                    'baelfire.dependencies.task.TaskDependency',
                 ],
                 'needtorun': True,
                 'runned': True,
@@ -229,17 +220,15 @@ class TestTask(object):
 
         assert data == {
             'baelfire.task.tests.test_tasks.ExampleFailingTask': {
-                'dependencies': {
-                    'baelfire.dependencies.dependency.AlwaysRebuild': {
+                'dependencies': [
+                    {
                         'builded': True,
                         'index': 0,
                         'should_build': True,
                         'phase_validation': True,
                         'success': True,
+                        'name': 'baelfire.dependencies.dependency.AlwaysRebuild',
                     },
-                },
-                'dependencies_run': [
-                    'baelfire.dependencies.dependency.AlwaysRebuild',
                 ],
                 'needtorun': True,
                 'runned': True,

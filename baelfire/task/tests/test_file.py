@@ -40,18 +40,16 @@ class TestFileTask(object):
         assert exists(task.output)
         assert task.report == {
             'baelfire.task.tests.test_file.ExampleFileTask': {
-                'dependencies': {
-                    'baelfire.dependencies.file.FileDoesNotExists': {
+                'dependencies': [
+                    {
                         'builded': True,
                         'filename': '/tmp/file.txt',
                         'index': 0,
                         'phase_validation': True,
                         'should_build': True,
                         'success': True,
+                        'name': 'baelfire.dependencies.file.FileDoesNotExists',
                     },
-                },
-                'dependencies_run': [
-                    'baelfire.dependencies.file.FileDoesNotExists',
                 ],
                 'needtorun': True,
                 'runned': True,
@@ -63,18 +61,16 @@ class TestFileTask(object):
         task.run()
         assert task.report == {
             'baelfire.task.tests.test_file.ExampleFileTask': {
-                'dependencies': {
-                    'baelfire.dependencies.file.FileDoesNotExists': {
+                'dependencies': [
+                    {
                         'builded': True,
                         'filename': '/tmp/file.txt',
                         'index': 0,
                         'phase_validation': True,
                         'should_build': False,
                         'success': True,
+                        'name': 'baelfire.dependencies.file.FileDoesNotExists',
                     },
-                },
-                'dependencies_run': [
-                    'baelfire.dependencies.file.FileDoesNotExists',
                 ],
                 'needtorun': False,
                 'runned': False,
@@ -90,18 +86,16 @@ class TestFileTask(object):
 
         assert task.report == {
             'baelfire.task.tests.test_file.ExampleSecondFileTask': {
-                'dependencies': {
-                    'baelfire.dependencies.file.FileDoesNotExists': {
+                'dependencies': [
+                    {
                         'builded': True,
                         'filename': ExampleSecondFileTask.output,
                         'index': 0,
                         'phase_validation': True,
                         'should_build': True,
                         'success': True,
+                        'name': 'baelfire.dependencies.file.FileDoesNotExists',
                     },
-                },
-                'dependencies_run': [
-                    'baelfire.dependencies.file.FileDoesNotExists',
                 ],
                 'needtorun': True,
                 'runned': True,

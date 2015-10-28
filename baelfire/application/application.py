@@ -12,12 +12,13 @@ log = getLogger(__name__)
 
 class Application(object):
 
-    def __init__(self):
-        self.args = {}
-
     def create_parser(self):
         self.parser = ArgumentParser()
+        self._add_task_group()
+        self._add_other_group()
+        self._add_logging_group()
 
+    def _add_task_group(self):
         tasks = self.parser.add_argument_group(
             'Tasks',
             'Tasks related options',
@@ -37,6 +38,7 @@ class Application(object):
             action="store_true",
         )
 
+    def _add_other_group(self):
         other = self.parser.add_argument_group(
             'Other',
             'Other useful options',
@@ -48,6 +50,7 @@ class Application(object):
             help='Draw graph from report file.',
         )
 
+    def _add_logging_group(self):
         log = self.parser.add_argument_group(
             'Logging:',
             'Logging related options.',

@@ -8,59 +8,60 @@ from ..graph import Graph
 EXAMPLE_REPORT = {
     '__main__.MyElo': {
         'aborted': False,
-        'dependencies': {
-            'baelfire.dependencies.file.FileDoesNotExists': {
+        'dependencies': [
+            {
                 'builded': True,
                 'filename': '/tmp/elo',
                 'index': 0,
                 'phase_validation': True,
                 'should_build': False,
-                'success': True
+                'success': True,
+                'name': 'baelfire.dependencies.file.FileDoesNotExists',
             },
-            'baelfire.dependencies.task.TaskDependency': {
+            {
                 'builded': True,
                 'index': 1,
                 'phase_validation': True,
                 'should_build': False,
                 'success': True,
                 'task': '__main__.MySecondElo',
+                'name': 'baelfire.dependencies.task.TaskDependency',
             },
-            'baelfire.dependencies.file.FileChanged': {
+            {
                 'builded': True,
                 'filename': '/tmp/elo',
                 'index': 0,
                 'phase_validation': True,
                 'should_build': True,
                 'success': True,
+                'name': 'baelfire.dependencies.file.FileChanged',
             },
-            'baelfire.dependencies.file.FileSomething': {
+            {
                 'builded': True,
                 'filename': '/tmp/elo',
                 'index': 0,
                 'phase_validation': True,
                 'should_build': True,
                 'success': False,
+                'name': 'baelfire.dependencies.file.FileSomething',
             },
-            'baelfire.dependencies.dependency.AlwaysRebuild': {
+            {
                 'builded': True,
                 'filename': '/tmp/elo',
                 'index': 0,
                 'phase_validation': True,
                 'should_build': True,
                 'success': True,
+                'name': 'baelfire.dependencies.dependency.AlwaysRebuild',
             },
-        },
-        'dependencies_run': [
-            'baelfire.dependencies.file.FileDoesNotExists',
-            'baelfire.dependencies.task.TaskDependency'],
+        ],
         'needtorun': False,
         'runned': False,
         'signal': None,
         'success': False},
     '__main__.MySecondElo': {
         'aborted': False,
-        'dependencies': {},
-        'dependencies_run': [],
+        'dependencies': [],
         'needtorun': False,
         'runned': False,
         'signal': None,
@@ -68,8 +69,7 @@ EXAMPLE_REPORT = {
     },
     '__main__.Something': {
         'aborted': False,
-        'dependencies': {},
-        'dependencies_run': [],
+        'dependencies': [],
         'needtorun': True,
         'runned': False,
         'signal': None,
@@ -77,8 +77,7 @@ EXAMPLE_REPORT = {
     },
     '__main__.Something2': {
         'aborted': False,
-        'dependencies': {},
-        'dependencies_run': [],
+        'dependencies': [],
         'needtorun': True,
         'runned': True,
         'signal': None,
@@ -90,13 +89,13 @@ EXAMPLE_REPORT = {
 EXPECTED_DOT_FILE = """\
 digraph {
     "__main__.MyElo"[label="MyElo",fillcolor=white,style=filled,shape=octagon];
-        "baelfire.dependencies.file.FileChanged"[label="FileChanged",fillcolor=yellow,shape=diamond,style=filled];
-            "baelfire.dependencies.file.FileChanged" -> "__main__.MyElo";
         "baelfire.dependencies.file.FileDoesNotExists"[label="FileDoesNotExists",fillcolor=white,shape=diamond,style=filled];
             "baelfire.dependencies.file.FileDoesNotExists" -> "__main__.MyElo";
+            "__main__.MySecondElo" -> "__main__.MyElo";
+        "baelfire.dependencies.file.FileChanged"[label="FileChanged",fillcolor=yellow,shape=diamond,style=filled];
+            "baelfire.dependencies.file.FileChanged" -> "__main__.MyElo";
         "baelfire.dependencies.file.FileSomething"[label="FileSomething",fillcolor=white,shape=diamond,style=filled];
             "baelfire.dependencies.file.FileSomething" -> "__main__.MyElo";
-            "__main__.MySecondElo" -> "__main__.MyElo";
     "__main__.MySecondElo"[label="MySecondElo",fillcolor=white,style=filled];
     "__main__.Something"[label="Something",fillcolor=red,style=filled];
     "__main__.Something2"[label="Something2",fillcolor=green,style=filled];

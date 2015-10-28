@@ -10,6 +10,9 @@ class Dependency(object):
     def __init__(self):
         self.task = None
         self.parent = None
+        self.myreport = {
+            'name': self.name,
+        }
 
     def phase_init(self):
         self.myreport['phase_validation'] = False
@@ -43,12 +46,6 @@ class Dependency(object):
 
     def set_parent(self, parent):
         self.parent = parent
-
-    @property
-    def myreport(self):
-        if self.name not in self.parent.myreport['dependencies']:
-            self.parent.myreport['dependencies'][self.name] = {}
-        return self.parent.myreport['dependencies'][self.name]
 
     @property
     def settings(self):

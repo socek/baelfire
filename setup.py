@@ -21,6 +21,9 @@ if __name__ == '__main__':
         install_requires=install_requires,
         test_suite='baelfire.tests.get_all_test_suite',
         license='Apache License 2.0',
+        package_data={
+            '': ['baelfire/application/commands/graph/tests/*.txt'],
+        },
         entry_points={
             'console_scripts': [
                 'bael=baelfire.application.application:run',

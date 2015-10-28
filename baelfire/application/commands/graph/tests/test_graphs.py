@@ -1,9 +1,15 @@
+from mock import patch
+from os import path
+from pytest import fixture
 from tempfile import NamedTemporaryFile
 
-from mock import patch
-from pytest import fixture
-
 from ..graph import Graph
+
+
+def open_relative_file(filename):
+    base = path.dirname(__file__)
+    filename = path.join(base, filename)
+    return open(filename, 'r')
 
 EXAMPLE_REPORT = {
     '__main__.MyElo': {
@@ -30,7 +36,7 @@ EXAMPLE_REPORT = {
             {
                 'builded': True,
                 'filename': '/tmp/elo',
-                'index': 0,
+                'index': 2,
                 'phase_validation': True,
                 'should_build': True,
                 'success': True,
@@ -39,7 +45,7 @@ EXAMPLE_REPORT = {
             {
                 'builded': True,
                 'filename': '/tmp/elo',
-                'index': 0,
+                'index': 3,
                 'phase_validation': True,
                 'should_build': True,
                 'success': False,
@@ -48,7 +54,7 @@ EXAMPLE_REPORT = {
             {
                 'builded': True,
                 'filename': '/tmp/elo',
-                'index': 0,
+                'index': 4,
                 'phase_validation': True,
                 'should_build': True,
                 'success': True,
@@ -86,21 +92,7 @@ EXAMPLE_REPORT = {
     'last_index': 2
 }
 
-EXPECTED_DOT_FILE = """\
-digraph {
-    "__main__.MyElo"[label="MyElo",fillcolor=white,style=filled,shape=octagon];
-        "baelfire.dependencies.file.FileDoesNotExists"[label="FileDoesNotExists",fillcolor=white,shape=diamond,style=filled];
-            "baelfire.dependencies.file.FileDoesNotExists" -> "__main__.MyElo";
-            "__main__.MySecondElo" -> "__main__.MyElo";
-        "baelfire.dependencies.file.FileChanged"[label="FileChanged",fillcolor=yellow,shape=diamond,style=filled];
-            "baelfire.dependencies.file.FileChanged" -> "__main__.MyElo";
-        "baelfire.dependencies.file.FileSomething"[label="FileSomething",fillcolor=white,shape=diamond,style=filled];
-            "baelfire.dependencies.file.FileSomething" -> "__main__.MyElo";
-    "__main__.MySecondElo"[label="MySecondElo",fillcolor=white,style=filled];
-    "__main__.Something"[label="Something",fillcolor=red,style=filled];
-    "__main__.Something2"[label="Something2",fillcolor=green,style=filled];
-}
-"""
+EXPECTED_DOT_FILE = open_relative_file('expected_dot_file.txt').read()
 
 
 class TestGraph(object):
@@ -147,10 +139,10 @@ class TestGraph(object):
     def test_with_fake_report(self, obj):
         patcher_read_report = patch.object(obj, 'read_report')
         with patcher_read_report as read_report:
-                read_report.return_value = EXAMPLE_REPORT
+            read_report.return_value = EXAMPLE_REPORT
 
-                obj.Config.dot_path = NamedTemporaryFile().name
-                obj.generate_dot_file()
+            obj.Config.dot_path = NamedTemporaryFile().name
+            obj.generate_dot_file()
 
-                data = open(obj.Config.dot_path, 'r').read()
-                assert EXPECTED_DOT_FILE == data.replace('\t', '    ')
+            data = open(obj.Config.dot_path, 'r').read()
+            assert EXPECTED_DOT_FILE == data.replace('\t', '    ')

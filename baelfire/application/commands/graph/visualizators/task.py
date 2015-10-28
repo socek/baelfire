@@ -39,11 +39,12 @@ class TaskVisualization(object):
             vdependency = self.Configure.dependency().choose(
                 dependency['name'],
                 dependency,
+                self,
             )
             vlink = self.Configure.link().choose(
                 self.url,
                 self.report,
-                dependency['name'],
+                vdependency.full_url,
                 dependency,
             )
             self.rendered += vdependency.render()

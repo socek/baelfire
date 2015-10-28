@@ -1,0 +1,13 @@
+digraph {
+    "__main__.MyElo"[label="MyElo",fillcolor=white,style=filled,shape=octagon];
+        "baelfire.dependencies.file.FileDoesNotExists:0"[label="FileDoesNotExists\n/tmp/elo",fillcolor=white,shape=box,style=filled];
+            "baelfire.dependencies.file.FileDoesNotExists:0" -> "__main__.MyElo";
+            "__main__.MySecondElo" -> "__main__.MyElo";
+        "baelfire.dependencies.file.FileChanged:2"[label="FileChanged\n/tmp/elo",fillcolor=yellow,shape=box,style=filled];
+            "baelfire.dependencies.file.FileChanged:2" -> "__main__.MyElo";
+        "baelfire.dependencies.file.FileSomething:3"[label="FileSomething",fillcolor=white,shape=box,style=filled];
+            "baelfire.dependencies.file.FileSomething:3" -> "__main__.MyElo";
+    "__main__.MySecondElo"[label="MySecondElo",fillcolor=white,style=filled];
+    "__main__.Something"[label="Something",fillcolor=red,style=filled];
+    "__main__.Something2"[label="Something2",fillcolor=green,style=filled];
+}

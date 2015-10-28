@@ -27,7 +27,7 @@ class LinkVisualization(object):
         }
 
     def render(self):
-        if self.right_url in self.HIDDEN_RIGHTS:
+        if self.right['name'] in self.HIDDEN_RIGHTS:
             return ''
         return self.PREFIX + (self.LINK_TEMPLATE % self.link())
 

@@ -13,7 +13,7 @@ install_requires = [
 if __name__ == '__main__':
     setup(
         name='baelfire',
-        version='0.3',
+        version='0.3.1',
         description=("Makefile for python."),
         author='Dominik "Socek" Długajczyk',
         author_email='msocek@gmail.com',

@@ -80,10 +80,12 @@ class Application(object):
         if args.task:
             task = self.import_task(args.task)()
             try:
-                task.run()
-                report_path = task.save_report()
+                try:
+                    task.run()
+                finally:
+                    report_path = task.save_report()
             except:
-                log.error('Error in %(report)s' % task.paths)
+                log.error('Error in %(report)s' % report_path)
                 raise
             if args.graph:
                 Graph(report_path).render()

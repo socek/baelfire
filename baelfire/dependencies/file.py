@@ -33,7 +33,10 @@ class FileChanged(FileDependency):
             output = getmtime(self.parent.output)
         except FileNotFoundError:
             return True
-        source = getmtime(self.path)
+        try:
+            source = getmtime(self.path)
+        except FileNotFoundError:
+            return True
 
         return output < source
 

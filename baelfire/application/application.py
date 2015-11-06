@@ -85,7 +85,7 @@ class Application(object):
                 finally:
                     report_path = task.save_report()
             except:
-                log.error('Error in %(report)s' % report_path)
+                log.error('Error in %s' % (report_path,))
                 raise
             if args.graph:
                 Graph(report_path).render()

@@ -54,6 +54,18 @@ class TestFileChanged(object):
 
         assert dependency.should_build() is True
 
+    def test_on_source_not_existing(self):
+        """
+        FileChanged should indicate to rebuild if source file does not exists.
+        """
+        name = NamedTemporaryFile(delete=False).name
+        parent = MagicMock()
+        parent.output = name
+        dependency = FileChanged(raw_path=NamedTemporaryFile().name)
+        dependency.set_parent(parent)
+
+        assert dependency.should_build() is True
+
     def test_on_output_younger(self):
         """
         FileChanged should indicate to rebuild if output file is younger then

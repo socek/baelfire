@@ -41,6 +41,15 @@ class FileChanged(FileDependency):
         return output < source
 
 
+class FileExists(FileDependency):
+    """
+    Trigger build if dependency file exists.
+    """
+
+    def should_build(self):
+        return exists(self.path)
+
+
 class FileDoesNotExists(FileDependency):
     """
     Trigger build if dependency file does not exists.

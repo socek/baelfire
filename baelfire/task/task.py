@@ -54,10 +54,16 @@ class Task(object):
         """
         Check all dependencies and rebuild if needed.
         """
+        self._step_validation()
+        self._step_build()
+
+    def _step_validation(self):
         self.phase_init()
         self.phase_settings()
         self.phase_data()
         self.phase_validation()
+
+    def _step_build(self):
         self.phase_dependencies_build()
         self.phase_build()
 

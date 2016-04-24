@@ -1,9 +1,8 @@
 from logging import getLogger
-from morfdict import PathDict
-from morfdict import StringDict
 from yaml import dump
 
 from baelfire.parrented import parrented
+from baelfire.core import Core
 
 
 class Task(object):
@@ -21,17 +20,17 @@ class Task(object):
     @property
     @parrented
     def settings(self):
-        return self._settings
+        return self.core.settings
 
     @property
     @parrented
     def paths(self):
-        return self._paths
+        return self.core.paths
 
     @property
     @parrented
     def report(self):
-        return self._report
+        return self.core.report
 
     @property
     def myreport(self):
@@ -43,11 +42,12 @@ class Task(object):
     def logger(self):
         return getLogger(self.name)
 
-    def __init__(self):
+    def __init__(self, core=None):
         self._dependencies = []
         self.parent = None
 
         self._args = {}
+        self.core = core or Core()
         self.create_dependecies()
 
     def run(self):
@@ -68,10 +68,7 @@ class Task(object):
         self.phase_build()
 
     def phase_init(self):
-        self._settings = StringDict()
-        self._paths = PathDict()
-        self._paths['settings'] = self._settings
-        self._report = {'last_index': 0}
+        self.core.init()
 
         self.paths['report'] = '.baelfire.report'
 
@@ -85,8 +82,10 @@ class Task(object):
             dependency.phase_init()
 
     def phase_settings(self):
+        self.core.before_dependencies()
         for dependency in self._dependencies:
             dependency.phase_settings()
+        self.core.after_dependencies()
 
     def phase_data(self):
         for dependency in self._dependencies:

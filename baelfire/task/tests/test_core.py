@@ -7,7 +7,7 @@ from baelfire.task import Task
 class ExampleTask(Task):
 
     def phase_settings(self):
-        super().phase_settings()
+        super(ExampleTask, self).phase_settings()
         self.settings['two'] = '-%(one)s-'
         self.settings['four'] = '+%(three)s+'
 
@@ -21,7 +21,7 @@ class ExampleTask(Task):
 class ExampleSecondTask(Task):
 
     def phase_settings(self):
-        super().phase_settings()
+        super(ExampleSecondTask, self).phase_settings()
         self.settings['one'] = 'one222'
         self.settings['five'] = '=%(six)s='
 

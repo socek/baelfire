@@ -42,7 +42,7 @@ class TestFileDict(object):
 
     def test_loading_on_error(self):
         data = self.obj()
-        with raises(FileNotFoundError):
+        with raises(IOError):
             data.load()
         assert dict(data) == {}
 

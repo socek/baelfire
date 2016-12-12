@@ -9,7 +9,7 @@ from baelfire.task import FileTask
 class BaseTemplateTask(FileTask):
 
     def phase_settings(self):
-        super().phase_settings()
+        super(BaseTemplateTask, self).phase_settings()
         self.paths['jinja_templates'] = '/'
 
     @property
@@ -48,7 +48,7 @@ class TemplateTask(BaseTemplateTask):
     """
 
     def create_dependecies(self):
-        super().create_dependecies()
+        super(TemplateTask, self).create_dependecies()
         self.add_dependency(FileChanged(self.source_name))
 
 
@@ -58,5 +58,5 @@ class FirstTemplateTask(BaseTemplateTask):
     """
 
     def create_dependecies(self):
-        super().create_dependecies()
+        super(FirstTemplateTask, self).create_dependecies()
         self.add_dependency(FileDoesNotExists(self.source_name))

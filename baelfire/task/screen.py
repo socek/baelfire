@@ -8,7 +8,7 @@ class ScreenTask(SubprocessTask):
     screen_name = None
 
     def phase_settings(self):
-        super().phase_settings()
+        super(ScreenTask, self).phase_settings()
         self.paths['exe:screen'] = ['/usr', 'bin', 'screen']
 
     def _screen_run(self, *args, **kwargs):

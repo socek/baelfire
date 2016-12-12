@@ -23,8 +23,8 @@ class TestPidIsRunning(object):
 
     def test_raw_path(self):
         spp = Popen(['sleep 10'], shell=True)
-        with NamedTemporaryFile(delete=False) as data:
-            data.write(bytes(str(spp.pid), 'utf8'))
+        with NamedTemporaryFile(mode='w', delete=False) as data:
+            data.write(str(spp.pid))
 
             is_running = PidIsRunning(pid_file_path=data.name)
             is_not_running = PidIsNotRunning(pid_file_path=data.name)
@@ -37,8 +37,8 @@ class TestPidIsRunning(object):
 
     def test_path_name(self):
         spp = Popen(['sleep 10'], shell=True)
-        with NamedTemporaryFile(delete=False) as data:
-            data.write(bytes(str(spp.pid), 'utf8'))
+        with NamedTemporaryFile(mode='w', delete=False) as data:
+            data.write(str(spp.pid))
             parent = MagicMock()
             parent.paths = {'pid': data.name}
         is_running = PidIsRunning(pid_file_name='pid')

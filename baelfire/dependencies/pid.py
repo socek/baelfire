@@ -9,7 +9,7 @@ class PidIsRunning(Dependency):
     """
 
     def __init__(self, pid=None, pid_file_name=None, pid_file_path=None):
-        super().__init__()
+        super(PidIsRunning, self).__init__()
         self.pid = pid
         self.pid_file_name = pid_file_name
         self.pid_file_path = pid_file_path

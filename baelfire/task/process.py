@@ -14,7 +14,7 @@ class SubprocessTask(Task):
     """
 
     def phase_init(self):
-        super().phase_init()
+        super(SubprocessTask, self).phase_init()
         self.spp = None
         self.myreport['aborted'] = False
         self.myreport['signal'] = None

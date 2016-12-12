@@ -10,12 +10,12 @@ class FileDependency(Dependency):
     """
 
     def __init__(self, name=None, raw_path=None):
-        super().__init__()
+        super(FileDependency, self).__init__()
         self.source_name = name
         self.raw_path = raw_path
 
     def phase_data(self):
-        super().phase_data()
+        super(FileDependency, self).phase_data()
         self.myreport['filename'] = self.path
 
     @property
@@ -31,11 +31,11 @@ class FileChanged(FileDependency):
     def should_build(self):
         try:
             output = getmtime(self.parent.output)
-        except FileNotFoundError:
+        except OSError:
             return True
         try:
             source = getmtime(self.path)
-        except FileNotFoundError:
+        except OSError:
             return True
 
         return output < source

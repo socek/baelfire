@@ -29,7 +29,7 @@ class ExampleFailingTask(Task):
 class ExampleChild(ExampleTask):
 
     def phase_settings(self):
-        super().phase_settings()
+        super(ExampleChild, self).phase_settings()
         self.settings['child'] = '2'
         self.paths['child'] = 'child.txt'
 
@@ -49,7 +49,7 @@ class ExampleChild(ExampleTask):
 class ExampleParent(ExampleTask):
 
     def phase_settings(self):
-        super().phase_settings()
+        super(ExampleParent, self).phase_settings()
         self.settings['parent'] = '1'
         self.paths['parent'] = 'parent.txt'
 

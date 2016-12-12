@@ -9,7 +9,7 @@ class ScreenIsNotRunning(Dependency):
     regex = re.compile(r'^\s*(.*)\.(\w+)\s*\((\w+)\)$', re.UNICODE)
 
     def __init__(self, screen_name=None):
-        super().__init__()
+        super(ScreenIsNotRunning, self).__init__()
         self._screen_name = screen_name
 
     def _list_screen(self):

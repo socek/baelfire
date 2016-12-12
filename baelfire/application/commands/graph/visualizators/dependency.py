@@ -45,7 +45,7 @@ class HiddenVisualization(DependencyVisualization):
 class FileVisualization(DependencyVisualization):
 
     def get_name(self):
-        return super().get_name() + r'\n' + self.report['filename']
+        return super(FileVisualization, self).get_name() + r'\n' + self.report['filename']
 
 
 class DependencyVisualizatorChooser(VisualizatorChooser):

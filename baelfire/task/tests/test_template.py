@@ -9,7 +9,7 @@ class ExampleTemplateTask(TemplateTask):
     output_name = 'output'
 
     def __init__(self):
-        super().__init__()
+        super(ExampleTemplateTask, self).__init__()
         self.source_file = NamedTemporaryFile(delete=False)
         self.source_file.write(
             b"{{paths['source']}}|{{paths['output']}}",
@@ -17,7 +17,7 @@ class ExampleTemplateTask(TemplateTask):
         self.source_file.close()
 
     def phase_settings(self):
-        super().phase_settings()
+        super(ExampleTemplateTask, self).phase_settings()
         self.paths['jinja_templates'] = '/'
         self.paths[self.source_name] = self.source_file.name
         self.paths[self.output_name] = NamedTemporaryFile().name
@@ -28,11 +28,11 @@ class ExampleFirstTemplateTask(FirstTemplateTask):
     output_name = 'output'
 
     def __init__(self, source_file):
-        super().__init__()
+        super(ExampleFirstTemplateTask, self).__init__()
         self.source_file = source_file
 
     def phase_settings(self):
-        super().phase_settings()
+        super(ExampleFirstTemplateTask, self).phase_settings()
         self.paths['jinja_templates'] = '/'
         self.paths[self.source_name] = self.source_file.name
         self.paths[self.output_name] = NamedTemporaryFile().name

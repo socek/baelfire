@@ -17,8 +17,8 @@ class ExampleCore(Core):
         )
         self.source_file.close()
 
-    def before_dependencies(self):
-        super(ExampleCore, self).before_dependencies()
+    def phase_settings(self):
+        super(ExampleCore, self).phase_settings()
         self.paths.set('jinja_templates', '', is_root=True)
         self.paths.set(self.source_name, self.source_file.name)
         self.paths.set(self.output_name, NamedTemporaryFile().name)

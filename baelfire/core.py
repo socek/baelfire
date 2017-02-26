@@ -9,8 +9,5 @@ class Core(object):
         self.paths = Paths()
         self.report = {'last_index': 0}
 
-    def before_dependencies(self):
-        pass
-
-    def after_dependencies(self):
+    def phase_settings(self):
         pass

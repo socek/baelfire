@@ -2,10 +2,22 @@ from pytest import fixture
 from pytest import raises
 from yaml import load
 
-from baelfire.task import Task
+from baelfire.core import Core
 from baelfire.dependencies import AlwaysRebuild
 from baelfire.dependencies import TaskDependency
 from baelfire.dependencies.dependency import NoRebuild
+from baelfire.task import Task
+
+
+class ExampleCore(Core):
+
+    def phase_settings(self):
+        super(ExampleCore, self).phase_settings()
+        self.settings['child'] = '2'
+        self.paths.set('child', 'child.txt')
+
+        self.settings['parent'] = '1'
+        self.paths.set('parent', 'parent.txt')
 
 
 class ExampleTask(Task):
@@ -28,11 +40,6 @@ class ExampleFailingTask(Task):
 
 class ExampleChild(ExampleTask):
 
-    def phase_settings(self):
-        super(ExampleChild, self).phase_settings()
-        self.settings['child'] = '2'
-        self.paths.set('child', 'child.txt')
-
     def build(self):
         self._data = {
             'settings': {
@@ -47,11 +54,6 @@ class ExampleChild(ExampleTask):
 
 
 class ExampleParent(ExampleTask):
-
-    def phase_settings(self):
-        super(ExampleParent, self).phase_settings()
-        self.settings['parent'] = '1'
-        self.paths.set('parent', 'parent.txt')
 
     def build(self):
         self._data = {
@@ -162,7 +164,7 @@ class TestTask(object):
             - paths
             - report
         """
-        parent = ExampleParent()
+        parent = ExampleParent(ExampleCore())
         child = ExampleChild()
         child.add_dependency(AlwaysRebuild())
         parent.add_dependency(TaskDependency(child))

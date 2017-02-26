@@ -82,10 +82,7 @@ class Task(object):
             dependency.phase_init()
 
     def phase_settings(self):
-        self.core.before_dependencies()
-        for dependency in self._dependencies:
-            dependency.phase_settings()
-        self.core.after_dependencies()
+        self.core.phase_settings()
 
     def phase_data(self):
         for dependency in self._dependencies:

@@ -21,9 +21,6 @@ class Dependency(object):
         self.myreport['should_build'] = None
         self.myreport['index'] = self.parent.get_index()
 
-    def phase_settings(self):
-        pass
-
     def phase_data(self):
         pass
 
@@ -60,7 +57,6 @@ class Dependency(object):
 
 
 class AlwaysRebuild(Dependency):
-
     """
     Always rebuild this task.
     """
@@ -70,7 +66,6 @@ class AlwaysRebuild(Dependency):
 
 
 class NoRebuild(Dependency):
-
     """
     This dependency will always return "do not rebuild". It is for testing
     purpose.

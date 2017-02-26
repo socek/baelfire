@@ -19,10 +19,6 @@ class TaskDependency(Dependency):
         super(TaskDependency, self).phase_data()
         self.task.phase_data()
 
-    def phase_settings(self):
-        super(TaskDependency, self).phase_settings()
-        self.task.phase_settings()
-
     def set_parent(self, parent):
         super(TaskDependency, self).set_parent(parent)
         self.task.set_parent(parent)

@@ -6,14 +6,14 @@ from .dependency import Dependency
 
 
 class ScreenIsNotRunning(Dependency):
-    regex = re.compile(r'^\s*(.*)\.(\w+)\s*\((\w+)\)$', re.UNICODE)
+    regex = re.compile(r'^\s*([^\.]*)\.([^\s]+)\s*\((\w+)\)$', re.UNICODE)
 
     def __init__(self, screen_name=None):
         super(ScreenIsNotRunning, self).__init__()
         self._screen_name = screen_name
 
     def _list_screen(self):
-        cmd = self.paths['exe:screen'] + ' -list'
+        cmd = self.paths.get('exe:screen') + ' -list'
         spp = Popen([cmd], shell=True, stdout=PIPE)
         spp.wait()
         return spp.stdout

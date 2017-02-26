@@ -20,7 +20,7 @@ class FileDependency(Dependency):
 
     @property
     def path(self):
-        return self.raw_path or self.paths[self.source_name]
+        return self.raw_path or self.paths.get(self.source_name)
 
 
 class FileChanged(FileDependency):

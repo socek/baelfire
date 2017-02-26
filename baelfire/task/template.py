@@ -8,13 +8,9 @@ from baelfire.task import FileTask
 
 class BaseTemplateTask(FileTask):
 
-    def phase_settings(self):
-        super(BaseTemplateTask, self).phase_settings()
-        self.paths['jinja_templates'] = '/'
-
     @property
     def source(self):
-        return self.paths[self.source_name]
+        return self.paths.get(self.source_name)
 
     def jinja(self):
         """Jinja2 environment generator."""
@@ -24,7 +20,7 @@ class BaseTemplateTask(FileTask):
         )
 
     def get_jinja2_loader(self):
-        return FileSystemLoader(self.paths['jinja_templates'])
+        return FileSystemLoader(self.paths.get('jinja_templates'))
 
     def build(self):
         template = self.get_template()

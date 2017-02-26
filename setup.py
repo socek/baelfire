@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'morfdict>=0.3.7',
+    'morfdict>=0.4.0',
     'pytest',
     'jinja2',
     'mock',

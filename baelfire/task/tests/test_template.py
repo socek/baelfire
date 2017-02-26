@@ -2,40 +2,36 @@ from tempfile import NamedTemporaryFile
 
 from ..template import FirstTemplateTask
 from ..template import TemplateTask
+from baelfire.core import Core
+
+
+class ExampleCore(Core):
+    source_name = 'source'
+    output_name = 'output'
+
+    def __init__(self):
+        super(ExampleCore, self).__init__()
+        self.source_file = NamedTemporaryFile(delete=False)
+        self.source_file.write(
+            b"{{paths.get('source')}}|{{paths.get('output')}}",
+        )
+        self.source_file.close()
+
+    def before_dependencies(self):
+        super(ExampleCore, self).before_dependencies()
+        self.paths.set('jinja_templates', '', is_root=True)
+        self.paths.set(self.source_name, self.source_file.name)
+        self.paths.set(self.output_name, NamedTemporaryFile().name)
 
 
 class ExampleTemplateTask(TemplateTask):
     source_name = 'source'
     output_name = 'output'
 
-    def __init__(self):
-        super(ExampleTemplateTask, self).__init__()
-        self.source_file = NamedTemporaryFile(delete=False)
-        self.source_file.write(
-            b"{{paths['source']}}|{{paths['output']}}",
-        )
-        self.source_file.close()
-
-    def phase_settings(self):
-        super(ExampleTemplateTask, self).phase_settings()
-        self.paths['jinja_templates'] = '/'
-        self.paths[self.source_name] = self.source_file.name
-        self.paths[self.output_name] = NamedTemporaryFile().name
-
 
 class ExampleFirstTemplateTask(FirstTemplateTask):
     source_name = 'source'
     output_name = 'output'
-
-    def __init__(self, source_file):
-        super(ExampleFirstTemplateTask, self).__init__()
-        self.source_file = source_file
-
-    def phase_settings(self):
-        super(ExampleFirstTemplateTask, self).phase_settings()
-        self.paths['jinja_templates'] = '/'
-        self.paths[self.source_name] = self.source_file.name
-        self.paths[self.output_name] = NamedTemporaryFile().name
 
 
 class TestTemplateTask(object):
@@ -44,7 +40,7 @@ class TestTemplateTask(object):
         """
         Source should be a template to output file.
         """
-        task = ExampleTemplateTask()
+        task = ExampleTemplateTask(ExampleCore())
         task.run()
 
         data = open(task.output, 'r').read()
@@ -54,10 +50,11 @@ class TestTemplateTask(object):
         """
         Task should be rebuild on template change.
         """
-        task = ExampleTemplateTask()
+        core = ExampleCore()
+        task = ExampleTemplateTask(core)
         task.run()
 
-        with open(task.source_file.name, 'w') as data:
+        with open(core.source_file.name, 'w') as data:
             data.write('xxx')
 
         task.run()
@@ -72,13 +69,7 @@ class TestFirstTemplateTask(object):
         """
         Source should be a template to output file.
         """
-        source_file = NamedTemporaryFile(delete=False)
-        source_file.write(
-            b"{{paths['source']}}|{{paths['output']}}",
-        )
-        source_file.close()
-
-        task = ExampleFirstTemplateTask(source_file)
+        task = ExampleFirstTemplateTask(ExampleCore())
         task.run()
 
         data = open(task.output, 'r').read()
@@ -87,7 +78,7 @@ class TestFirstTemplateTask(object):
         with open(task.output, 'w') as fp:
             fp.write('new')
 
-        task = ExampleFirstTemplateTask(source_file)
+        task = ExampleFirstTemplateTask(ExampleCore())
         task.run()
 
         data = open(task.output, 'r').read()

@@ -70,7 +70,7 @@ class Task(object):
     def phase_init(self):
         self.core.init()
 
-        self.paths['report'] = '.baelfire.report'
+        self.paths.set('report', '.baelfire.report')
 
         self.myreport['runned'] = False
         self.myreport['needtorun'] = False
@@ -132,6 +132,6 @@ class Task(object):
         """
         Save report file after task run.
         """
-        with open(self.paths['report'], 'w') as file:
+        with open(self.paths.get('report'), 'w') as file:
             dump(self.report, file, default_flow_style=False)
-        return self.paths['report']
+        return self.paths.get('report')

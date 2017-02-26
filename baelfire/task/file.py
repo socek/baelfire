@@ -11,7 +11,7 @@ class FileTask(Task):
 
     @property
     def output(self):
-        return self.paths[self.output_name]
+        return self.paths.get(self.output_name)
 
     def create_dependecies(self):
         try:

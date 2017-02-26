@@ -9,7 +9,7 @@ class ExampleFileTask(FileTask):
     output_name = 'file'
 
     def phase_settings(self):
-        self.paths['file'] = ['/tmp', 'file.txt']
+        self.paths.set('file', ['/tmp', 'file.txt'])
 
     def build(self):
         open(self.output, 'w').close()

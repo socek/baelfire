@@ -31,7 +31,7 @@ class ExampleChild(ExampleTask):
     def phase_settings(self):
         super(ExampleChild, self).phase_settings()
         self.settings['child'] = '2'
-        self.paths['child'] = 'child.txt'
+        self.paths.set('child', 'child.txt')
 
     def build(self):
         self._data = {
@@ -40,8 +40,8 @@ class ExampleChild(ExampleTask):
                 'parent': self.settings['parent']
             },
             'paths': {
-                'child': self.paths['child'],
-                'parent': self.paths['parent'],
+                'child': self.paths.get('child'),
+                'parent': self.paths.get('parent'),
             },
         }
 
@@ -51,7 +51,7 @@ class ExampleParent(ExampleTask):
     def phase_settings(self):
         super(ExampleParent, self).phase_settings()
         self.settings['parent'] = '1'
-        self.paths['parent'] = 'parent.txt'
+        self.paths.set('parent', 'parent.txt')
 
     def build(self):
         self._data = {
@@ -60,8 +60,8 @@ class ExampleParent(ExampleTask):
                 'parent': self.settings['parent']
             },
             'paths': {
-                'child': self.paths['child'],
-                'parent': self.paths['parent'],
+                'child': self.paths.get('child'),
+                'parent': self.paths.get('parent'),
             },
         }
 
@@ -216,7 +216,7 @@ class TestTask(object):
 
         task.save_report()
 
-        data = load(open(task.paths['report'], 'r').read())
+        data = load(open(task.paths.get('report'), 'r').read())
 
         assert data == {
             'baelfire.task.tests.test_tasks.ExampleFailingTask': {

@@ -6,6 +6,7 @@ from mock import MagicMock
 from ..file import FileChanged
 from ..file import FileDependency
 from ..file import FileDoesNotExists
+from ..file import FileExists
 
 
 class TestFileDependency(object):
@@ -135,3 +136,34 @@ class TestFileDoesNotExists(object):
             dependency.set_parent(parent)
 
             assert dependency.should_build() is False
+
+
+class TestFileExists(object):
+
+    def test_on_file_not_exists(self):
+        """
+        FileExists should indicate not to rebuild if file is not existing.
+        """
+        name = NamedTemporaryFile().name
+        parent = MagicMock()
+        parent.paths = {
+            'source': name,
+        }
+        dependency = FileExists('source')
+        dependency.set_parent(parent)
+
+        assert dependency.should_build() is False
+
+    def test_on_file_exists(self):
+        """
+        FileExists should indicate to rebuild if file exists.
+        """
+        with NamedTemporaryFile(delete=False) as source:
+            parent = MagicMock()
+            parent.paths = {
+                'source': source.name,
+            }
+            dependency = FileExists('source')
+            dependency.set_parent(parent)
+
+            assert dependency.should_build() is True

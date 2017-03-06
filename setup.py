@@ -2,7 +2,7 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'morfdict>=0.4.0',
+    'morfdict>=0.4.1',
     'pytest',
     'jinja2',
     'mock',
@@ -13,7 +13,7 @@ install_requires = [
 if __name__ == '__main__':
     setup(
         name='baelfire',
-        version='0.3.3',
+        version='0.3.4',
         description=("Makefile for python."),
         author='Dominik "Socek" Długajczyk',
         author_email='msocek@gmail.com',

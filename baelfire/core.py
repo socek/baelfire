@@ -18,6 +18,9 @@ class TaskInheritance(object):
     def _default_migration(self, task, child_cls):
         return child_cls()
 
+    def is_doubled(self, base_cls):
+        return self.base_cls == base_cls
+
 
 class Core(object):
 
@@ -46,5 +49,12 @@ class Core(object):
         pass
 
     def add_task_inheritance(self, base_cls, child_cls, migration=None):
+        self._remove_old_inheritance(base_cls)
         self.inheritance.append(
             TaskInheritance(base_cls, child_cls, migration))
+
+    def _remove_old_inheritance(self, base_cls):
+        for inheritance in list(self.inheritance):
+            if inheritance.is_doubled(base_cls):
+                self.inheritance.remove(inheritance)
+                return

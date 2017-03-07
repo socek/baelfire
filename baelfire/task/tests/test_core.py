@@ -31,6 +31,15 @@ class ExampleTaskInherited(Task):
         self.top_core.flags['ExampleTaskInherited'] = True
 
 
+class ExampleTaskInheritedSecond(Task):
+
+    def create_dependecies(self):
+        self.add_dependency(AlwaysRebuild())
+
+    def build(self):
+        self.top_core.flags['ExampleTaskInheritedSecond'] = True
+
+
 class RootTask(Task):
 
     def create_dependecies(self):
@@ -118,5 +127,18 @@ class TestInheritance(object):
 
         assert not core.flags.get('ExampleTask')
         assert core.flags.get('ExampleTaskInherited')
+        assert core.flags.get('RootTask')
+        assert core.flags.get('DeepInheritanceTask')
+
+    def test_double_inheritance(self):
+        core = InheritanceCore()
+        core.add_task_inheritance(ExampleTask, ExampleTaskInheritedSecond)
+        core.add_task_inheritance(FakeTask, ExampleTaskInheritedSecond)
+        task = DeepInheritanceTask(core)
+        task.run()
+
+        assert not core.flags.get('ExampleTask')
+        assert not core.flags.get('ExampleTaskInherited')
+        assert core.flags.get('ExampleTaskInheritedSecond')
         assert core.flags.get('RootTask')
         assert core.flags.get('DeepInheritanceTask')

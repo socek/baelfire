@@ -132,3 +132,10 @@ class Task(object):
         with open(self.paths.get('report'), 'w') as file:
             dump(self.report, file, default_flow_style=False)
         return self.paths.get('report')
+
+    @property
+    def top_core(self):
+        if self.parent:
+            return self.parent.top_core
+        else:
+            return self.core

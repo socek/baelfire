@@ -12,6 +12,7 @@ class TaskDependency(Dependency):
 
     def phase_init(self):
         super(TaskDependency, self).phase_init()
+        self.task = self.parent.top_core.prepere_task(self.task)
         self.task.phase_init()
         self.myreport['task'] = self.task.name
 

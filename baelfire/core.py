@@ -34,7 +34,7 @@ class Core(object):
         self.report = {'last_index': 0}
 
     def phase_settings(self):
-        pass
+        self.paths.set('jinja_templates', '', is_root=True)
 
     def prepere_task(self, task):
         for inheritance in self.inheritance:

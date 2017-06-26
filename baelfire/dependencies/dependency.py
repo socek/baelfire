@@ -56,7 +56,7 @@ class Dependency(object):
         pass
 
 
-class AlwaysRebuild(Dependency):
+class AlwaysTrue(Dependency):
     """
     Always rebuild the task.
     """
@@ -65,7 +65,7 @@ class AlwaysRebuild(Dependency):
         return True
 
 
-class NoRebuild(Dependency):
+class AlwaysFalse(Dependency):
     """
     This dependency will always return "do not rebuild". It is for testing
     purpose.

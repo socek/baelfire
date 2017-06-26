@@ -1,5 +1,5 @@
 from baelfire.core import Core
-from baelfire.dependencies import AlwaysRebuild
+from baelfire.dependencies import AlwaysTrue
 from baelfire.dependencies.task import ValidateTask
 from baelfire.task import Task
 
@@ -7,7 +7,7 @@ from baelfire.task import Task
 class ExampleTask(Task):
 
     def create_dependecies(self):
-        self.build_if(AlwaysRebuild())
+        self.build_if(AlwaysTrue())
 
     def build(self):
         self.top_core.flags['ExampleTask'] = True
@@ -16,7 +16,7 @@ class ExampleTask(Task):
 class FakeTask(Task):
 
     def create_dependecies(self):
-        self.build_if(AlwaysRebuild())
+        self.build_if(AlwaysTrue())
 
     def build(self):
         self.top_core.flags['FakeTask'] = True
@@ -25,7 +25,7 @@ class FakeTask(Task):
 class ExampleTaskInherited(Task):
 
     def create_dependecies(self):
-        self.build_if(AlwaysRebuild())
+        self.build_if(AlwaysTrue())
 
     def build(self):
         self.top_core.flags['ExampleTaskInherited'] = True
@@ -34,7 +34,7 @@ class ExampleTaskInherited(Task):
 class ExampleTaskInheritedSecond(Task):
 
     def create_dependecies(self):
-        self.build_if(AlwaysRebuild())
+        self.build_if(AlwaysTrue())
 
     def build(self):
         self.top_core.flags['ExampleTaskInheritedSecond'] = True
@@ -45,7 +45,7 @@ class RootTask(Task):
     def create_dependecies(self):
         self.build_if(ValidateTask(ExampleTask()))
         self.build_if(ValidateTask(FakeTask()))
-        self.build_if(AlwaysRebuild())
+        self.build_if(AlwaysTrue())
 
     def build(self):
         if self.parent:
@@ -58,7 +58,7 @@ class DeepInheritanceTask(Task):
 
     def create_dependecies(self):
         self.build_if(ValidateTask(RootTask()))
-        self.build_if(AlwaysRebuild())
+        self.build_if(AlwaysTrue())
 
     def build(self):
         self.top_core.flags['DeepInheritanceTask'] = True

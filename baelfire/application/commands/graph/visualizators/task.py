@@ -53,7 +53,7 @@ class TaskVisualization(object):
         return self.rendered
 
     def render_task(self):
-        always_rebuild = 'baelfire.dependencies.dependency.AlwaysRebuild'
+        always_rebuild = 'baelfire.dependencies.dependency.AlwaysTrue'
         if always_rebuild in self.get_dependencies_names():
             self.rendered += (
                 self.PREFIX + (self.Templates.always_run % self.task())

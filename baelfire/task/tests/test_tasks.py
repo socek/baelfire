@@ -3,8 +3,8 @@ from pytest import raises
 from yaml import load
 
 from baelfire.core import Core
-from baelfire.dependencies import AlwaysRebuild
-from baelfire.dependencies.dependency import NoRebuild
+from baelfire.dependencies import AlwaysTrue
+from baelfire.dependencies.dependency import AlwaysFalse
 from baelfire.dependencies.task import TaskRebuilded
 from baelfire.task import Task
 
@@ -32,7 +32,7 @@ class ExampleTask(Task):
 class ExampleFailingTask(Task):
 
     def create_dependecies(self):
-        self.build_if(AlwaysRebuild())
+        self.build_if(AlwaysTrue())
 
     def build(self):
         raise RuntimeError('failing')
@@ -92,12 +92,12 @@ class TestTask(object):
 
     def test_dependency_run(self, task):
         """
-        AlwaysRebuild should indicate rebuilding task every time. NoRebuild
+        AlwaysTrue should indicate rebuilding task every time. AlwaysFalse
         should not indicate rebuilding at any time. This test tests report for
         dependencies.
         """
-        task.build_if(AlwaysRebuild())
-        task.build_if(NoRebuild())
+        task.build_if(AlwaysTrue())
+        task.build_if(AlwaysFalse())
 
         task.run()
 
@@ -110,7 +110,7 @@ class TestTask(object):
                         'should_build': True,
                         'phase_validation': True,
                         'success': True,
-                        'name': 'baelfire.dependencies.dependency.AlwaysRebuild',
+                        'name': 'baelfire.dependencies.dependency.AlwaysTrue',
                     },
                     {
                         'builded': True,
@@ -118,7 +118,7 @@ class TestTask(object):
                         'should_build': False,
                         'phase_validation': True,
                         'success': True,
-                        'name': 'baelfire.dependencies.dependency.NoRebuild',
+                        'name': 'baelfire.dependencies.dependency.AlwaysFalse',
                     },
                 ],
                 'needtorun': True,
@@ -147,7 +147,7 @@ class TestTask(object):
                         'should_build': True,
                         'phase_validation': True,
                         'success': True,
-                        'name': 'baelfire.dependencies.dependency.AlwaysRebuild',
+                        'name': 'baelfire.dependencies.dependency.AlwaysTrue',
                     },
                 ],
                 'needtorun': True,
@@ -166,7 +166,7 @@ class TestTask(object):
         """
         parent = ExampleParent(ExampleCore())
         child = ExampleChild()
-        child.build_if(AlwaysRebuild())
+        child.build_if(AlwaysTrue())
         parent.build_if(TaskRebuilded(child))
 
         parent.run()
@@ -181,7 +181,7 @@ class TestTask(object):
                         'should_build': True,
                         'phase_validation': True,
                         'success': True,
-                        'name': 'baelfire.dependencies.dependency.AlwaysRebuild',
+                        'name': 'baelfire.dependencies.dependency.AlwaysTrue',
                     },
                 ],
                 'needtorun': True,
@@ -229,7 +229,7 @@ class TestTask(object):
                         'should_build': True,
                         'phase_validation': True,
                         'success': True,
-                        'name': 'baelfire.dependencies.dependency.AlwaysRebuild',
+                        'name': 'baelfire.dependencies.dependency.AlwaysTrue',
                     },
                 ],
                 'needtorun': True,

@@ -1,4 +1,4 @@
-from baelfire.dependencies.dependency import AlwaysRebuild
+from baelfire.dependencies.dependency import AlwaysTrue
 from baelfire.dependencies.task import ValidateTask
 from baelfire.task import SubprocessTask
 from baelfire.core import Core
@@ -40,7 +40,7 @@ class AttachScreenTask(SubprocessTask):
         self._detached_task = self.detached_task()
 
         self.build_if(ValidateTask(self._detached_task))
-        self.build_if(AlwaysRebuild())
+        self.build_if(AlwaysTrue())
 
     def _screen_attach(self):
         cmd = '%s -r %s' % (self.paths.get('exe:screen'),

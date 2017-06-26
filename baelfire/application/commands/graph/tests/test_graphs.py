@@ -58,7 +58,7 @@ EXAMPLE_REPORT = {
                 'phase_validation': True,
                 'should_build': True,
                 'success': True,
-                'name': 'baelfire.dependencies.dependency.AlwaysRebuild',
+                'name': 'baelfire.dependencies.dependency.AlwaysTrue',
             },
         ],
         'needtorun': False,

@@ -5,7 +5,7 @@ class LinkVisualization(object):
     PREFIX = '\t\t\t'
     LINK_TEMPLATE = '"%(right_url)s" -> "%(left_url)s";\n'
     HIDDEN_RIGHTS = [
-        'baelfire.dependencies.dependency.AlwaysRebuild',
+        'baelfire.dependencies.dependency.AlwaysTrue',
     ]
 
     def __init__(self, left_url, left, right_url, right):

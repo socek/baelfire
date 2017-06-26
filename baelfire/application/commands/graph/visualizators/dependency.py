@@ -53,7 +53,7 @@ class DependencyVisualizatorChooser(VisualizatorChooser):
 
     def generate_visualizators(self):
         self.add_visualizator(
-            'baelfire.dependencies.dependency.AlwaysRebuild',
+            'baelfire.dependencies.dependency.AlwaysTrue',
             HiddenVisualization,
         )
         self.add_visualizator(

@@ -1,8 +1,8 @@
 from mock import MagicMock
 
-from ..dependency import AlwaysRebuild
-from ..dependency import Dependency
-from ..dependency import NoRebuild
+from baelfire.dependencies.dependency import AlwaysRebuild
+from baelfire.dependencies.dependency import Dependency
+from baelfire.dependencies.dependency import NoRebuild
 
 
 class TestAlwaysRebuild(object):

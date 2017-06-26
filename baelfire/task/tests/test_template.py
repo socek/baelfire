@@ -1,8 +1,8 @@
 from tempfile import NamedTemporaryFile
 
-from ..template import FirstTemplateTask
-from ..template import TemplateTask
 from baelfire.core import Core
+from baelfire.task.template import FirstTemplateTask
+from baelfire.task.template import TemplateTask
 
 
 class ExampleCore(Core):

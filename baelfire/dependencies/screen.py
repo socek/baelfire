@@ -2,7 +2,7 @@ from subprocess import PIPE
 from subprocess import Popen
 import re
 
-from .dependency import Dependency
+from baelfire.dependencies.dependency import Dependency
 
 
 class ScreenIsNotRunning(Dependency):

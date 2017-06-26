@@ -7,9 +7,9 @@ from pytest import fixture
 from pytest import raises
 from pytest import yield_fixture
 
-from ..process import SubprocessTask
 from baelfire.error import CommandAborted
 from baelfire.error import CommandError
+from baelfire.task.process import SubprocessTask
 
 
 class ExampleSubproccessTask(SubprocessTask):

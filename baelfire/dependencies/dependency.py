@@ -58,7 +58,7 @@ class Dependency(object):
 
 class AlwaysRebuild(Dependency):
     """
-    Always rebuild this task.
+    Always rebuild the task.
     """
 
     def should_build(self):

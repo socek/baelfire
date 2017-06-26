@@ -1,30 +1,30 @@
 from mock import MagicMock
 
-from ..task import RunBefore
-from ..task import TaskDependency
+from baelfire.dependencies.task import TaskRebuilded
+from baelfire.dependencies.task import ValidateTask
 
 
-class TestRunBefore(object):
+class TestValidateTask(object):
 
     def test_fail(self):
         """
-        RunBefore should run linked task, but should not affect dependency
+        ValidateTask should run linked task, but should not affect dependency
         validating.
         """
         task = MagicMock()
-        dependency = RunBefore(task)
+        dependency = ValidateTask(task)
 
         assert dependency.should_build() is False
 
 
-class TestTaskDependency(object):
+class TestTaskRebuilded(object):
 
     def test_fail(self):
         """
-        TaskDependency should run linked task, but should not affect dependency
+        TaskRebuilded should run linked task, but should not affect dependency
         validating.
         """
         task = MagicMock()
-        dependency = TaskDependency(task)
+        dependency = TaskRebuilded(task)
 
         assert dependency.should_build() is task.phase_validation.return_value

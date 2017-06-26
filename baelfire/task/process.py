@@ -2,9 +2,9 @@ import signal
 
 from subprocess import Popen
 
-from .task import Task
 from baelfire.error import CommandAborted
 from baelfire.error import CommandError
+from baelfire.task.task import Task
 
 
 class SubprocessTask(Task):

@@ -4,8 +4,8 @@ from yaml import load
 
 from baelfire.core import Core
 from baelfire.dependencies import AlwaysRebuild
-from baelfire.dependencies import TaskDependency
 from baelfire.dependencies.dependency import NoRebuild
+from baelfire.dependencies.task import TaskRebuilded
 from baelfire.task import Task
 
 
@@ -32,7 +32,7 @@ class ExampleTask(Task):
 class ExampleFailingTask(Task):
 
     def create_dependecies(self):
-        self.add_dependency(AlwaysRebuild())
+        self.build_if(AlwaysRebuild())
 
     def build(self):
         raise RuntimeError('failing')
@@ -96,8 +96,8 @@ class TestTask(object):
         should not indicate rebuilding at any time. This test tests report for
         dependencies.
         """
-        task.add_dependency(AlwaysRebuild())
-        task.add_dependency(NoRebuild())
+        task.build_if(AlwaysRebuild())
+        task.build_if(NoRebuild())
 
         task.run()
 
@@ -166,8 +166,8 @@ class TestTask(object):
         """
         parent = ExampleParent(ExampleCore())
         child = ExampleChild()
-        child.add_dependency(AlwaysRebuild())
-        parent.add_dependency(TaskDependency(child))
+        child.build_if(AlwaysRebuild())
+        parent.build_if(TaskRebuilded(child))
 
         parent.run()
 
@@ -197,7 +197,7 @@ class TestTask(object):
                         'should_build': True,
                         'success': True,
                         'task': 'baelfire.task.tests.test_tasks.ExampleChild',
-                        'name': 'baelfire.dependencies.task.TaskDependency',
+                        'name': 'baelfire.dependencies.task.TaskRebuilded',
                     }
                 ],
                 'needtorun': True,

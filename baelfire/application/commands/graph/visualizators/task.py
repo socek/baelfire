@@ -1,6 +1,6 @@
-from .chooser import VisualizatorChooser
-from .dependency import DependencyVisualizatorChooser
-from .link import LinkVisualizatorChooser
+from baelfire.application.commands.graph.visualizators.chooser import VisualizatorChooser
+from baelfire.application.commands.graph.visualizators.dependency import DependencyVisualizatorChooser
+from baelfire.application.commands.graph.visualizators.link import LinkVisualizatorChooser
 
 
 class TaskVisualization(object):

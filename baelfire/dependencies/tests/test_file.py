@@ -3,10 +3,10 @@ from time import sleep
 
 from mock import MagicMock
 
-from ..file import FileChanged
-from ..file import FileDependency
-from ..file import FileDoesNotExists
-from ..file import FileExists
+from baelfire.dependencies.file import FileChanged
+from baelfire.dependencies.file import FileDependency
+from baelfire.dependencies.file import FileDoesNotExists
+from baelfire.dependencies.file import FileExists
 
 
 class TestFileDependency(object):

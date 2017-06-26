@@ -1,4 +1,4 @@
-from .chooser import VisualizatorChooser
+from baelfire.application.commands.graph.visualizators.chooser import VisualizatorChooser
 
 
 class DependencyVisualization(object):
@@ -57,11 +57,11 @@ class DependencyVisualizatorChooser(VisualizatorChooser):
             HiddenVisualization,
         )
         self.add_visualizator(
-            'baelfire.dependencies.task.TaskDependency',
+            'baelfire.dependencies.task.TaskRebuilded',
             HiddenVisualization,
         ),
         self.add_visualizator(
-            'baelfire.dependencies.task.RunBefore',
+            'baelfire.dependencies.task.ValidateTask',
             HiddenVisualization,
         )
         self.add_visualizator(

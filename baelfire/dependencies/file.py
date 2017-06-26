@@ -1,7 +1,7 @@
 from os.path import exists
 from os.path import getmtime
 
-from .dependency import Dependency
+from baelfire.dependencies.dependency import Dependency
 
 
 class FileDependency(Dependency):

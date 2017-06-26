@@ -1,6 +1,6 @@
 from mock import MagicMock
 
-from ..parrented import parrented
+from baelfire.parrented import parrented
 
 
 class TestParrented(object):

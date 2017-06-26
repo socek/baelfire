@@ -1,4 +1,4 @@
-from .chooser import VisualizatorChooser
+from baelfire.application.commands.graph.visualizators.chooser import VisualizatorChooser
 
 
 class LinkVisualization(object):

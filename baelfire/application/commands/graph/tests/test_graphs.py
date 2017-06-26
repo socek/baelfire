@@ -3,7 +3,7 @@ from os import path
 from pytest import fixture
 from tempfile import NamedTemporaryFile
 
-from ..graph import Graph
+from baelfire.application.commands.graph.graph import Graph
 
 
 def open_relative_file(filename):
@@ -31,7 +31,7 @@ EXAMPLE_REPORT = {
                 'should_build': False,
                 'success': True,
                 'task': '__main__.MySecondElo',
-                'name': 'baelfire.dependencies.task.TaskDependency',
+                'name': 'baelfire.dependencies.task.TaskRebuilded',
             },
             {
                 'builded': True,

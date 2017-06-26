@@ -1,8 +1,9 @@
 from logging import getLogger
 from yaml import dump
 
-from baelfire.parrented import parrented
 from baelfire.core import Core
+from baelfire.dependencies.dependency import AlwaysRebuild
+from baelfire.parrented import parrented
 
 
 class Task(object):
@@ -110,12 +111,15 @@ class Task(object):
                 self.logger.error(str(error))
                 raise
 
-    def add_dependency(self, dependency):
+    def build_if(self, dependency):
         """
         Add dependency to a task.
         """
         self._dependencies.append(dependency)
         dependency.set_parent(self)
+
+    def always_build(self):
+        self.build_if(AlwaysRebuild())
 
     def set_parent(self, parent):
         self.parent = parent

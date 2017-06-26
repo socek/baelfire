@@ -45,7 +45,7 @@ class TemplateTask(BaseTemplateTask):
 
     def create_dependecies(self):
         super(TemplateTask, self).create_dependecies()
-        self.add_dependency(FileChanged(self.source_name))
+        self.build_if(FileChanged(self.source_name))
 
 
 class FirstTemplateTask(BaseTemplateTask):
@@ -55,4 +55,4 @@ class FirstTemplateTask(BaseTemplateTask):
 
     def create_dependecies(self):
         super(FirstTemplateTask, self).create_dependecies()
-        self.add_dependency(FileDoesNotExists(self.source_name))
+        self.build_if(FileDoesNotExists(self.source_name))

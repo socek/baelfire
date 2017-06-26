@@ -1,5 +1,5 @@
 from baelfire.dependencies.file import FileDoesNotExists
-from .task import Task
+from baelfire.task.task import Task
 
 
 class FileTask(Task):
@@ -15,6 +15,6 @@ class FileTask(Task):
 
     def create_dependecies(self):
         try:
-            self.add_dependency(FileDoesNotExists(self.output_name))
+            self.build_if(FileDoesNotExists(self.output_name))
         except AttributeError:
-            self.add_dependency(FileDoesNotExists(raw_path=self.output))
+            self.build_if(FileDoesNotExists(raw_path=self.output))

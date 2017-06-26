@@ -1,7 +1,7 @@
 from subprocess import Popen
 from yaml import load
 
-from .visualizators import TaskVisualizatorChooser
+from baelfire.application.commands.graph.visualizators.task import TaskVisualizatorChooser
 
 
 class Graph(object):

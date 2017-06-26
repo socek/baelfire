@@ -1,6 +1,6 @@
 import os
 
-from .dependency import Dependency
+from baelfire.dependencies.dependency import Dependency
 
 
 class PidIsRunning(Dependency):

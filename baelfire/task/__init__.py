@@ -1,7 +1,8 @@
-from .file import FileTask
-from .process import SubprocessTask
-from .task import Task
-from .template import TemplateTask
+from baelfire.task.task import Task
+
+from baelfire.task.file import FileTask
+from baelfire.task.process import SubprocessTask
+from baelfire.task.template import TemplateTask
 
 __all__ = [
     'Task',

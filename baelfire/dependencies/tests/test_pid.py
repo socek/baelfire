@@ -3,8 +3,8 @@ from signal import SIGKILL
 from subprocess import Popen
 from tempfile import NamedTemporaryFile
 
-from ..pid import PidIsNotRunning
-from ..pid import PidIsRunning
+from baelfire.dependencies.pid import PidIsNotRunning
+from baelfire.dependencies.pid import PidIsRunning
 
 
 class TestPidIsRunning(object):

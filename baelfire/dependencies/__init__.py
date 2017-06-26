@@ -1,13 +1,12 @@
-from .dependency import AlwaysRebuild
-from .dependency import Dependency
-from .file import FileChanged
-from .file import FileDependency
-from .file import FileDoesNotExists
-from .file import FileExists
-from .pid import PidIsNotRunning
-from .pid import PidIsRunning
-from .task import RunBefore
-from .task import TaskDependency
+from baelfire.dependencies.dependency import AlwaysRebuild
+from baelfire.dependencies.dependency import Dependency
+from baelfire.dependencies.file import FileChanged
+from baelfire.dependencies.file import FileDependency
+from baelfire.dependencies.file import FileDoesNotExists
+from baelfire.dependencies.file import FileExists
+from baelfire.dependencies.pid import PidIsNotRunning
+from baelfire.dependencies.pid import PidIsRunning
+
 
 __all__ = [
     'AlwaysRebuild',
@@ -18,6 +17,4 @@ __all__ = [
     'FileExists',
     'PidIsNotRunning',
     'PidIsRunning',
-    'RunBefore',
-    'TaskDependency',
 ]

@@ -1,13 +1,13 @@
 from baelfire.core import Core
 from baelfire.dependencies import AlwaysRebuild
-from baelfire.dependencies.task import RunBefore
+from baelfire.dependencies.task import ValidateTask
 from baelfire.task import Task
 
 
 class ExampleTask(Task):
 
     def create_dependecies(self):
-        self.add_dependency(AlwaysRebuild())
+        self.build_if(AlwaysRebuild())
 
     def build(self):
         self.top_core.flags['ExampleTask'] = True
@@ -16,7 +16,7 @@ class ExampleTask(Task):
 class FakeTask(Task):
 
     def create_dependecies(self):
-        self.add_dependency(AlwaysRebuild())
+        self.build_if(AlwaysRebuild())
 
     def build(self):
         self.top_core.flags['FakeTask'] = True
@@ -25,7 +25,7 @@ class FakeTask(Task):
 class ExampleTaskInherited(Task):
 
     def create_dependecies(self):
-        self.add_dependency(AlwaysRebuild())
+        self.build_if(AlwaysRebuild())
 
     def build(self):
         self.top_core.flags['ExampleTaskInherited'] = True
@@ -34,7 +34,7 @@ class ExampleTaskInherited(Task):
 class ExampleTaskInheritedSecond(Task):
 
     def create_dependecies(self):
-        self.add_dependency(AlwaysRebuild())
+        self.build_if(AlwaysRebuild())
 
     def build(self):
         self.top_core.flags['ExampleTaskInheritedSecond'] = True
@@ -43,9 +43,9 @@ class ExampleTaskInheritedSecond(Task):
 class RootTask(Task):
 
     def create_dependecies(self):
-        self.add_dependency(RunBefore(ExampleTask()))
-        self.add_dependency(RunBefore(FakeTask()))
-        self.add_dependency(AlwaysRebuild())
+        self.build_if(ValidateTask(ExampleTask()))
+        self.build_if(ValidateTask(FakeTask()))
+        self.build_if(AlwaysRebuild())
 
     def build(self):
         if self.parent:
@@ -57,8 +57,8 @@ class RootTask(Task):
 class DeepInheritanceTask(Task):
 
     def create_dependecies(self):
-        self.add_dependency(RunBefore(RootTask()))
-        self.add_dependency(AlwaysRebuild())
+        self.build_if(ValidateTask(RootTask()))
+        self.build_if(AlwaysRebuild())
 
     def build(self):
         self.top_core.flags['DeepInheritanceTask'] = True

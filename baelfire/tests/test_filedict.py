@@ -3,7 +3,7 @@ from tempfile import NamedTemporaryFile
 from mock import patch
 from pytest import raises
 
-from ..filedict import FileDict
+from baelfire.filedict import FileDict
 
 
 class TestFileDict(object):

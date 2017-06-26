@@ -32,11 +32,11 @@ class TaskRebuilded(Dependency):
         self.task.phase_build()
 
 
-class ValidateTask(TaskRebuilded):
+class RunTask(TaskRebuilded):
     """
     Build assigned task, but do not affect dependency checking.
     """
 
     def should_build(self):
-        super(ValidateTask, self).should_build()
+        super(RunTask, self).should_build()
         return False

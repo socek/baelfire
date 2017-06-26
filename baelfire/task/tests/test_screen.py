@@ -62,7 +62,7 @@ class TestAttachScreenTask(ScreenFixtures):
 
     @yield_fixture
     def mrun_before(self):
-        with patch('baelfire.task.screen.ValidateTask') as mock:
+        with patch('baelfire.task.screen.RunTask') as mock:
             yield mock
 
     def test_no_detached_task_configured(self):

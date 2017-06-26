@@ -61,7 +61,7 @@ class DependencyVisualizatorChooser(VisualizatorChooser):
             HiddenVisualization,
         ),
         self.add_visualizator(
-            'baelfire.dependencies.task.ValidateTask',
+            'baelfire.dependencies.task.RunTask',
             HiddenVisualization,
         )
         self.add_visualizator(

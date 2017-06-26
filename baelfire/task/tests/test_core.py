@@ -1,6 +1,6 @@
 from baelfire.core import Core
 from baelfire.dependencies import AlwaysTrue
-from baelfire.dependencies.task import ValidateTask
+from baelfire.dependencies.task import RunTask
 from baelfire.task import Task
 
 
@@ -43,8 +43,8 @@ class ExampleTaskInheritedSecond(Task):
 class RootTask(Task):
 
     def create_dependecies(self):
-        self.build_if(ValidateTask(ExampleTask()))
-        self.build_if(ValidateTask(FakeTask()))
+        self.build_if(RunTask(ExampleTask()))
+        self.build_if(RunTask(FakeTask()))
         self.build_if(AlwaysTrue())
 
     def build(self):
@@ -57,7 +57,7 @@ class RootTask(Task):
 class DeepInheritanceTask(Task):
 
     def create_dependecies(self):
-        self.build_if(ValidateTask(RootTask()))
+        self.build_if(RunTask(RootTask()))
         self.build_if(AlwaysTrue())
 
     def build(self):

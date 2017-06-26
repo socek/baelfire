@@ -1,18 +1,18 @@
 from mock import MagicMock
 
 from baelfire.dependencies.task import TaskRebuilded
-from baelfire.dependencies.task import ValidateTask
+from baelfire.dependencies.task import RunTask
 
 
-class TestValidateTask(object):
+class TestRunTask(object):
 
     def test_fail(self):
         """
-        ValidateTask should run linked task, but should not affect dependency
+        RunTask should run linked task, but should not affect dependency
         validating.
         """
         task = MagicMock()
-        dependency = ValidateTask(task)
+        dependency = RunTask(task)
 
         assert dependency.should_build() is False
 

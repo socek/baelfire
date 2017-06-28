@@ -1,8 +1,16 @@
 import logging
 
-from baelfire.dependencies import RunBefore
+from baelfire.core import Core
+from baelfire.dependencies import RunTask
 from baelfire.task import FileTask
 from baelfire.task import Task
+
+
+class MyCore(Core):
+
+    def phase_settings(self):
+        super().phase_settings()
+        self.paths.set('second', '/tmp/second.txt')
 
 
 class FirstTask(FileTask):
@@ -24,18 +32,14 @@ class SecondTask(FileTask):
 class ParentTask(Task):
 
     def create_dependecies(self):
-        self.add_dependency(RunBefore(FirstTask()))
-        self.add_dependency(RunBefore(SecondTask()))
-
-    def phase_settings(self):
-        super().phase_settings()
-        self.paths['second'] = '/tmp/second.txt'
+        self.build_if(RunTask(FirstTask()))
+        self.build_if(RunTask(SecondTask()))
 
     def build(self):
         pass
 
-FORMAT = ' * %(levelname)s %(name)s: %(message)s *'
-logging.basicConfig(level=logging.DEBUG, format=FORMAT)
 
-
-ParentTask().run()
+if __name__ == '__main__':
+    FORMAT = ' * %(levelname)s %(name)s: %(message)s *'
+    logging.basicConfig(level=logging.DEBUG, format=FORMAT)
+    ParentTask(MyCore()).run()

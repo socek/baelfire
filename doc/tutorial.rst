@@ -5,6 +5,7 @@
     :maxdepth: 2
 
     base
+    core
     file
     subprocess
 

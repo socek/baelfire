@@ -1,11 +1,11 @@
-from baelfire.dependencies import AlwaysRebuild
+from baelfire.dependencies import AlwaysTrue
 from baelfire.task import SubprocessTask
 
 
 class SimpleProccess(SubprocessTask):
 
     def create_dependecies(self):
-        self.add_dependency(AlwaysRebuild())
+        self.build_if(AlwaysTrue())
 
     def build(self):
         self.popen(['echo', 'something'])
@@ -15,4 +15,5 @@ class SimpleProccess(SubprocessTask):
         return args, kwargs
 
 
-SimpleProccess().run()
+if __name__ == '__main__':
+    SimpleProccess().run()

@@ -1,15 +1,15 @@
 import logging
 
 from baelfire.dependencies import FileDoesNotExists
-from baelfire.dependencies import RunBefore
-from baelfire.dependencies import TaskDependency
+from baelfire.dependencies import RunTask
+from baelfire.dependencies import TaskRebuilded
 from baelfire.task import Task
 
 
 class FirstTask(Task):
 
     def create_dependecies(self):
-        self.add_dependency(FileDoesNotExists(raw_path='/tmp/me'))
+        self.build_if(FileDoesNotExists(raw_path='/tmp/me'))
 
     def build(self):
         with open('/tmp/me', 'w') as myfile:
@@ -19,7 +19,7 @@ class FirstTask(Task):
 class SecondTask(Task):
 
     def create_dependecies(self):
-        self.add_dependency(FileDoesNotExists(raw_path='/tmp/me_too'))
+        self.build_if(FileDoesNotExists(raw_path='/tmp/me_too'))
 
     def build(self):
         with open('/tmp/me_too', 'w') as myfile:
@@ -29,8 +29,8 @@ class SecondTask(Task):
 class ParentTask(Task):
 
     def create_dependecies(self):
-        self.add_dependency(TaskDependency(FirstTask()))
-        self.add_dependency(RunBefore(SecondTask()))
+        self.build_if(TaskRebuilded(FirstTask()))
+        self.build_if(RunTask(SecondTask()))
 
     def build(self):
         pass
@@ -39,4 +39,5 @@ class ParentTask(Task):
 FORMAT = ' * %(levelname)s %(name)s: %(message)s *'
 logging.basicConfig(level=logging.INFO, format=FORMAT)
 
-ParentTask().run()
+if __name__ == '__main__':
+    ParentTask().run()

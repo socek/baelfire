@@ -1,27 +1,27 @@
 from subprocess import Popen
 
-from baelfire.dependencies.dependency import AlwaysRebuild
+from baelfire.dependencies.dependency import AlwaysTrue
 from baelfire.dependencies.pid import PidIsNotRunning
 from baelfire.dependencies.pid import PidIsRunning
 from baelfire.task import Task
 from baelfire.task.process import SubprocessTask
 
+proc = Popen(['sleep 0.1'], shell=True)
+
 
 class ExampleProccess(SubprocessTask):
 
     def create_dependecies(self):
-        self.add_dependency(AlwaysRebuild())
+        self.build_if(AlwaysTrue())
 
     def build(self):
         self.popen(['yes'])
-
-proc = Popen(['sleep 0.1'], shell=True)
 
 
 class RunWhenSleepIsRunning(Task):
 
     def create_dependecies(self):
-        self.add_dependency(PidIsRunning(proc.pid))
+        self.build_if(PidIsRunning(proc.pid))
 
     def build(self):
         print("sleep is still running...")
@@ -30,15 +30,17 @@ class RunWhenSleepIsRunning(Task):
 class RunWhenSleepIsNotRunning(Task):
 
     def create_dependecies(self):
-        self.add_dependency(PidIsNotRunning(proc.pid))
+        self.build_if(PidIsNotRunning(proc.pid))
 
     def build(self):
         print("sleep is not running!")
 
-RunWhenSleepIsRunning().run()
-RunWhenSleepIsNotRunning().run()
-proc.wait()
 
-print("- After Termination")
-RunWhenSleepIsRunning().run()
-RunWhenSleepIsNotRunning().run()
+if __name__ == '__main__':
+    RunWhenSleepIsRunning().run()
+    RunWhenSleepIsNotRunning().run()
+    proc.wait()
+
+    print("- After Termination")
+    RunWhenSleepIsRunning().run()
+    RunWhenSleepIsNotRunning().run()

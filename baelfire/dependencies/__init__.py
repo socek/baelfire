@@ -6,6 +6,8 @@ from baelfire.dependencies.file import FileDoesNotExists
 from baelfire.dependencies.file import FileExists
 from baelfire.dependencies.pid import PidIsNotRunning
 from baelfire.dependencies.pid import PidIsRunning
+from baelfire.dependencies.task import RunTask
+from baelfire.dependencies.task import TaskRebuilded
 
 
 __all__ = [
@@ -17,4 +19,6 @@ __all__ = [
     'FileExists',
     'PidIsNotRunning',
     'PidIsRunning',
+    'RunTask',
+    'TaskRebuilded',
 ]

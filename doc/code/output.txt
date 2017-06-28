@@ -1,3 +1,0 @@
-source.txt
-output.txt
-my var 10

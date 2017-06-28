@@ -1,7 +1,7 @@
-2.3 SubProcessing
+2.4 SubProcessing
 =================
 
-2.3.1 SubprocessTask
+2.4.1 SubprocessTask
 --------------------
 SubprocessTask is a way to run external programs. It is just a wrapper for
 ``subprocess.Popen``.
@@ -16,11 +16,10 @@ SubprocessTask is a way to run external programs. It is just a wrapper for
     $ python doc8.py
     something
 
-All args from ``SubprocessTask.popen`` is passed to ``subprocess.Popen``, but
-the ``shell`` argument is from default set to ``True``. If you want to change
-that just override ``_set_default_args`` method.
+All args from ``SubprocessTask.popen`` is passed to ``subprocess.Popen``, but the ``shell`` argument is from default,
+which is set to ``True``. If you want to change that, just override ``_set_default_args`` method.
 
-.. literalinclude:: code/doc8.py
+.. literalinclude:: code/doc9.py
     :language: python
     :caption: doc9.py
     :linenos:
@@ -30,7 +29,7 @@ that just override ``_set_default_args`` method.
     $ python doc9.py
     something
 
-2.3.2 Pid dependencies
+2.4.2 Pid dependencies
 ----------------------
 ``baelfire.dependencies.pid.PidIsRunning`` and ``baelfire.dependencies.pid.PidIsNotRunning``
 are dependencies which are designed to work with pid numbers. PidIsRunning will

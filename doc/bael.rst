@@ -4,8 +4,8 @@
 3.1 About
 ---------
 
-There is no need to create your own command lines just to run tasks. We created
-command line named "bael"
+There is no need to create your own command lines just to run tasks. Baelfire comes with command line task runner.
+It is called ``bael``.
 
 3.2 Help
 --------
@@ -65,20 +65,31 @@ command line named "bael"
 
 .. code-block:: bash
 
-    bael -t some.lib.TaskClass
+    bael -t some.lib:TaskClass
 
-All tasks runned by bael will generate .baelfire.report file which is a yaml
-file with report of what has been runned and why.
+``-t`` switch is expecting python dotted url for Task class or function which will return created Task object. Module with
+tasks should be in python path. All tasks runned by bael will generate .baelfire.report file which is a yaml file with
+report of what has been runned and why.
+
+.. literalinclude:: code/doc12.py
+    :language: python
+    :caption: doc12.py
+    :linenos:
+
+.. code-block:: bash
+
+    $ bael -t doc12:run
+     * INFO doc12.MyTask: Running *
+    hello
 
 3.4 Graphs
 ----------
 
-There is a possibility to generate graph from task run. Just after task add "-g"
-switch.
+``bael`` can create graph from report created from last run. This is very helpful, when you want to debug your tasks.
 
 .. code-block:: bash
 
-    $ bael -t tester.taskme3:Example -g
+    $ bael -t doc12:run -g
 
 If you forgot the switch, after running task you can generate graph from report
 file.
@@ -87,4 +98,5 @@ file.
 
     $ bael -r .baelfire.report
 
-Graphs are generated in ``graph.png`` file.
+Graphs are generated in ``graph.png`` file. If you would like to use the graph in your code, you should check
+``baelfire.application.commands.graph.graph:Graph``.

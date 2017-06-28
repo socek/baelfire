@@ -1,4 +1,6 @@
 import logging
+import os
+import sys
 
 from argparse import ArgumentParser
 from importlib import import_module
@@ -95,7 +97,8 @@ class Application(object):
             self.parser.print_help()
 
     def import_task(self, package_url):
-        """Returns task from url "some.url:klass" """
+        """Returns task from url 'some.url:class'"""
+        sys.path.append(os.getcwd())
         url = package_url.split(':')
         module = import_module(url[0])
         try:

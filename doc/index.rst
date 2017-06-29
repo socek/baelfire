@@ -1,8 +1,7 @@
 Baelfire
 ========
 
-``Baelfire`` is a program which provides the sam functionality as ``GNU make`` does,
-but the ``makefile`` is a more powerfull python script.
+``Baelfire`` is a tool for build automatization and a task runner.
 
 Overall
 =======

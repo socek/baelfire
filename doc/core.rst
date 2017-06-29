@@ -38,13 +38,65 @@ code.
 
 .. code-block:: bash
 
-    $ (master ✗) $ python doc11.py
+    $ python doc11.py
     Description for something: testme
     testme
-    $ (master ✗) $ python doc11.py
+    $ python doc11.py
     testme
-    $ (master ✗) $
+    $
 
 
-2.2.2 Task replacment
+2.2.3 Task replacment
 ---------------------
+
+.. warning::
+    This feature can result in very unreadable code. Use with caution! Use only as a last resort!
+
+Creating task hierarchy can be very tricky. Sometimes we would like to change small thing in a task, but do not change
+the rest of the hierarchy. Core object can replace one task class with another. In the next example we will have 3 tasks
+depending on each other: TaskA, TaskB, TaskC. And then we will replace TaskB with TaskD.
+
+Before:
+
+.. image:: images/graph_doc13_a.png
+   :alt: Before change
+
+After:
+
+.. image:: images/graph_doc13_b.png
+   :alt: After change
+
+.. literalinclude:: code/doc13.py
+    :language: python
+    :caption: doc13.py
+    :linenos:
+
+.. code-block:: bash
+
+    $ python doc13.py
+    I am task A
+    I am task B
+    I am task C
+    -------------
+    I am task A
+    I am task D
+    I am task C
+
+
+2.2.4 Task replacment - migration
+---------------------------------
+
+You can also make a migration script. If you would like to change something, or just to make more debug, like in the
+example.
+
+.. literalinclude:: code/doc14.py
+    :language: python
+    :caption: doc14.py
+    :linenos:
+
+.. code-block:: bash
+
+    $ python doc14.py
+    <__main__.TaskA object at 0x7f23af21bbe0> <class '__main__.TaskC'>
+    I am task C
+    I am task B

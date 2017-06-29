@@ -4,7 +4,9 @@
 
 1.1 What is Baelfire
 --------------------
-Baelfire is a tool for build automatization. It can be used instead of GNU Make.
+``Baelfire`` is a tool for build automatization and a task runner. It is designed to run developer's envoritment along
+with starting the developer's servers. If was implemented as a replacment for ``makefile`` which was used in many
+projects.
 
 1.2 Why reimplement makefile?
 -----------------------------

@@ -2,6 +2,7 @@ from logging import getLogger
 from yaml import dump
 
 from baelfire.core import Core
+from baelfire.dependencies import RunTask
 from baelfire.parrented import parrented
 
 
@@ -114,6 +115,14 @@ class Task(object):
         """
         Add dependency to a task.
         """
+        self._dependencies.append(dependency)
+        dependency.set_parent(self)
+
+    def run_before(self, task):
+        """
+        Run task before self.
+        """
+        dependency = RunTask(task)
         self._dependencies.append(dependency)
         dependency.set_parent(self)
 

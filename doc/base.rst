@@ -67,11 +67,11 @@ Description:
 2.1.3 Task dependency
 ---------------------
 
-Now, you know how to create one task. But what if we want to create tasks
-depending on the run of other tasks. This is where TaskRebuilded and RunTask
-come in handy. TaskRebuilded run other task. If this task is rebuilded, our
-task is rebuilded too. RunTask does not affect dependency checking of a
-parent.
+Now, you know how to create one task. But what if we want to create tasks depending on the run of other tasks. This is
+where ``TaskRebuilded`` dependency come in handy. It runs other task and if the task is rebuilded, our parent task is
+rebuilded too.
+
+If we would like to just run a task before our parent task, then we should use ``Task.run_before`` method.
 
 .. literalinclude:: code/doc3.py
     :language: python
@@ -93,7 +93,6 @@ parent.
     $ python doc3.py
      * INFO __main__.SecondTask: Running *
 
-First run just creates all files. After deleting :file:`/tmp/me` which was linked to
-parent task by TaskRebuilded, we will se that FirstTask and ParentTask is
-rebuilded. But if we remove :file:`/tmp/me_too` which was linked by RunTask, only
-the SecondTask is rebuilded.
+First run just creates all files. After deleting :file:`/tmp/me` which was linked to parent task by ``TaskRebuilded``,
+we will see that FirstTask and ParentTask is rebuilded. But if we remove :file:`/tmp/me_too` which was linked by
+``Task.run_before``, only the SecondTask is rebuilded and the ParentTask is not rebuilded.

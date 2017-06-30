@@ -1,5 +1,8 @@
+from mock import MagicMock
+from mock import patch
 from pytest import fixture
 from pytest import raises
+from pytest import yield_fixture
 from yaml import load
 
 from baelfire.core import Core
@@ -73,6 +76,11 @@ class TestTask(object):
     @fixture
     def task(self):
         return ExampleTask()
+
+    @yield_fixture
+    def mrun_task(self):
+        with patch('baelfire.task.task.RunTask') as mock:
+            yield mock
 
     def test_simple_flow(self, task):
         """
@@ -238,3 +246,14 @@ class TestTask(object):
             },
             'last_index': 1,
         }
+
+    def test_run_before(self, task, mrun_task):
+        """
+        .run_before should add RunTask dependency to the dependency list.
+        """
+        child_task = MagicMock()
+        task.run_before(child_task)
+
+        assert task._dependencies == [mrun_task.return_value]
+        mrun_task.assert_called_once_with(child_task)
+        mrun_task.return_value.set_parent.assert_called_once_with(task)

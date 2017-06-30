@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## 0.5.0 - 2017-06-29
 ### Added
 - this change log
+- Task.run_before -> as a replacment for Task.build_if(RunTask)
 
 ### Fixed
 - Documentation in some places.

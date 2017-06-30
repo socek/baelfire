@@ -1,5 +1,4 @@
 from baelfire.dependencies.dependency import AlwaysTrue
-from baelfire.dependencies.task import RunTask
 from baelfire.task import SubprocessTask
 from baelfire.core import Core
 
@@ -43,7 +42,7 @@ class AttachScreenTask(SubprocessTask):
         assert self.detached_task
         self._detached_task = self.detached_task()
 
-        self.build_if(RunTask(self._detached_task))
+        self.run_before(self._detached_task)
         self.build_if(AlwaysTrue())
 
     def _screen_attach(self):

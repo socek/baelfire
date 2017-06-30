@@ -1,7 +1,6 @@
 import logging
 
 from baelfire.dependencies import FileDoesNotExists
-from baelfire.dependencies import RunTask
 from baelfire.dependencies import TaskRebuilded
 from baelfire.task import Task
 
@@ -30,14 +29,16 @@ class ParentTask(Task):
 
     def create_dependecies(self):
         self.build_if(TaskRebuilded(FirstTask()))
-        self.build_if(RunTask(SecondTask()))
+
+        self.run_before(SecondTask())
 
     def build(self):
         pass
 
 
-FORMAT = ' * %(levelname)s %(name)s: %(message)s *'
-logging.basicConfig(level=logging.INFO, format=FORMAT)
 
 if __name__ == '__main__':
+    FORMAT = ' * %(levelname)s %(name)s: %(message)s *'
+    logging.basicConfig(level=logging.INFO, format=FORMAT)
+
     ParentTask().run()

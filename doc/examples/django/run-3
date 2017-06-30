@@ -1,0 +1,2 @@
+(venv_bdjango) $ mkdir -p bdjango/
+(venv_bdjango) $ touch bdjango/__init__.py

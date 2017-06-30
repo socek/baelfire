@@ -1,0 +1,12 @@
+(venv_bdjango) $ bael -t bdjango.tasks:UpdateRequirements
+ * INFO bdjango.tasks.UpdateRequirements: Running *
+running develop
+running egg_info
+writing bdjango.egg-info/PKG-INFO
+writing dependency_links to bdjango.egg-info/dependency_links.txt
+writing requirements to bdjango.egg-info/requires.txt
+writing top-level names to bdjango.egg-info/top_level.txt
+reading manifest file 'bdjango.egg-info/SOURCES.txt'
+writing manifest file 'bdjango.egg-info/SOURCES.txt'
+running build_ext
+(...)

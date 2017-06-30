@@ -21,6 +21,15 @@ Api
 
    api/mainapi
 
+Examples
+========
+
+.. toctree::
+    :maxdepth: 2
+
+    examples/intro
+
+
 Indices and tables
 ==================
 

@@ -1,0 +1,18 @@
+$ make
+virtualenv venv_bdjango
+Using base prefix '/usr'
+New python executable in /home/socek/projects/bael-django/venv_bdjango/bin/python3
+Also creating executable in /home/socek/projects/bael-django/venv_bdjango/bin/python
+Installing setuptools, pip, wheel...done.
+./venv_bdjango/bin/python setup.py develop
+running develop
+running egg_info
+creating bdjango.egg-info
+
+(...)
+
+Using /home/socek/projects/bael-django/venv_bdjango/lib/python3.6/site-packages
+Finished processing dependencies for bdjango==0.0.0
+
+$ source ./venv_bdjango/bin/activate
+(venv_bdjango) $

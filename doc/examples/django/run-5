@@ -1,0 +1,28 @@
+(venv_bdjango) $ cd mysite
+(venv_bdjango) mysite/ $ bael -t bdjango.tasks:UpdateRequirements
+ * INFO bdjango.tasks.UpdateRequirements: Running *
+python: can't open file 'setup.py': [Errno 2] No such file or directory
+ * ERROR bdjango.tasks.UpdateRequirements: Error: Command error (2):  *
+ * ERROR baelfire.application.application: Error in .baelfire.report *
+Traceback (most recent call last):
+  File "/home/socek/projects/bael-django/venv_bdjango/bin/bael", line 11, in <module>
+    load_entry_point('baelfire', 'console_scripts', 'bael')()
+  File "/home/socek/projects/bael-django/venv_bdjango/lib/python3.6/site-packages/baelfire-0.5.0-py3.6.egg/baelfire/application/application.py", line 117, in run
+    Application().run()
+  File "/home/socek/projects/bael-django/venv_bdjango/lib/python3.6/site-packages/baelfire-0.5.0-py3.6.egg/baelfire/application/application.py", line 113, in run
+    self.run_command_or_print_help(args)
+  File "/home/socek/projects/bael-django/venv_bdjango/lib/python3.6/site-packages/baelfire-0.5.0-py3.6.egg/baelfire/application/application.py", line 86, in run_command_or_print_help
+    task.run()
+  File "/home/socek/projects/bael-django/venv_bdjango/lib/python3.6/site-packages/baelfire-0.5.0-py3.6.egg/baelfire/task/task.py", line 59, in run
+    self._step_build()
+  File "/home/socek/projects/bael-django/venv_bdjango/lib/python3.6/site-packages/baelfire-0.5.0-py3.6.egg/baelfire/task/task.py", line 69, in _step_build
+    self.phase_build()
+  File "/home/socek/projects/bael-django/venv_bdjango/lib/python3.6/site-packages/baelfire-0.5.0-py3.6.egg/baelfire/task/task.py", line 108, in phase_build
+    self.build()
+  File "/home/socek/projects/bael-django/bdjango/tasks.py", line 11, in build
+    self.popen('python setup.py develop')
+  File "/home/socek/projects/bael-django/venv_bdjango/lib/python3.6/site-packages/baelfire-0.5.0-py3.6.egg/baelfire/task/process.py", line 41, in popen
+    self._post_popen()
+  File "/home/socek/projects/bael-django/venv_bdjango/lib/python3.6/site-packages/baelfire-0.5.0-py3.6.egg/baelfire/task/process.py", line 66, in _post_popen
+    raise CommandError(self.spp.returncode)
+baelfire.error.CommandError: Error: Command error (2):

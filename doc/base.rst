@@ -36,7 +36,7 @@ rebuild itself. But it will be rebuilded if the file is not present.
 2.1.2 Logging
 -------------
 
-Tasks and dependencies has logging support. You can turn it on so the build will show much more informations.
+Baelfire has a logging support. You can turn it on so the build will show much more informations.
 
 .. literalinclude:: code/doc2.py
     :language: python
@@ -54,8 +54,15 @@ Tasks and dependencies has logging support. You can turn it on so the build will
      * DEBUG __main__.FirstTask: Dependency baelfire.dependencies.file.FileDoesNotExists result: False *
      * DEBUG __main__.FirstTask: Need to run: False *
 
-First, the FileDoesNotExists dependency check if file exists. If not, then task
-will be rebuilded.
+Description:
+    - Format: ``{dotted task}: Dependency {dotted dependency} result: {False/True}``
+        This line is describing Dependency checking. ``{task}`` has checked ``{dependency}`` which resulted in
+        ``{False}`` or ``{True}``.
+    - Format: ``{dotted task}: Need to run: {False/True}``
+        This line is showing result of all dependency checks. If at least one of the dependency will result in True,
+        then whole task will be rebuilded.
+    - Format: ``{dotted task}: Running``
+        This line just shows when the task has started rebuilding.
 
 2.1.3 Task dependency
 ---------------------

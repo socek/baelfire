@@ -30,7 +30,7 @@ Baelfire also implements report feature, to let you know what happend during the
 
 1.4 Website
 -----------
-Baelfire do not have any special project website, by we have a github projcet here:
+Baelfire do not have any dedicated project's website, but we have a github projcet here:
 https://github.com/socek/baelfire
 
 1.5 Install

@@ -3,7 +3,7 @@ from baelfire.dependencies.dependency import Dependency
 
 class TaskRebuilded(Dependency):
     """
-    Trigger build parent task if assigned task has changed.
+    Trigger build parent task if assigned task has rebuilded.
     """
 
     def __init__(self, task):
@@ -34,7 +34,7 @@ class TaskRebuilded(Dependency):
 
 class RunTask(TaskRebuilded):
     """
-    Build assigned task, but do not affect dependency checking.
+    Run provided task before the parent.
     """
 
     def should_build(self):

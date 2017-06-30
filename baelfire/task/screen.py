@@ -5,6 +5,9 @@ from baelfire.core import Core
 
 
 class ScreenCore(Core):
+    """
+    Core with 'exe:screen' setting, which gives path to the screen application.
+    """
 
     def phase_settings(self):
         super(ScreenCore, self).phase_settings()
@@ -14,6 +17,7 @@ class ScreenCore(Core):
 class ScreenTask(SubprocessTask):
     """
     Start command in detached screen.
+    In order to use ScreenTask, your application's core needs to inherit from ScreenCore.
     """
 
     screen_name = None
@@ -30,8 +34,8 @@ class AttachScreenTask(SubprocessTask):
     """
     Attach task from screen. Run it first if needed.
 
-    In order to use this, you need to set `detached_task` property, which should
-    be the ScreenTask like task.
+    In order to use AttachScreenTask, your application's core needs to inherit from ScreenCore and you need to set
+    `detached_task` property, which should be the ScreenTask like task.
     """
     detached_task = None
 

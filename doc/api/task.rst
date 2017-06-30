@@ -24,3 +24,21 @@
 
 .. autoclass:: baelfire.task.process.SubprocessTask
     :members:
+
+4.1.5 ScreenTask
+----------------
+
+.. autoclass:: baelfire.task.screen.ScreenTask
+    :members:
+
+4.1.6 AttachScreenTask
+----------------------
+
+.. autoclass:: baelfire.task.screen.AttachScreenTask
+    :members:
+
+4.1.7 ScreenCore
+----------------
+
+.. autoclass:: baelfire.task.screen.ScreenCore
+    :members:

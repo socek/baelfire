@@ -72,6 +72,7 @@ class TestApplication(object):
         task.run.side_effect = RuntimeError
 
         args = MagicMock()
+        args.graph = False
         with raises(RuntimeError):
             app.run_command_or_print_help(args)
 

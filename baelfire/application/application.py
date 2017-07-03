@@ -86,11 +86,12 @@ class Application(object):
                     task.run()
                 finally:
                     report_path = task.save_report()
+                    if args.graph:
+                        Graph(report_path).render()
             except:
                 log.error('Error in %s' % (report_path,))
                 raise
-            if args.graph:
-                Graph(report_path).render()
+
         elif args.graph_file:
             Graph(args.graph_file).render()
         else:

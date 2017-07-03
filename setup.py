@@ -3,17 +3,14 @@ from setuptools import setup, find_packages
 
 install_requires = [
     'morfdict>=0.4.1',
-    'pytest',
     'jinja2',
-    'mock',
-    'pytest-cov',
     'pyyaml',
 ]
 
 if __name__ == '__main__':
     setup(
         name='baelfire',
-        version='0.5.0',
+        version='0.5.1',
         description=("Tool for build automatization and a task runner"),
         author='Dominik "Socek" Długajczyk',
         author_email='msocek@gmail.com',

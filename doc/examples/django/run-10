@@ -1,0 +1,44 @@
+(venv_bdjango) $ bael -t bdjango.cmd:start_runserver -g
+ * INFO bdjango.tasks.StartRunserver: Running *
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 13 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+
+July 03, 2017 - 11:00:12
+Django version 1.11.2, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+(CTRL +C -> ...)
+
+(venv_bdjango) $ touch setup.py
+bael -t bdjango.cmd:start_runserver -g
+ * INFO bdjango.tasks.SetupPyDevelop: Running *
+running develop
+running egg_info
+writing bdjango.egg-info/PKG-INFO
+writing dependency_links to bdjango.egg-info/dependency_links.txt
+writing requirements to bdjango.egg-info/requires.txt
+writing top-level names to bdjango.egg-info/top_level.txt
+reading manifest file 'bdjango.egg-info/SOURCES.txt'
+writing manifest file 'bdjango.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/socek/projects/bael-django/venv_bdjango/lib/python3.6/site-packages/bdjango.egg-link (link to .)
+bdjango 0.0.0 is already the active version in easy-install.pth
+(...)
+
+ * INFO bdjango.tasks.StartRunserver: Running *
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 13 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+
+July 03, 2017 - 11:00:21
+Django version 1.11.2, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.

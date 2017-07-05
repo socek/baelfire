@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Fixed
 - bael - using "-g" will now generate graph if user will stop the application with CTRL+C
 - pytest is not in the normal requiretments.
+- fix PidIsNotRunning dependency - it was using old version of MorfDict.
 
 ## 0.5.0 - 2017-06-30
 ### Added

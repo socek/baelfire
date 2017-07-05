@@ -10,6 +10,7 @@ before actual running:
 - start runserver
 
 Using baelfire we can automate this process so all these steps will be made before the runserver but only when needed.
+Code from this example is avalible here: https://github.com/socek/bael-django
 
 
 5.1.1 Create the application
@@ -254,3 +255,47 @@ Now everytime we will start our ``runserver`` the migration will be started when
 
 We did not include the code of the models which where migrated.
 
+5.1.8 Tasks in the background - celery
+--------------------------------------
+
+Many projects needs to use task schedulers, which works outside of the webserver. For this tutorial we will use celery
+`4.0.2`. For the sake of this tutorial we don't care if the celery is connecting to the broker.
+
+For the celery we could use normal task, but the downside is that we would need to run this in one terminal and the
+runserver in second one. In most cases we would need the celery to be run, but not to be visible. We could start the
+celery in the background, but sometimes we would like to see what is happening with the celery process. For this we will
+use ``ScreenTask`` and ``AttachScreenTask``.
+
+.. literalinclude:: django/core-7.py
+    :language: python
+    :caption: bdjango/dependency.py
+    :linenos:
+
+We had to update ``core.py``, because Screen tasks needs to have ``exe:screen`` value in paths. Also we have added path
+for celery pidfile.
+
+.. literalinclude:: django/tasks-9.py
+    :language: python
+    :caption: bdjango/dependency.py
+    :linenos:
+
+In this file we have added ``StartCelery`` task, which will start celery worker in the background and ``AttachCelery``
+for attaching the celery worker. ``StartRunserver`` also have a new dependency which will start celery before starting
+``runserver``.
+
+.. literalinclude:: django/cmd-3.py
+    :language: python
+    :caption: bdjango/cmd.py
+    :linenos:
+
+Here we are only adding endpoint for attaching the celery.
+
+Starting ``runserver``:
+
+.. image:: ../images/graph_doc518_a.png
+    :alt: Start runserver
+
+Attaching ``celery``:
+
+.. image:: ../images/graph_doc518_b.png
+    :alt: Attach Celery

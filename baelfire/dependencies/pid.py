@@ -18,7 +18,7 @@ class PidIsRunning(Dependency):
         if self.pid:
             return self.pid
         elif self.pid_file_name:
-            return self._get_pid_from_file(self.paths[self.pid_file_name])
+            return self._get_pid_from_file(self.paths.get(self.pid_file_name))
         else:
             return self._get_pid_from_file(self.pid_file_path)
 

@@ -1,0 +1,42 @@
+(venv_bdjango) $ bael -t bdjango.cmd:start_runserver
+ * INFO bdjango.tasks.StartCelery: Running *
+ * INFO bdjango.tasks.StartRunserver: Running *
+Performing system checks...
+
+System check identified no issues (0 silenced).
+July 05, 2017 - 11:06:20
+Django version 1.11.2, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+(...)
+
+(venv_bdjango) $ bael -t bdjango.cmd:start_runserver
+ * INFO bdjango.tasks.StartRunserver: Running *
+Performing system checks...
+
+System check identified no issues (0 silenced).
+July 05, 2017 - 11:06:20
+Django version 1.11.2, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+(...)
+
+# attaching to the celery
+(venv_bdjango) $ bael -t bdjango.cmd:attach_celery
+ -------------- celery@gringo v4.0.2 (latentcall)
+---- **** -----
+--- * ***  * -- Linux-4.11.7-1-ARCH-x86_64-with-arch 2017-07-05 11:07:20
+-- * - **** ---
+- ** ---------- [config]
+- ** ---------- .> app:         mysite:0x7fa4b1700d68
+- ** ---------- .> transport:   amqp://guest:**@localhost:5672//
+- ** ---------- .> results:     disabled://
+- *** --- * --- .> concurrency: 8 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** -----
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+
+
+[tasks]
+  . mysite.celery.debug_task

@@ -80,7 +80,7 @@ class Application(object):
 
     def run_command_or_print_help(self, args):
         if args.task:
-            task = self.import_task(args.task)()
+            task = self.get_task(args.task)
             try:
                 try:
                     task.run()
@@ -97,13 +97,13 @@ class Application(object):
         else:
             self.parser.print_help()
 
-    def import_task(self, package_url):
+    def get_task(self, package_url):
         """Returns task from url 'some.url:class'"""
         sys.path.append(os.getcwd())
         url = package_url.split(':')
         module = import_module(url[0])
         try:
-            return getattr(module, url[1])
+            return getattr(module, url[1])()
         except AttributeError:
             raise TaskNotFoundError(package_url)
 

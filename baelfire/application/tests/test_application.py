@@ -32,8 +32,8 @@ class TestApplication(object):
             yield parse_args
 
     @yield_fixture
-    def import_task(self, app):
-        with patch.object(app, 'import_task') as mock:
+    def get_task(self, app):
+        with patch.object(app, 'get_task') as mock:
             yield mock
 
     def test_run_without_args(self, app, parse_args):
@@ -67,8 +67,8 @@ class TestApplication(object):
         with raises(TaskNotFoundError):
             app.run_command_or_print_help(args)
 
-    def test_run_with_task_error(self, app, import_task, parse_args):
-        task = import_task.return_value.return_value
+    def test_run_with_task_error(self, app, get_task, parse_args):
+        task = get_task.return_value
         task.run.side_effect = RuntimeError
 
         args = MagicMock()
@@ -76,7 +76,7 @@ class TestApplication(object):
         with raises(RuntimeError):
             app.run_command_or_print_help(args)
 
-        import_task.assert_called_once_with(args.task)
+        get_task.assert_called_once_with(args.task)
 
     def test_run(self):
         parser_patcher = patch.object(

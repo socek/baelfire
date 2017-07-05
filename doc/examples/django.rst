@@ -220,3 +220,37 @@ Now, every time we will start runserver, we will run migrations before.
     :alt: Tasks
 
 As you can see, we are using UpdateRequirements in two places, but the Baelfire does not complain.
+
+5.1.7 Custom dependency - migration
+-----------------------------------
+
+It is a good idea to rebuild migrations everytime we start runserver. The task should search for newly created migration
+scripts and then rebuild if needed. If at this point you want to add some ifs in the ``build`` method, then stop it
+please and read the whole documentation again. We will make custom dependency instead. This new dependency will search
+thru all migration scripts and find the newest one. Then it will compare mtime of the file with the mtime of flag file.
+So we will know if the migrations has been applied without connecting to the database. This algorythm is not covering
+all of the situation that can happend, but for the sake of the example, let's just say it is enough.
+
+.. literalinclude:: django/dependency-1.py
+    :language: python
+    :caption: bdjango/dependency.py
+    :linenos:
+
+The dependency is ready, so we can change our ``tasks.py`` and ``core.py``.
+
+.. literalinclude:: django/tasks-8.py
+    :language: python
+    :caption: bdjango/dependency.py
+    :linenos:
+
+.. literalinclude:: django/core-6.py
+    :language: python
+    :caption: bdjango/dependency.py
+    :linenos:
+
+Now everytime we will start our ``runserver`` the migration will be started when needed.
+
+.. literalinclude:: django/run-12
+
+We did not include the code of the models which where migrated.
+

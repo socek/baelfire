@@ -1,0 +1,43 @@
+(venv_bdjango) $ bael -t bdjango.cmd:start_runserver
+ * INFO bdjango.tasks.ApplyMigrations: Running *
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, hello, sessions
+Running migrations:
+  No migrations to apply.
+ * INFO bdjango.tasks.StartRunserver: Running *
+Performing system checks...
+
+System check identified no issues (0 silenced).
+July 05, 2017 - 06:58:09
+Django version 1.11.2, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+(...)
+
+(venv_bdjango) $ bael -t bdjango.cmd:start_runserver
+ * INFO bdjango.tasks.StartRunserver: Running *
+Performing system checks...
+
+System check identified no issues (0 silenced).
+July 05, 2017 - 06:59:58
+Django version 1.11.2, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+(venv_bdjango) $ python manage.py makemigrations
+Migrations for 'hello':
+  hello/migrations/0002_hello_year.py
+    - Add field year to hello
+(venv_bdjango) $ bael -t bdjango.cmd:start_runserver
+ * INFO bdjango.tasks.ApplyMigrations: Running *
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, hello, sessions
+Running migrations:
+  Applying hello.0002_hello_year... OK
+ * INFO bdjango.tasks.StartRunserver: Running *
+Performing system checks...
+
+System check identified no issues (0 silenced).
+July 05, 2017 - 07:00:28
+Django version 1.11.2, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/

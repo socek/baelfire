@@ -299,3 +299,28 @@ Attaching ``celery``:
 
 .. image:: ../images/graph_doc518_b.png
     :alt: Attach Celery
+
+.. literalinclude:: django/run-13
+
+5.1.9 Finally - your own command line
+-------------------------------------
+
+It is not very comfortable to use ``bael`` command for all this tasks. But it is very simple to make your own command
+line tool. You can just inherite from ``baelfire.application.application.Application`` and make your own task names for
+``-t`` switch.
+
+.. literalinclude:: django/cmd-4.py
+    :language: python
+    :caption: bdjango/cmd.py
+    :linenos:
+
+Also you need to update ``setup.py`` file and run ``python setup.py develop`` in order to have new command line tool.
+
+.. literalinclude:: django/setup-2.py
+    :language: python
+    :caption: bdjango/setup.py
+    :linenos:
+
+Finally, the quick and simple run:
+
+.. literalinclude:: django/run-14

@@ -1,0 +1,9 @@
+(venv_bdjango) $ bdcmd -t runserver
+ * INFO bdjango.tasks.StartRunserver: Running *
+Performing system checks...
+
+System check identified no issues (0 silenced).
+July 05, 2017 - 12:30:05
+Django version 1.11.2, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.

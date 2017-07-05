@@ -1,4 +1,4 @@
-(venv_bdjango) $ bael -t bdjango.cmd:start_runserver -g
+(venv_bdjango) $ bael -t bdjango.cmd:start_runserver
  * INFO bdjango.tasks.StartRunserver: Running *
 Performing system checks...
 
@@ -15,7 +15,7 @@ Quit the server with CONTROL-C.
 (CTRL +C -> ...)
 
 (venv_bdjango) $ touch setup.py
-bael -t bdjango.cmd:start_runserver -g
+bael -t bdjango.cmd:start_runserver
  * INFO bdjango.tasks.SetupPyDevelop: Running *
 running develop
 running egg_info

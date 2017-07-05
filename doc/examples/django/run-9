@@ -1,5 +1,5 @@
 (venv_bdjango) $ touch requirements.txt
-(venv_bdjango) $ bael -t bdjango.cmd:update_requirements -g
+(venv_bdjango) $ bael -t bdjango.cmd:update_requirements
  * INFO bdjango.tasks.UpdateRequirementsProduction: Running *
 Requirement already satisfied: baelfire==0.5.0 in ./venv_bdjango/lib/python3.6/site-packages/baelfire-0.5.0-py3.6.egg (from -r /home/socek/projects/bael-django/requirements.txt (line 1))
 Requirement already satisfied: coverage==4.4.1 in ./venv_bdjango/lib/python3.6/site-packages/coverage-4.4.1-py3.6-linux-x86_64.egg (from -r /home/socek/projects/bael-django/requirements.txt (line 2))
@@ -18,7 +18,7 @@ Requirement already satisfied: six==1.10.0 in ./venv_bdjango/lib/python3.6/site-
 Requirement already satisfied: setuptools in ./venv_bdjango/lib/python3.6/site-packages (from pytest==3.1.2->-r /home/socek/projects/bael-django/requirements.txt (line 10))
 
 (venv_bdjango) $ touch setup.py
-(venv_bdjango) $ bael -t bdjango.cmd:update_requirements -g
+(venv_bdjango) $ bael -t bdjango.cmd:update_requirements
  * INFO bdjango.tasks.SetupPyDevelop: Running *
 running develop
 running egg_info

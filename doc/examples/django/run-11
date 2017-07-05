@@ -1,4 +1,4 @@
-(venv_bdjango) $ bael -t bdjango.cmd:start_runserver -g
+(venv_bdjango) $ bael -t bdjango.cmd:start_runserver
  * INFO bdjango.tasks.ApplyMigrations: Running *
 Operations to perform:
   Apply all migrations: admin, auth, contenttypes, sessions

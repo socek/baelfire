@@ -1,24 +1,26 @@
 5.1 Django
 ==========
 
-When we are implementing simple Django application and we want to start developer server, we need to make some steps
-before actual running:
+When we are implementing simple Django application and we want to start developer server (``runserver`` command), we
+need to take care of few steps before using the server:
 
 - update requiretments from setup.py or requiretments.txt
-- make migrations
+- apply migrations
 - start celery
 - start runserver
 
-Using baelfire we can automate this process so all these steps will be made before the runserver but only when needed.
+By using Baelfire, we can automate this process, so all these steps will be made before starting the runserver but only
+when needed.
+
 Code from this example is avalible here: https://github.com/socek/bael-django
 
 
 5.1.1 Create the application
 ----------------------------
 
-First of all, we need to create simple Django application for tests. It will not have any views, because all we want is
-to make sure the runserver will start. We will not go into details here, because it is not a Django tutorial. So we will
-start with the setup.py file.
+First of all, we need to create simple Django application for tests. It will not have any views, because all we want for
+now is to make sure the runserver will start. We will not go into details here, because it is not a Django tutorial.
+We will start with the setup.py file.
 
 .. literalinclude:: django/setup-1.py
     :language: python
@@ -36,7 +38,7 @@ Now we can run it and activate virtualenv.
 
 .. literalinclude:: django/run-1
 
-Now we can create our application and start runserver.
+Now we can create our application and start ``runserver``.
 
 .. literalinclude:: django/run-2
 
@@ -45,7 +47,7 @@ Our simple Django application is ready.
 5.1.2 Baelfire package and first task
 -------------------------------------
 
-First step in creating automatizion is to create package that will be outside of the django app, which we created a
+First step in creating automatizion is to create package that will be outside of the django app, which we have created a
 moment ego.
 
 .. literalinclude:: django/run-3
@@ -61,12 +63,11 @@ Now we can start our first task and see what it will do:
 
 .. literalinclude:: django/run-4
 
-Ok, but now we have hardcoded path for python executable, and hardcoded path for setup.py. This will not work if we
-change our workdir.
+Ok, but now we have hardcoded path for python executable and for setup.py. This will not work if we change our workdir.
 
 .. literalinclude:: django/run-5
 
-So now we will create ``Core`` class and do some path configurations.
+So now we will implement ``Core`` class and do some path configurations.
 
 .. literalinclude:: django/core-1.py
     :language: python
@@ -81,7 +82,7 @@ need to implement these settings in our task.
     :caption: bdjango/tasks.py
     :linenos:
 
-Last step for this paragraph is to make task with proper Core installed, so we need to create new file.
+Last step for this paragraph is to make task with proper Core installed, so we need to create new file with an endpoint.
 
 .. literalinclude:: django/cmd-1.py
     :language: python
@@ -110,8 +111,8 @@ And also, we need to add some configurations to the core.
     :caption: bdjango/core.py
     :linenos:
 
-This time, when we make update and we will not change the ``setup.py`` file, the script will not start the rebuild.
-In those scripts we use "bdjango/flags" directory, as a place for storing the flags. You should create a folder before
+In this example, when we make update and we will not change the ``setup.py`` file, the script will not start the rebuild.
+In those scripts we use ``bdjango/flags`` directory, as a place for storing the flags. You should create a folder before
 running the ``bael`` application.
 
 .. literalinclude:: django/run-7
@@ -135,7 +136,7 @@ rebuild.
 .. literalinclude:: django/run-8
 
 At this point, we have already created the flags folder by hand, that is why the first run did nothing. But after
-removing the folder, the whole chain was rebuild.
+removing the folder, the whole chain has been rebuild.
 
 Most of the Python projects use requiretments.txt file instead of setup.py. In our sample project we will use both, just
 for the sake of creating Baelfire tasks.
@@ -171,7 +172,7 @@ So now we can run our newly created baelfire tasks.
 5.1.5 Runserver
 ---------------
 
-Main purpose of the Baelfire in our sample project is to start runserver with all it's dependencies. For now, we have
+Main purpose of the Baelfire in our sample project is to start runserver with all the dependencies. For now, we have
 implemented dependency of updating packages to proper version. It is enough to implement a task for starting the
 developer's server.
 
@@ -180,8 +181,8 @@ developer's server.
     :caption: bdjango/tasks.py
     :linenos:
 
-The ``StartRunserver`` task has been implemented. In line 75 we added ``AlwaysTrue`` dependency which will result in
-rebuilding this task every time it will be started no matter every other dependency.
+The ``StartRunserver`` task has been implemented. In line 75 we have added ``AlwaysTrue`` dependency which will result in
+rebuilding this task every time it will be started no matter the dependency checking.
 
 Now we need to implement endpoint for starting new task.
 
@@ -190,18 +191,18 @@ Now we need to implement endpoint for starting new task.
     :caption: bdjango/cmd.py
     :linenos:
 
-No new settings needs to be done, so we will just test the run.
+No new settings needs to be done, so we will just test this run.
 
 .. literalinclude:: django/run-10
 
-As you can see on the listing above, starting the runserver will first reinstall requiretments before starting the
-server.
+As you can see on the listing above, running the runserver command will start reinstall requiretments before starting
+the server application.
 
 5.1.6 Migrations
 ----------------
 
-You probably noticed that runserver is yelling at us (color of the message is red, which means yelling!), that we did
-not made migrations.
+You have probably noticed that runserver is yelling at us (color of the message is red, which means yelling!), that we
+did not made migrations.
 
 .. literalinclude:: django/tasks-7.py
     :language: python
@@ -210,8 +211,8 @@ not made migrations.
 
 Now we have 2 tasks which needs to use ``manage.py``, so I made base class ``BaseManagePy`` with default dependency,
 which make sure that the requiretments will be updated before running ``manage.py`` command. At this point we may want
-to add ``AlwaysTrue`` dependency here, but it is design flaw. In the future, you may want to use ``manage.py`` command
-which does not need to be rebuild every time it will be started.
+to add ``AlwaysTrue`` dependency here, but it will be a design flaw. In the future, you may want to use ``manage.py``
+command which does not need to be rebuild every time it will be started.
 
 .. literalinclude:: django/run-11
 
@@ -220,17 +221,18 @@ Now, every time we will start runserver, we will run migrations before.
 .. image:: ../images/graph_doc516_a.png
     :alt: Tasks
 
-As you can see, we are using UpdateRequirements in two places, but the Baelfire does not complain.
+As you can see, we are using UpdateRequirements in two places, but the Baelfire does not complain and run it only once.
 
 5.1.7 Custom dependency - migration
 -----------------------------------
 
-It is a good idea to rebuild migrations everytime we start runserver. The task should search for newly created migration
-scripts and then rebuild if needed. If at this point you want to add some ifs in the ``build`` method, then stop it
+It is a good idea to rebuild migrations everytime we start the runserver, but it is a better idea to rebuild this only
+when new migrations will be avalible. The task should search for newly created migration
+scripts and then rebuild. If at this point you want to add some ifs in the ``build`` method, then stop it
 please and read the whole documentation again. We will make custom dependency instead. This new dependency will search
 thru all migration scripts and find the newest one. Then it will compare mtime of the file with the mtime of flag file.
-So we will know if the migrations has been applied without connecting to the database. This algorythm is not covering
-all of the situation that can happend, but for the sake of the example, let's just say it is enough.
+This is how we will know if the migrations has been applied without connecting to the database. This algorythm is not
+covering all of the situation that can happend, but for the sake of the example, let's just say it is enough.
 
 .. literalinclude:: django/dependency-1.py
     :language: python
@@ -253,18 +255,20 @@ Now everytime we will start our ``runserver`` the migration will be started when
 
 .. literalinclude:: django/run-12
 
-We did not include the code of the models which where migrated.
+I did not include the code of the models which created the migration scripts. The whole code is avalible on github
+(link above).
 
 5.1.8 Tasks in the background - celery
 --------------------------------------
 
 Many projects needs to use task schedulers, which works outside of the webserver. For this tutorial we will use celery
-`4.0.2`. For the sake of this tutorial we don't care if the celery is connecting to the broker.
+`4.0.2`. For the simplicity, we don't care if the celery is connecting to the broker.
 
 For the celery we could use normal task, but the downside is that we would need to run this in one terminal and the
 runserver in second one. In most cases we would need the celery to be run, but not to be visible. We could start the
-celery in the background, but sometimes we would like to see what is happening with the celery process. For this we will
-use ``ScreenTask`` and ``AttachScreenTask``.
+celery in the background, but sometimes we would like to see what is happening with the celery process. I prefer to use
+screen for starting the celery process and attach/detach whenever I like. For this we will use ``ScreenTask`` and
+``AttachScreenTask``.
 
 .. literalinclude:: django/core-7.py
     :language: python
@@ -288,7 +292,7 @@ for attaching the celery worker. ``StartRunserver`` also have a new dependency w
     :caption: bdjango/cmd.py
     :linenos:
 
-Here we are only adding endpoint for attaching the celery.
+Here we only are adding endpoint for attaching the celery.
 
 Starting ``runserver``:
 

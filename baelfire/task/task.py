@@ -1,4 +1,5 @@
 from logging import getLogger
+from os import utime
 from yaml import dump
 
 from baelfire.core import Core
@@ -148,3 +149,16 @@ class Task(object):
             return self.parent.top_core
         else:
             return self.core
+
+    def touch(self, file_name=None, file_path=None, times=None):
+        """
+        Update mtime of a file.
+
+        - file_name - name of the file in Core.paths
+        - file_path - path to a file
+        - times - set the access and modified times of the file specified by path (see os.utime documentation)
+        """
+        assert bool(file_name) != bool(file_path)
+        file_path = file_path or self.paths.get(file_name)
+        with open(file_path, 'a'):
+            utime(file_path, times)

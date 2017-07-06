@@ -1,6 +1,8 @@
 from mock import MagicMock
 from mock import patch
+from mock import sentinel
 from pytest import fixture
+from pytest import mark
 from pytest import raises
 from pytest import yield_fixture
 from yaml import load
@@ -81,6 +83,21 @@ class TestTask(object):
     def mrun_task(self):
         with patch('baelfire.task.task.RunTask') as mock:
             yield mock
+
+    @yield_fixture
+    def mopen(self):
+        with patch('baelfire.task.task.open') as mock:
+            yield mock
+
+    @yield_fixture
+    def mutime(self):
+        with patch('baelfire.task.task.utime') as mock:
+            yield mock
+
+    @yield_fixture
+    def mpaths(self, task):
+        task.core.paths = MagicMock()
+        return task.core.paths
 
     def test_simple_flow(self, task):
         """
@@ -257,3 +274,41 @@ class TestTask(object):
         assert task._dependencies == [mrun_task.return_value]
         mrun_task.assert_called_once_with(child_task)
         mrun_task.return_value.set_parent.assert_called_once_with(task)
+
+    @mark.parametrize(
+        'file_name, file_path, should_validate',
+        [
+            [None, None, False],
+            [True, None, True],
+            [None, True, True],
+            [True, True, False],
+        ]
+    )
+    def test_touch_assertion(self, task, file_name, file_path, should_validate, mopen, mutime, mpaths):
+        """
+        .touch should allow only setting file_name xor file_path.
+        """
+        if should_validate:
+            task.touch(file_name=file_name, file_path=file_path)
+        else:
+            with raises(AssertionError):
+                task.touch(file_name=file_name, file_path=file_path)
+
+    @mark.parametrize(
+        'file_name, file_path',
+        [
+            ['file_name', None],
+            [None, 'file_path'],
+        ]
+    )
+    def test_touch_get_path(self, task, file_name, file_path, mopen, mutime, mpaths):
+        """
+        .touch should get path from paths or get file_path as a raw path.
+        """
+        task.touch(file_name=file_name, file_path=file_path, times=sentinel.times)
+        if file_name:
+            mopen.assert_called_once_with(mpaths.get.return_value, 'a')
+            mutime.assert_called_once_with(mpaths.get.return_value, sentinel.times)
+        if file_path:
+            mopen.assert_called_once_with(file_path, 'a')
+            mutime.assert_called_once_with(file_path, sentinel.times)

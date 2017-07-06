@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - pytest is not in the normal requiretments.
 - fix PidIsNotRunning dependency - it was using old version of MorfDict.
 
+### Added
+- Application._run_missing_command for better extendability when adding new custom commans for beal like tools
+
 ## 0.5.0 - 2017-06-30
 ### Added
 - this change log

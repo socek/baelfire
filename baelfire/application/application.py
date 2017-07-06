@@ -95,7 +95,11 @@ class Application(object):
         elif args.graph_file:
             Graph(args.graph_file).render()
         else:
-            self.parser.print_help()
+            if not self._run_missing_command():
+                self.parser.print_help()
+
+    def _run_missing_command(self):
+        return False
 
     def get_task(self, package_url):
         """Returns task from url 'some.url:class'"""

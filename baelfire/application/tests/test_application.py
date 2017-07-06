@@ -36,6 +36,11 @@ class TestApplication(object):
         with patch.object(app, 'get_task') as mock:
             yield mock
 
+    @yield_fixture
+    def mrun_missing_command(self, app):
+        with patch.object(app, '_run_missing_command') as mock:
+            yield mock
+
     def test_run_without_args(self, app, parse_args):
         with patch.object(app.parser, 'print_help') as print_help:
             args = MagicMock()
@@ -121,3 +126,18 @@ class TestApplication(object):
 
             graph.assert_called_once_with(args.graph_file)
             graph.return_value.render.assert_called_once_with()
+
+    def test_missing_command(self, app, parse_args, mrun_missing_command):
+        """
+        When the _missing_command will be overwritten, then it should return True when the custom command was started.
+        In this situation, no help should be printed.
+        """
+        mrun_missing_command.return_value = True
+        with patch.object(app.parser, 'print_help') as print_help:
+            args = MagicMock()
+            args.task = None
+            args.graph_file = False
+
+            app.run_command_or_print_help(args)
+
+            assert not print_help.called

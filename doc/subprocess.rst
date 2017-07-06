@@ -52,3 +52,15 @@ accept pid in 3 ways:
     sleep is still running...
     - After Termination
     sleep is not running!
+
+2.4.3 Ignore abort error
+------------------------
+
+``SubprocessTask`` has a setting named IGNORE_ABORT which will change behaviour of the error mechanism. When this var is
+set to True (default) and the task will be aborted (for example, by using CTRL+C), then no exception will be raised and
+the command will just be ended. But if we set this to False, then the command will raise a CommandAbort error.
+
+.. literalinclude:: code/doc15.py
+    :language: python
+    :caption: doc15.py
+    :linenos:

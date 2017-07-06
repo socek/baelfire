@@ -12,6 +12,7 @@ class SubprocessTask(Task):
     Task which will run external programs. This task will manage sending
     proccess signals.
     """
+    IGNORE_ABORT = True
 
     def phase_init(self):
         super(SubprocessTask, self).phase_init()
@@ -61,6 +62,9 @@ class SubprocessTask(Task):
 
     def _post_popen(self):
         if self.myreport['aborted']:
-            raise CommandAborted()
+            if self.IGNORE_ABORT:
+                return
+            else:
+                raise CommandAborted()
         if self.spp.returncode is not 0:
             raise CommandError(self.spp.returncode)

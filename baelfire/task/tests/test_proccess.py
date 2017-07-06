@@ -3,6 +3,7 @@ from signal import SIGALRM
 from mock import MagicMock
 from mock import call
 from mock import patch
+from pytest import fail
 from pytest import fixture
 from pytest import raises
 from pytest import yield_fixture
@@ -146,6 +147,7 @@ class TestSubproccessTask(object):
         task.phase_init()
         task.spp = MagicMock()
         task.myreport['aborted'] = True
+        task.IGNORE_ABORT = False
 
         with raises(CommandAborted):
             task.popen()
@@ -169,3 +171,27 @@ class TestSubproccessTask(object):
         popen.assert_called_once_with('arg', kw='arg')
         assert task.spp == popen.return_value
         task.spp.wait.assert_called_once_with()
+
+    def test_ignore_abort(self, task):
+        """
+        when .IGNORE_ABORT is set to True, no CommandError should be raisen when command will be ended with CTRL+C.
+        """
+        task.phase_init()
+        task.myreport['aborted'] = True
+        task.IGNORE_ABORT = True
+
+        try:
+            task._post_popen()
+        except CommandAborted:
+            fail("CommandAborted should not be raisen")
+
+    def test_ignore_abort_when_not_ignoring(self, task):
+        """
+        when .IGNORE_ABORT is set to False, a CommandError should be raisen when command will be ended with CTRL+C.
+        """
+        task.phase_init()
+        task.myreport['aborted'] = True
+        task.IGNORE_ABORT = False
+
+        with raises(CommandAborted):
+            task._post_popen()

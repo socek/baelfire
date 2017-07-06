@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 - Application._run_missing_command for better extendability when adding new custom commans for beal like tools
+- SubprocessTask.IGNORE_ABORT for switching if the task should complain about CommandAbort
 
 ## 0.5.0 - 2017-06-30
 ### Added

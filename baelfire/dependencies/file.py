@@ -25,7 +25,7 @@ class FileDependency(Dependency):
 
 class FileChanged(FileDependency):
     """
-    Trigger build if dependency file was changed.
+    Trigger build if dependency file was rebuilded.
     """
 
     def should_build(self):

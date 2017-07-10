@@ -97,7 +97,7 @@ And now we can run it:
 ---------------------------
 
 So now we have a script, which will always run ``python setup.py develop``. But we need to run this only, when setup.py
-has changed. That is why we need to change the task implementation.
+has rebuilded. That is why we need to change the task implementation.
 
 .. literalinclude:: django/tasks-3.py
     :language: python

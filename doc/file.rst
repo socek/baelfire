@@ -5,7 +5,7 @@
 ---------------
 
 Task class can be extended to your own needs, but in most cases we want file related tasks, for example "build file if
-other file has changed", or "create file if not exists". For this purpose Baelfire comes with FileTask.
+other file has rebuilded", or "create file if not exists". For this purpose Baelfire comes with FileTask.
 
 .. literalinclude:: code/doc5.py
     :language: python

@@ -1,5 +1,3 @@
-.. image:: https://drone.io/github.com/socek/baelfire/status.png
-
 1. Baelfire
 ===========
 Baelfire is a yet another make-like program. Main goals for Baelfire is separete
